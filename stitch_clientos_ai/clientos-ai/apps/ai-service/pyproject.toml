@@ -1,0 +1,32 @@
+[project]
+name = "clientos-ai-service"
+version = "0.1.0"
+description = "ClientOS AI Service - LLM provider abstraction and AI-powered features"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.8.0",
+    "pydantic-settings>=2.4.0",
+    "httpx>=0.27.0",
+    "openai>=1.40.0",
+    "anthropic>=0.34.0",
+    "redis>=5.0.0",
+    "python-multipart>=0.0.9",
+    "orjson>=3.10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0",
+    "ruff>=0.6.0",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Proposal Builder - ClientOS AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#c0c1ff",
+                      "on-secondary-fixed-variant": "#005236",
+                      "surface-dim": "#0b1326",
+                      "surface": "#0b1326",
+                      "surface-container-highest": "#2d3449",
+                      "on-primary-container": "#00285c",
+                      "tertiary-fixed": "#e1e0ff",
+                      "error-container": "#93000a",
+                      "secondary": "#4edea3",
+                      "inverse-surface": "#dae2fd",
+                      "primary-fixed": "#d8e2ff",
+                      "surface-bright": "#31394d",
+                      "secondary-fixed": "#6ffbbe",
+                      "surface-container": "#171f33",
+                      "background": "#0b1326",
+                      "on-error-container": "#ffdad6",
+                      "primary-container": "#4b8eff",
+                      "primary": "#adc6ff",
+                      "on-tertiary": "#1000a9",
+                      "on-primary-fixed": "#001a41",
+                      "inverse-on-surface": "#283044",
+                      "surface-container-lowest": "#060e20",
+                      "tertiary-fixed-dim": "#c0c1ff",
+                      "secondary-container": "#00a572",
+                      "on-primary": "#002e69",
+                      "on-background": "#dae2fd",
+                      "on-secondary": "#003824",
+                      "on-tertiary-fixed": "#07006c",
+                      "on-error": "#690005",
+                      "inverse-primary": "#005bc1",
+                      "outline": "#8b90a0",
+                      "on-surface-variant": "#c1c6d7",
+                      "error": "#ffb4ab",
+                      "surface-container-high": "#222a3d",
+                      "on-primary-fixed-variant": "#004493",
+                      "surface-tint": "#adc6ff",
+                      "outline-variant": "#414755",
+                      "surface-variant": "#2d3449",
+                      "on-secondary-container": "#00311f",
+                      "surface-container-low": "#131b2e",
+                      "on-secondary-fixed": "#002113",
+                      "secondary-fixed-dim": "#4edea3",
+                      "tertiary-container": "#8083ff",
+                      "primary-fixed-dim": "#adc6ff",
+                      "on-tertiary-fixed-variant": "#2f2ebe",
+                      "on-tertiary-container": "#0d0096",
+                      "on-surface": "#dae2fd"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "container-padding": "24px",
+                      "gutter": "16px",
+                      "card-gap": "12px",
+                      "unit": "4px",
+                      "sidebar-width": "240px"
+              },
+              "fontFamily": {
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "JetBrains Mono"
+                      ],
+                      "lead-score": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "display": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "lead-score": [
+                              "14px",
+                              {
+                                      "lineHeight": "14px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+          font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-sm h-screen overflow-hidden flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-surface dark:bg-surface text-primary dark:text-primary font-body-sm text-body-sm docked full-width top-0 border-b border-outline-variant flat no shadows duration-200 ease-in-out flex justify-between items-center h-16 px-container-padding sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<button aria-label="Open Menu" class="md:hidden text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight">ClientOS AI</span>
+</div>
+<div class="hidden md:flex flex-1 mx-8 justify-center items-center h-full">
+<div class="flex h-full items-center gap-6">
+<!-- Proposal Builder is not a main nav tab in the JSON, but it falls under "Work" or "Sales". Since it's a specific transactional/creation screen, we don't highlight a top nav tab directly, but keep the shell minimal. -->
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-on-surface transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-highest">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-highest">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="h-9 px-4 rounded border border-outline-variant text-on-surface font-body-sm hover:bg-surface-container-highest transition-colors">
+                Save Draft
+            </button>
+<button class="h-9 px-4 rounded bg-primary text-on-primary font-body-sm hover:bg-primary-fixed transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">send</span>
+                Send to Client
+            </button>
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full ml-2 object-cover border border-outline-variant" data-alt="A small, circular avatar portrait of a professional in their 30s with short dark hair, wearing a navy blue blazer against a sleek, dark grey background. High resolution, modern professional headshot." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmeXT7M-ZaPyZzrDduiszgcBK1v57REJezUsfDUU-WfZCf8CGC4mXcWu_BhfgFNyaN3lolrIyRJ3F1ha8VQdP4whwU40ERW7OG3_q7nAN6R3xQmsMFcyXnBfVz5OR2s4VPGT39KeI0EaiKuX4iTkQ4g3PASOqky0gZG5a52tWVkRjhVEqJ0tELf9pWWu1x0Jv_mf4tqvGyIMzyHed-HzVTyRuqCB7ZWOKtZFHdYnRmHuFDq9fdieFW"/>
+</div>
+</nav>
+<!-- Main Content Layout -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Left Sidebar: Document Sections (Mini Nav) -->
+<aside class="w-64 border-r border-outline-variant bg-surface-container-low flex flex-col py-6 overflow-y-auto hidden md:flex">
+<div class="px-6 mb-4">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Proposal Structure</h2>
+</div>
+<nav class="flex flex-col gap-1 px-4">
+<button class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-highest text-primary font-bold text-left w-full transition-colors">
+<span class="material-symbols-outlined fill text-[20px]">assignment</span>
+                    Executive Summary
+                </button>
+<button class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface transition-colors text-left w-full">
+<span class="material-symbols-outlined text-[20px]">track_changes</span>
+                    Scope of Work
+                </button>
+<button class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface transition-colors text-left w-full">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                    Timeline
+                </button>
+<button class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface transition-colors text-left w-full">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+                    Investment
+                </button>
+</nav>
+<div class="mt-8 px-6 mb-4">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">AI Context</h2>
+</div>
+<div class="px-4">
+<div class="p-3 bg-surface-container rounded border border-outline-variant text-body-sm text-on-surface-variant">
+<p class="mb-2"><span class="text-on-surface font-semibold">Client:</span> Acme Corp</p>
+<p class="mb-2"><span class="text-on-surface font-semibold">Intent:</span> Enterprise Q3 Migration</p>
+<p class="text-xs mt-3 flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+                        Pre-filled from audit
+                    </p>
+</div>
+</div>
+</aside>
+<!-- Center: Document Canvas -->
+<main class="flex-1 overflow-y-auto bg-background p-8 md:p-12 relative flex justify-center">
+<!-- Max width container for the 'document' -->
+<div class="w-full max-w-4xl bg-surface border border-outline-variant rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.2)] flex flex-col min-h-full">
+<!-- Document Header -->
+<div class="p-10 border-b border-outline-variant flex justify-between items-start">
+<div>
+<input class="bg-transparent border-none text-headline-lg font-headline-lg text-on-surface focus:ring-0 p-0 w-full placeholder-on-surface-variant outline-none" placeholder="Proposal Title" type="text" value="Enterprise Q3 Migration Proposal"/>
+<p class="text-body-lg text-on-surface-variant mt-2">Prepared for: Acme Corp • Oct 24, 2023</p>
+</div>
+<div class="w-16 h-16 bg-surface-container flex items-center justify-center rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-[32px] text-on-surface-variant">domain</span>
+</div>
+</div>
+<!-- Document Body -->
+<div class="p-10 flex flex-col gap-10">
+<!-- Section: Executive Summary -->
+<section class="group">
+<div class="flex items-center gap-2 mb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">Executive Summary</h3>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+<div class="p-4 bg-surface-container-low border border-transparent hover:border-outline-variant rounded-lg transition-colors cursor-text">
+<p class="text-body-lg text-on-surface-variant leading-relaxed">
+                                Based on our recent audit of Acme Corp's legacy infrastructure, there is a critical need to transition to a scalable, cloud-native architecture before Q4 to avoid projected bottleneck failures. This proposal outlines a comprehensive migration strategy designed to ensure zero downtime while reducing operational overhead by an estimated 22%.
+                            </p>
+<p class="text-body-lg text-on-surface-variant leading-relaxed mt-4">
+                                Our AI-driven approach will map all existing dependencies and automate the deployment pipeline, significantly reducing risk compared to manual migration methods.
+                            </p>
+</div>
+</section>
+<!-- Section: Scope of Work (Snippet) -->
+<section class="group">
+<div class="flex items-center gap-2 mb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">Scope of Work</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-4 border border-outline-variant rounded-lg bg-surface-container">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+<h4 class="font-bold text-on-surface">Phase 1: Discovery &amp; Mapping</h4>
+</div>
+<p class="text-on-surface-variant text-sm">Automated dependency mapping using ClientOS Agent. Expected duration: 2 weeks.</p>
+</div>
+<div class="p-4 border border-outline-variant rounded-lg bg-surface-container">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+<h4 class="font-bold text-on-surface">Phase 2: Pilot Migration</h4>
+</div>
+<p class="text-on-surface-variant text-sm">Migration of non-critical workloads to establish baseline performance metrics.</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Spacer to push footer down if needed -->
+<div class="flex-grow"></div>
+<!-- Document Footer -->
+<div class="p-6 border-t border-outline-variant flex justify-between items-center text-on-surface-variant text-sm">
+<span>ClientOS • Confidential</span>
+<span>Page 1 of 4</span>
+</div>
+</div>
+</main>
+<!-- Right Sidebar: AI Suggestions & Settings -->
+<aside class="w-80 border-l border-outline-variant bg-surface-container-lowest flex flex-col hidden lg:flex overflow-y-auto">
+<!-- Tabs -->
+<div class="flex border-b border-outline-variant">
+<button class="flex-1 py-4 text-center font-bold text-primary border-b-2 border-primary">
+                    AI Suggestions
+                </button>
+<button class="flex-1 py-4 text-center text-on-surface-variant hover:text-on-surface transition-colors border-b-2 border-transparent">
+                    Settings
+                </button>
+</div>
+<!-- Panel Content: AI Suggestions -->
+<div class="p-6 flex flex-col gap-6">
+<div class="flex items-start gap-3 p-4 bg-surface-container rounded-lg border border-outline-variant border-l-4 border-l-secondary">
+<span class="material-symbols-outlined text-secondary">lightbulb</span>
+<div>
+<h4 class="font-bold text-on-surface mb-1 text-sm">Strengthen ROI Claim</h4>
+<p class="text-xs text-on-surface-variant mb-3">Based on industry data, you can likely claim a 30% reduction in overhead instead of 22%.</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-surface-variant text-on-surface text-xs rounded hover:bg-outline-variant transition-colors">Apply Change</button>
+<button class="px-3 py-1 text-on-surface-variant text-xs hover:text-on-surface transition-colors">Dismiss</button>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-4 bg-surface-container rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<div>
+<h4 class="font-bold text-on-surface mb-1 text-sm">Add Risk Mitigation Section</h4>
+<p class="text-xs text-on-surface-variant mb-3">Enterprise clients usually expect a dedicated risk matrix. AI can generate one based on the scope.</p>
+<button class="w-full py-1.5 border border-primary text-primary text-xs rounded hover:bg-primary-container/10 transition-colors">Generate Section</button>
+</div>
+</div>
+<div class="flex items-start gap-3 p-4 bg-surface-container rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-tertiary">spellcheck</span>
+<div>
+<h4 class="font-bold text-on-surface mb-1 text-sm">Tone Check</h4>
+<p class="text-xs text-on-surface-variant">The Executive Summary tone is currently 'Formal'. Would you like to adjust it to 'Persuasive'?</p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</body></html>

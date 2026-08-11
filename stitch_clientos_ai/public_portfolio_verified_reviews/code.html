@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sarah Jenkins - Public Portfolio | ClientOS AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#4edea3",
+                      "on-secondary-fixed": "#002113",
+                      "on-tertiary-fixed-variant": "#2f2ebe",
+                      "surface-container-highest": "#2d3449",
+                      "inverse-primary": "#005bc1",
+                      "surface-dim": "#0b1326",
+                      "on-error-container": "#ffdad6",
+                      "primary-container": "#4b8eff",
+                      "background": "#0b1326",
+                      "on-primary": "#002e69",
+                      "on-error": "#690005",
+                      "error-container": "#93000a",
+                      "tertiary-fixed": "#e1e0ff",
+                      "secondary-fixed": "#6ffbbe",
+                      "on-primary-fixed": "#001a41",
+                      "primary-fixed": "#d8e2ff",
+                      "error": "#ffb4ab",
+                      "primary": "#adc6ff",
+                      "surface-container-high": "#222a3d",
+                      "secondary-container": "#00a572",
+                      "surface-container-lowest": "#060e20",
+                      "on-primary-container": "#00285c",
+                      "secondary": "#4edea3",
+                      "on-tertiary-fixed": "#07006c",
+                      "outline-variant": "#414755",
+                      "surface-variant": "#2d3449",
+                      "tertiary-container": "#8083ff",
+                      "on-surface-variant": "#c1c6d7",
+                      "surface-container": "#171f33",
+                      "tertiary-fixed-dim": "#c0c1ff",
+                      "primary-fixed-dim": "#adc6ff",
+                      "on-primary-fixed-variant": "#004493",
+                      "surface-tint": "#adc6ff",
+                      "on-surface": "#dae2fd",
+                      "on-background": "#dae2fd",
+                      "inverse-surface": "#dae2fd",
+                      "outline": "#8b90a0",
+                      "on-tertiary": "#1000a9",
+                      "surface-bright": "#31394d",
+                      "surface": "#0b1326",
+                      "on-secondary-fixed-variant": "#005236",
+                      "on-secondary-container": "#00311f",
+                      "on-secondary": "#003824",
+                      "surface-container-low": "#131b2e",
+                      "tertiary": "#c0c1ff",
+                      "on-tertiary-container": "#0d0096",
+                      "inverse-on-surface": "#283044"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "unit": "4px",
+                      "sidebar-width": "240px",
+                      "card-gap": "12px",
+                      "container-padding": "24px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "JetBrains Mono"
+                      ],
+                      "lead-score": [
+                              "Inter"
+                      ],
+                      "display": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "lead-score": [
+                              "14px",
+                              {
+                                      "lineHeight": "14px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-sm">
+<!-- Public Header (TopNavBar variant without sidebar constraints) -->
+<header class="bg-surface border-b border-outline-variant sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-container-padding flex justify-between items-center h-16">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-on-surface">ClientOS AI</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors">
+                    Sign In
+                </button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-caps text-label-caps hover:bg-primary-fixed-dim transition-colors">
+                    Join Network
+                </button>
+</div>
+</div>
+</header>
+<main class="flex-grow w-full max-w-7xl mx-auto px-container-padding py-12 md:py-24 flex flex-col gap-16">
+<!-- Hero Section -->
+<section class="flex flex-col md:flex-row items-center gap-12 justify-between">
+<div class="flex-1 flex flex-col gap-6">
+<div class="inline-flex items-center gap-2 bg-surface-container-low border border-outline-variant rounded-full px-3 py-1 w-fit">
+<span class="material-symbols-outlined text-[16px] text-secondary">verified</span>
+<span class="font-label-caps text-label-caps text-secondary">ClientOS Verified Expert</span>
+</div>
+<h1 class="font-display text-display text-on-surface">Building high-performance SaaS &amp; AI Automations</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                    Sarah Jenkins | Agency Growth
+                </p>
+<div class="flex flex-wrap gap-4 pt-4">
+<button class="bg-primary text-on-primary px-6 py-3 rounded-lg font-label-caps text-label-caps hover:bg-primary-fixed-dim transition-colors flex items-center gap-2">
+                        Book a Discovery Call
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="w-64 h-64 md:w-80 md:h-80 relative rounded-xl border border-outline-variant overflow-hidden shadow-2xl flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional, modern headshot of a female technology expert in a softly lit, dark-themed corporate studio environment. She is wearing sharp, smart-casual attire. The lighting is sophisticated, with a subtle blue rim light echoing a premium AI tool aesthetic. The background is a clean, dark textured gray." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuVBEcRuX6EHFQUtKH-wEU0QvVUYnVlC8ma_mW15lJEKYzJRX_F5t34Y3_1Mz2OP_X8nCTI_GoqfY20TIDuaTNiZdaA1R2lCX9ys3rbTTsNLPaTLeLEWQ46aga8I0PqDvmM_1_FDQiQi-tFnKVWhfgmvBgx4ShK1JtxJLi3QoiZjzQkfEFSwZ1WdA5ZCUKfEQpoTBb2xleYgcTMJGhbWnuwSIMd5uu8eHSz4ORXW-_8WZHh2h9t_gi"/>
+<!-- Floating Stat Cards -->
+<div class="absolute bottom-4 left-4 right-4 flex gap-2">
+<div class="bg-surface-container-highest/90 backdrop-blur-md border border-outline-variant p-3 rounded-lg flex-1 flex flex-col items-center">
+<span class="font-headline-md text-headline-md text-primary">24</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant text-center">Verified Projects</span>
+</div>
+<div class="bg-surface-container-highest/90 backdrop-blur-md border border-outline-variant p-3 rounded-lg flex-1 flex flex-col items-center">
+<div class="flex items-center text-secondary gap-1">
+<span class="font-headline-md text-headline-md">4.9</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-label-caps text-[10px] text-on-surface-variant text-center">Average Rating</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Services Section (Bento Grid Style) -->
+<section class="flex flex-col gap-8">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Core Expertise</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Service 1 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low border border-outline-variant flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[24px]">code</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Web Development</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Scalable, high-performance web applications built on modern tech stacks designed for rapid growth and enterprise reliability.</p>
+</div>
+<!-- Service 2 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group md:col-span-2 relative overflow-hidden">
+<div class="absolute right-0 bottom-0 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[120px]">psychology</span>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-container-low border border-outline-variant flex items-center justify-center text-secondary group-hover:scale-110 transition-transform relative z-10">
+<span class="material-symbols-outlined text-[24px]">psychology</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface relative z-10">AI Strategy &amp; Automation</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-lg relative z-10">Implementing advanced machine learning models and intelligent workflows to reduce operational friction and accelerate sales velocity across your organization.</p>
+</div>
+<!-- Service 3 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-6 flex flex-col gap-4 hover:bg-surface-container-high transition-colors group md:col-span-3">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low border border-outline-variant flex items-center justify-center text-tertiary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[24px]">trending_up</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Technical SEO &amp; Growth</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Data-driven optimization strategies that establish structural dominance in search engines and capture high-intent leads.</p>
+</div>
+</div>
+</section>
+<!-- Featured Projects -->
+<section class="flex flex-col gap-8">
+<div class="flex justify-between items-end border-b border-outline-variant pb-4">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Verified Projects</h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Via ClientOS Escrow</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Project Card 1 -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden flex flex-col hover:border-outline transition-colors hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+<div class="h-48 relative border-b border-outline-variant bg-surface-dim">
+<img class="w-full h-full object-cover opacity-80" data-alt="A sleek, modern dashboard UI displayed on a high-end monitor in a dark, atmospheric office setting. The screen shows complex data visualizations and graphs in vibrant blues and greens against a dark theme. The lighting is moody, reflecting a premium tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPize4OexzBVHvRbwMw5ZwJWWrWhg_cGBncsO6SkQ5oWHX-QuhoZJHNDFzrm2sEbz1McDEw9yYs2xd3cJdM_smLaM4-MbHzeKxHsYc-WJ999AgxLyR5IkNuRYjc3oG4hX6tbUYM7VA1FTkcTuLeVP91bi8VlDlGzYuATLPDDdgimzIqTEadLLZbSGmTdfEnARTIQdqZ6_iEbU7Vw5BvslGxb2-vv1M8Ed2IyQSSROsKrf4ZoiNzxlE"/>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-sm border border-outline-variant rounded px-2 py-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">verified</span>
+<span class="font-label-caps text-[10px] text-on-surface">Verified Outcome</span>
+</div>
+</div>
+<div class="p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">NexusAI Data Platform</h3>
+<p class="font-body-sm text-body-sm text-primary mt-1">Enterprise Analytics Dashboard</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Architected and developed a real-time data visualization platform processing 10M+ daily events. Reduced query latency by 40%.</p>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden flex flex-col hover:border-outline transition-colors hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+<div class="h-48 relative border-b border-outline-variant bg-surface-dim">
+<img class="w-full h-full object-cover opacity-80" data-alt="A futuristic abstract representation of an automated workflow. Glowing neon data streams in cool blues and cyan moving through complex, geometric glass-like nodes against a deep black background. Highly detailed, evoking artificial intelligence and seamless integration." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiyybY4rkObqCHvODiLbrwuaNhTOOry2XWlBfKcLSJWxWhzqTIieB4YxGIBryGWy5oIxGuk_ATdrfoXS7-EhQYoCajprDm0PLobCkon_5XSe-B0LK0Amv0mh6jCfeX_Bh3KKRYdmU0wdmwsTT51jQT76y85eiR7m5TNy1yflxYiwrks6jW3ii62Qziw_IcqpZdw7BsO-EIT2HwqHxO6fPRApNqyGcPhU6fHGK3ZyrDCi2cgogsdXS2"/>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-sm border border-outline-variant rounded px-2 py-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">verified</span>
+<span class="font-label-caps text-[10px] text-on-surface">Verified Outcome</span>
+</div>
+</div>
+<div class="p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">OmniFlow Automation</h3>
+<p class="font-body-sm text-body-sm text-primary mt-1">AI Agent Integration</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Deployed custom LLM agents to automate preliminary sales outreach, resulting in a 2.5x increase in qualified discovery calls within Q1.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Verified Reviews -->
+<section class="flex flex-col gap-8 mb-12">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Client Feedback</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Review 1 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-6 flex flex-col gap-4 relative">
+<div class="absolute -top-3 -right-3">
+<span class="material-symbols-outlined text-[48px] text-surface-bright opacity-50">format_quote</span>
+</div>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface italic relative z-10">
+                        "Sarah didn't just build a website; she fundamentally re-engineered how we process inbound leads. Her understanding of AI integration is unparalleled. A true partner."
+                    </p>
+<div class="flex items-center gap-3 mt-2 border-t border-outline-variant pt-4">
+<div class="w-10 h-10 rounded-full bg-surface-dim border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A small, professional avatar portrait of a corporate executive. A middle-aged man in a sharp suit against a neutral gray background. Soft studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxJU_Rn2X7wDnbE-R1nA7e_MriYallZWuUDG6GViCNNY5odIAQ1MIiPfHbUGOmkMBJGX42O47LhLXnlMkR8pnQg_geDAHNHG-eIc0pNZMziUf3vTB2UVoTo0pVQG-2MY7cSXG7i3iytH5Jt6y-PLYApHppV6NCxVorw4WqwQi0DqnRNvatiuWMdz28RNIRrJA64B7uy86d-XPFbL2jHP8iCxP5pBho9qtXlI8kCQ7SV817-hvvNV49"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface">Marcus Vance</span>
+<span class="font-body-sm text-[12px] text-on-surface-variant">CEO, NexusAI</span>
+</div>
+<div class="ml-auto flex items-center gap-1 text-surface-variant hover:text-primary transition-colors cursor-pointer" title="View linked project">
+<span class="material-symbols-outlined text-[16px]">link</span>
+</div>
+</div>
+</div>
+<!-- Review 2 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-6 flex flex-col gap-4 relative">
+<div class="absolute -top-3 -right-3">
+<span class="material-symbols-outlined text-[48px] text-surface-bright opacity-50">format_quote</span>
+</div>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface italic relative z-10">
+                        "Execution was flawless and communication was transparent throughout. The OmniFlow system she deployed saved us roughly 40 hours a week in manual data entry."
+                    </p>
+<div class="flex items-center gap-3 mt-2 border-t border-outline-variant pt-4">
+<div class="w-10 h-10 rounded-full bg-surface-dim border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A small, professional avatar portrait of a tech startup founder. A young woman looking confident, slightly smiling, set against a dark modern office backdrop." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATaRbQ8L_CdMfu1gsUFh0XvCZLlZv9OLvhd8NE2KpL8uEVtR6reyy33r6p-1rCS0hOzvKvgE7bOwsi-6z-whUnIRFN_W9yPUAbUAT7atQgrP714GVYxV1EuAZRXbP27qyA7tZj4Ucjv57Qgd4ihlk3-9J0roCfuK7t8XLVzrl4HKgQ422vgcAozt2KTqpoKREs1XZsY7KfwFpvW9TFGG_aLYAaGMyPM531aZK0xR6lPzl8fD95zdFd"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface">Elena Rostova</span>
+<span class="font-body-sm text-[12px] text-on-surface-variant">VP Ops, OmniFlow</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-outline-variant mt-auto py-8 bg-surface-container-lowest">
+<div class="max-w-7xl mx-auto px-container-padding flex flex-col md:flex-row justify-between items-center gap-4">
+<span class="font-body-sm text-body-sm text-on-surface-variant">© 2024 ClientOS Network. Public Profile.</span>
+<div class="flex gap-4">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface" href="#">Terms</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface" href="#">Privacy</a>
+</div>
+</div>
+</footer>
+</body></html>

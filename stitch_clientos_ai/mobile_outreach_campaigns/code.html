@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Loomis AI - Outreach</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#131b2e",
+                        "on-secondary": "#003824",
+                        "surface-variant": "#2d3449",
+                        "on-primary": "#002e69",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-fixed": "#e1e0ff",
+                        "surface-tint": "#adc6ff",
+                        "primary": "#adc6ff",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary": "#1000a9",
+                        "tertiary": "#c0c1ff",
+                        "surface": "#0b1326",
+                        "on-secondary-container": "#00311f",
+                        "secondary-container": "#00a572",
+                        "inverse-primary": "#005bc1",
+                        "on-secondary-fixed": "#002113",
+                        "surface-dim": "#0b1326",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "error-container": "#93000a",
+                        "on-surface-variant": "#c1c6d7",
+                        "on-primary-fixed": "#001a41",
+                        "on-tertiary-fixed": "#07006c",
+                        "secondary-fixed-dim": "#4edea3",
+                        "error": "#ffb4ab",
+                        "on-surface": "#dae2fd",
+                        "primary-container": "#4b8eff",
+                        "on-primary-fixed-variant": "#004493",
+                        "background": "#0b1326",
+                        "inverse-on-surface": "#283044",
+                        "on-tertiary-container": "#0d0096",
+                        "on-error": "#690005",
+                        "surface-container-high": "#222a3d",
+                        "surface-bright": "#31394d",
+                        "outline": "#8b90a0",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-background": "#dae2fd",
+                        "secondary": "#4edea3",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#8083ff",
+                        "surface-container-highest": "#2d3449",
+                        "outline-variant": "#414755",
+                        "surface-container-lowest": "#060e20",
+                        "on-primary-container": "#00285c",
+                        "surface-container": "#171f33",
+                        "on-secondary-fixed-variant": "#005236",
+                        "primary-fixed-dim": "#adc6ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "sidebar-width": "240px",
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "card-gap": "12px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "display": ["Inter"],
+                        "lead-score": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "lead-score": ["14px", { "lineHeight": "14px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen pt-16 pb-28 md:hidden">
+<!-- TopAppBar from JSON -->
+<header class="bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline-variant fixed top-0 w-full flex justify-between items-center px-container-padding h-16 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary dark:text-primary" style="font-variation-settings: 'FILL' 1;">bubble_chart</span>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary tracking-tight">Loomis AI</h1>
+</div>
+<div>
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant cursor-pointer hover:bg-surface-variant/50 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
+</div>
+</div>
+</header>
+<main class="px-4 py-6 flex flex-col gap-6">
+<!-- Page Header -->
+<section class="flex flex-col gap-2">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">Active Campaigns</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Monitoring 3 sequences.</p>
+</section>
+<!-- Campaigns List (High Density Cards) -->
+<div class="flex flex-col gap-4">
+<!-- Card 1 -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-5 flex flex-col gap-4 relative overflow-hidden group hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all duration-200">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-10"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-md text-headline-md text-on-background">Q4 Enterprise Push</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">SaaS VPs & Directors</span>
+</div>
+<div class="bg-secondary-container/20 border border-secondary/30 rounded-lg px-2 py-1 flex items-center gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></div>
+<span class="font-label-caps text-label-caps text-secondary">Active</span>
+</div>
+</div>
+<!-- Stats Bento -->
+<div class="grid grid-cols-2 gap-3 bg-surface-dim rounded-lg p-3 border border-outline-variant/50">
+<div class="flex flex-col gap-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Open Rate</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">42</span>
+<span class="font-body-sm text-body-sm text-secondary">%</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Reply Rate</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">18</span>
+<span class="font-body-sm text-body-sm text-secondary">%</span>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex gap-2 mt-2">
+<button class="flex-1 bg-surface-variant text-on-background font-label-caps text-label-caps py-2.5 rounded-lg border border-outline-variant hover:border-primary transition-colors active:scale-95">View Leads</button>
+<button class="flex-1 bg-transparent text-primary font-label-caps text-label-caps py-2.5 rounded-lg border border-outline-variant hover:bg-surface-variant/50 transition-colors active:scale-95">Edit Sequence</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-5 flex flex-col gap-4 relative overflow-hidden group hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all duration-200">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-md text-headline-md text-on-background">Series A Founders</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Fintech / AI Startups</span>
+</div>
+<div class="bg-surface-variant border border-outline-variant rounded-lg px-2 py-1 flex items-center gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-outline"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Paused</span>
+</div>
+</div>
+<!-- Stats Bento -->
+<div class="grid grid-cols-2 gap-3 bg-surface-dim rounded-lg p-3 border border-outline-variant/50 opacity-80">
+<div class="flex flex-col gap-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Open Rate</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">31</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">%</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Reply Rate</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">8</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">%</span>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex gap-2 mt-2">
+<button class="flex-1 bg-surface-variant text-on-background font-label-caps text-label-caps py-2.5 rounded-lg border border-outline-variant hover:border-primary transition-colors active:scale-95">View Leads</button>
+<button class="flex-1 bg-transparent text-primary font-label-caps text-label-caps py-2.5 rounded-lg border border-outline-variant hover:bg-surface-variant/50 transition-colors active:scale-95">Edit Sequence</button>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB for New Campaign -->
+<button class="fixed bottom-24 right-4 bg-primary text-on-primary-container w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-primary-fixed transition-colors active:scale-90 z-40 border border-primary-fixed-dim/30 backdrop-blur-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 600;">add</span>
+</button>
+<!-- BottomNavBar from JSON -->
+<nav class="bg-surface-container-low dark:bg-surface-container-low border-t border-outline-variant dark:border-outline-variant fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-safe px-2">
+<!-- Home (Inactive) -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200 cursor-pointer w-16">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-caps text-label-caps text-[10px]">Home</span>
+</div>
+<!-- Sales (Inactive) -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200 cursor-pointer w-16">
+<span class="material-symbols-outlined mb-1">leaderboard</span>
+<span class="font-label-caps text-label-caps text-[10px]">Sales</span>
+</div>
+<!-- Outreach (Active Match) -->
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 hover:text-primary transition-all active:scale-90 duration-200 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send_time_extension</span>
+<span class="font-label-caps text-label-caps text-[10px] mt-0.5">Outreach</span>
+</div>
+<!-- Intelligence (Inactive) -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200 cursor-pointer w-16">
+<span class="material-symbols-outlined mb-1">psychology</span>
+<span class="font-label-caps text-label-caps text-[10px]">Intelligence</span>
+</div>
+</nav>
+</body></html>

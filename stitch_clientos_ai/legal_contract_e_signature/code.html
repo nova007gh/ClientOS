@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contract Management - ClientOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#c0c1ff",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-dim": "#0b1326",
+                    "surface": "#0b1326",
+                    "surface-container-highest": "#2d3449",
+                    "on-primary-container": "#00285c",
+                    "tertiary-fixed": "#e1e0ff",
+                    "error-container": "#93000a",
+                    "secondary": "#4edea3",
+                    "inverse-surface": "#dae2fd",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-bright": "#31394d",
+                    "secondary-fixed": "#6ffbbe",
+                    "surface-container": "#171f33",
+                    "background": "#0b1326",
+                    "on-error-container": "#ffdad6",
+                    "primary-container": "#4b8eff",
+                    "primary": "#adc6ff",
+                    "on-tertiary": "#1000a9",
+                    "on-primary-fixed": "#001a41",
+                    "inverse-on-surface": "#283044",
+                    "surface-container-lowest": "#060e20",
+                    "tertiary-fixed-dim": "#c0c1ff",
+                    "secondary-container": "#00a572",
+                    "on-primary": "#002e69",
+                    "on-background": "#dae2fd",
+                    "on-secondary": "#003824",
+                    "on-tertiary-fixed": "#07006c",
+                    "on-error": "#690005",
+                    "inverse-primary": "#005bc1",
+                    "outline": "#8b90a0",
+                    "on-surface-variant": "#c1c6d7",
+                    "error": "#ffb4ab",
+                    "surface-container-high": "#222a3d",
+                    "on-primary-fixed-variant": "#004493",
+                    "surface-tint": "#adc6ff",
+                    "outline-variant": "#414755",
+                    "surface-variant": "#2d3449",
+                    "on-secondary-container": "#00311f",
+                    "surface-container-low": "#131b2e",
+                    "on-secondary-fixed": "#002113",
+                    "secondary-fixed-dim": "#4edea3",
+                    "tertiary-container": "#8083ff",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-tertiary-fixed-variant": "#2f2ebe",
+                    "on-tertiary-container": "#0d0096",
+                    "on-surface": "#dae2fd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "container-padding": "24px",
+                    "gutter": "16px",
+                    "card-gap": "12px",
+                    "unit": "4px",
+                    "sidebar-width": "240px"
+            },
+            "fontFamily": {
+                    "body-sm": [
+                            "Inter"
+                    ],
+                    "label-caps": [
+                            "JetBrains Mono"
+                    ],
+                    "lead-score": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Inter"
+                    ],
+                    "display": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "body-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "lead-score": [
+                            "14px",
+                            {
+                                    "lineHeight": "14px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display": [
+                            "48px",
+                            {
+                                    "lineHeight": "56px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-surface');
+        }
+        
+        .card-hover:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            transform: translateY(-2px);
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen font-body-sm text-body-sm bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation -->
+<nav class="flex justify-between items-center h-16 px-container-padding sticky top-0 z-50 bg-surface border-b border-outline-variant ml-sidebar-width w-[calc(100%-theme('spacing.sidebar-width'))] hidden md:flex">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">ClientOS AI</span>
+</div>
+<!-- Search (Left) - Not explicitly defined in JSON layout but search_bar='on_left' is there -->
+<div class="flex-1 ml-8 max-w-md">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-[20px]">search</span>
+<input class="w-full bg-[#020617] border border-outline-variant rounded-DEFAULT py-2 pl-10 pr-4 text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-on-surface-variant" placeholder="Search contracts, clients..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<!-- Trailing Icons -->
+<div class="flex items-center gap-3">
+<button class="p-2 rounded-DEFAULT hover:bg-surface-variant hover:text-on-surface transition-colors duration-200 ease-in-out text-on-surface-variant group relative">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 rounded-DEFAULT hover:bg-surface-variant hover:text-on-surface transition-colors duration-200 ease-in-out text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">help</span>
+</button>
+</div>
+<div class="h-6 w-px bg-outline-variant mx-2"></div>
+<!-- Actions -->
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-DEFAULT font-label-caps text-label-caps hover:bg-primary/20 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">smart_toy</span>
+                    AI Copilot
+                </button>
+<button class="px-4 py-2 bg-transparent border border-outline-variant rounded-DEFAULT font-label-caps text-label-caps hover:bg-surface-variant transition-colors text-on-surface">
+                    Sign Out
+                </button>
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full border border-outline-variant object-cover cursor-pointer hover:border-primary transition-colors" data-alt="A professional headshot of a corporate executive in a modern office setting. The lighting is bright and even, highlighting sharp features and a confident expression. The background is slightly blurred showing glass walls and subtle hints of city life. The aesthetic is clean, premium, and trustworthy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR9xXuh-VY-z8KvvmkF6KS0ZtgH2etj0QO4LhQas_akspKyGmiB8eYcZEwdrgcofTJTnuidnGKxelrcye_aCBGQwi8NY8BAHaglND-BIgfh4Kx5H7a6ATsRAMZ5mYNHPU8WoddSJf9cI0mi42lmIfrS2AVIWocmc5PBYoiWU-RRh1mAgMhPf8xcICtF1RJ_u7Bok7Pq1zU8AxIkEPFHLtMUQta1ZtbiC1I9po1ygqc8OTCdlLLdven"/>
+</div>
+</div>
+</nav>
+<!-- Side Navigation -->
+<aside class="flex flex-col h-screen fixed left-0 top-0 w-sidebar-width border-r border-outline-variant bg-surface-container-low hidden md:flex z-40">
+<!-- Brand/Header -->
+<div class="p-container-padding flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">hexagon</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md font-bold text-on-surface leading-none tracking-tight">ClientOS</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1 text-[10px]">Agency Intelligence</span>
+</div>
+</div>
+<!-- Primary Navigation -->
+<div class="flex-1 px-4 py-2 space-y-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-highest transition-colors cursor-pointer active:scale-95 group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface transition-colors">home</span>
+<span class="font-label-caps text-label-caps group-hover:text-on-surface transition-colors">Home</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-highest transition-colors cursor-pointer active:scale-95 group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface transition-colors">trending_up</span>
+<span class="font-label-caps text-label-caps group-hover:text-on-surface transition-colors">Sales</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-highest transition-colors cursor-pointer active:scale-95 group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface transition-colors">send</span>
+<span class="font-label-caps text-label-caps group-hover:text-on-surface transition-colors">Outreach</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-highest transition-colors cursor-pointer active:scale-95 group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface transition-colors">groups</span>
+<span class="font-label-caps text-label-caps group-hover:text-on-surface transition-colors">Clients</span>
+</a>
+<!-- Active Tab based on Intent (Contract Management -> Work) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT bg-primary/10 text-primary font-bold cursor-pointer active:scale-95 border-l-2 border-primary" href="#">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">business_center</span>
+<span class="font-label-caps text-label-caps">Work</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-highest transition-colors cursor-pointer active:scale-95 group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface transition-colors">psychology</span>
+<span class="font-label-caps text-label-caps group-hover:text-on-surface transition-colors">Intelligence</span>
+</a>
+</div>
+<!-- Footer / Utility Navigation -->
+<div class="p-4 border-t border-outline-variant space-y-1">
+<button class="w-full mb-4 px-4 py-2 bg-surface-bright border border-outline-variant rounded-DEFAULT font-label-caps text-label-caps hover:bg-surface-variant transition-colors text-on-surface flex justify-center items-center gap-2 group">
+<span class="material-symbols-outlined text-[16px] text-secondary group-hover:rotate-12 transition-transform">star</span>
+                Upgrade Plan
+            </button>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-highest transition-colors cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-highest transition-colors cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined text-[18px]">help</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-sidebar-width p-container-padding overflow-y-auto">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+<span class="font-label-caps text-label-caps text-[10px]">Back to Contracts</span>
+</a>
+</div>
+<h1 class="font-headline-lg text-headline-lg font-semibold tracking-tight text-on-surface flex items-center gap-3">
+                    Master Services Agreement
+                    <span class="px-2 py-1 rounded bg-secondary/10 border border-secondary/20 text-secondary font-label-caps text-label-caps flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                        Pending Signature
+                    </span>
+</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Ref: MSA-2023-0892 • Last edited 2 hours ago by Sarah Jenkins</p>
+</div>
+<div class="flex gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-none px-4 py-2 bg-transparent border border-outline-variant rounded-DEFAULT font-label-caps text-label-caps hover:bg-surface-variant transition-colors text-on-surface flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">edit_document</span>
+                    Edit Draft
+                </button>
+<button class="flex-1 md:flex-none px-4 py-2 bg-primary text-on-primary rounded-DEFAULT font-label-caps text-label-caps hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">send</span>
+                    Send for Signature
+                </button>
+</div>
+</header>
+<!-- Content Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column: The Contract Document -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<!-- Document Container -->
+<article class="bg-surface-container rounded-lg border border-outline-variant shadow-sm overflow-hidden flex flex-col h-full min-h-[800px]">
+<!-- Toolbar -->
+<div class="px-6 py-3 border-b border-outline-variant bg-surface-container-low flex justify-between items-center sticky top-0 z-10">
+<div class="flex gap-2">
+<button class="p-1.5 rounded hover:bg-surface-variant text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[18px]">format_bold</span></button>
+<button class="p-1.5 rounded hover:bg-surface-variant text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[18px]">format_italic</span></button>
+<div class="w-px h-6 bg-outline-variant mx-1 my-auto"></div>
+<button class="p-1.5 rounded hover:bg-surface-variant text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[18px]">list</span></button>
+<button class="p-1.5 rounded hover:bg-surface-variant text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[18px]">format_list_numbered</span></button>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-label-caps text-label-caps text-on-surface-variant text-[10px]">Auto-saved 1m ago</span>
+</div>
+</div>
+<!-- Document Body (Paper simulation) -->
+<div class="p-8 md:p-12 bg-white text-gray-900 flex-1 overflow-y-auto selection:bg-primary/30">
+<div class="max-w-3xl mx-auto font-serif text-[15px] leading-relaxed">
+<h2 class="text-2xl font-bold text-center mb-8 uppercase tracking-widest text-black">Master Services Agreement</h2>
+<p class="mb-6">This Master Services Agreement (this "Agreement") is entered into as of <span class="bg-yellow-200/50 px-1 border-b border-yellow-400 cursor-pointer hover:bg-yellow-200 transition-colors" title="Click to edit variable">[Effective Date]</span> (the "Effective Date") by and between:</p>
+<div class="pl-8 mb-8 border-l-2 border-gray-300">
+<p class="mb-2"><strong>Provider:</strong> <span class="bg-blue-100 px-1 border-b border-blue-300 text-blue-900 cursor-pointer font-sans text-sm">ClientOS Technologies Inc.</span>, a Delaware corporation with its principal place of business at 123 Tech Blvd, San Francisco, CA 94105.</p>
+<p><strong>Client:</strong> <span class="bg-blue-100 px-1 border-b border-blue-300 text-blue-900 cursor-pointer font-sans text-sm">Acme Corp Global</span>, a New York corporation with its principal place of business at 456 Enterprise Way, New York, NY 10001.</p>
+</div>
+<h3 class="text-lg font-bold mb-3 text-black">1. Scope of Work</h3>
+<p class="mb-6">Provider shall perform the services described in one or more Statements of Work ("SOW") executed by the parties (the "Services"). Each SOW will reference this Agreement and will be governed by its terms. In the event of a conflict between this Agreement and a SOW, the terms of the SOW shall prevail for that specific engagement.</p>
+<h3 class="text-lg font-bold mb-3 text-black">2. Payment Terms</h3>
+<p class="mb-6">Client shall pay Provider the fees set forth in the applicable SOW. Unless otherwise specified in a SOW, invoices will be issued monthly and are payable within <span class="bg-yellow-200/50 px-1 border-b border-yellow-400 cursor-pointer hover:bg-yellow-200 transition-colors" title="Click to edit variable">[Net 30]</span> days of receipt. Late payments will incur interest at a rate of <span class="bg-yellow-200/50 px-1 border-b border-yellow-400 cursor-pointer hover:bg-yellow-200 transition-colors" title="Click to edit variable">[1.5%]</span> per month or the highest rate permitted by law, whichever is lower.</p>
+<h3 class="text-lg font-bold mb-3 text-black">3. Confidentiality</h3>
+<p class="mb-6">Each party (the "Receiving Party") agrees to maintain the confidentiality of all proprietary information disclosed by the other party (the "Disclosing Party"). The Receiving Party shall use the Disclosing Party's Confidential Information solely to perform its obligations or exercise its rights under this Agreement.</p>
+<div class="my-12 h-px bg-gray-200 w-full"></div>
+<!-- E-Signature Section -->
+<div class="mt-12 bg-gray-50 p-8 border border-gray-200 rounded-lg">
+<h4 class="font-sans font-bold text-gray-800 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">draw</span>
+                                    Signatures Required
+                                </h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Provider Signature Block -->
+<div class="flex flex-col gap-2">
+<label class="font-sans text-xs font-semibold text-gray-500 uppercase tracking-wider">For Provider:</label>
+<div class="border-b-2 border-gray-400 h-16 flex items-end pb-2 relative group cursor-pointer">
+<span class="font-sans text-gray-400 italic group-hover:text-gray-600 transition-colors">Click to sign</span>
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-t"></div>
+</div>
+<div class="font-sans text-sm mt-2">
+<p class="font-semibold text-gray-800">Sarah Jenkins</p>
+<p class="text-gray-600">Director of Sales, ClientOS</p>
+<p class="text-gray-400 text-xs mt-1">Date: _________</p>
+</div>
+</div>
+<!-- Client Signature Block -->
+<div class="flex flex-col gap-2">
+<label class="font-sans text-xs font-semibold text-gray-500 uppercase tracking-wider">For Client:</label>
+<div class="border-b-2 border-gray-400 h-16 flex items-end pb-2 relative bg-yellow-50">
+<span class="font-sans text-yellow-600 font-medium text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">pending_actions</span>
+                                                Awaiting signature
+                                            </span>
+</div>
+<div class="font-sans text-sm mt-2">
+<p class="font-semibold text-gray-800">Michael Chang</p>
+<p class="text-gray-600">VP of Operations, Acme Corp</p>
+<p class="text-gray-400 text-xs mt-1">Date: _________</p>
+</div>
+</div>
+</div>
+</div>
+<!-- End of Document Space -->
+<div class="h-24"></div>
+</div>
+</div>
+</article>
+</div>
+<!-- Right Column: Context & Metadata -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- AI Insights Panel (Bento Style) -->
+<div class="bg-surface-container rounded-xl p-5 border border-primary/20 relative overflow-hidden group">
+<div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-colors duration-700"></div>
+<h3 class="font-label-caps text-label-caps text-primary flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+                        Contract Intelligence
+                    </h3>
+<ul class="space-y-3">
+<li class="flex gap-3 items-start">
+<span class="material-symbols-outlined text-secondary text-[16px] mt-0.5">check_circle</span>
+<div>
+<p class="font-body-sm text-body-sm text-on-surface">Standard terms detected.</p>
+<p class="text-xs text-on-surface-variant mt-0.5">Matches company playbook 98%.</p>
+</div>
+</li>
+<li class="flex gap-3 items-start">
+<span class="material-symbols-outlined text-tertiary text-[16px] mt-0.5">info</span>
+<div>
+<p class="font-body-sm text-body-sm text-on-surface">Non-standard payment terms.</p>
+<p class="text-xs text-on-surface-variant mt-0.5">Net 30 negotiated from Net 45.</p>
+</div>
+</li>
+</ul>
+</div>
+<!-- Parties Involved Card -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-5 card-hover">
+<h3 class="font-headline-md text-headline-md font-semibold text-on-surface mb-4">Parties Involved</h3>
+<div class="space-y-4">
+<!-- Party 1 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low border border-outline-variant/50">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Sarah Jenkins" class="w-10 h-10 rounded-full object-cover border border-outline" data-alt="A close-up corporate headshot of a female executive with warm, professional lighting. She is wearing a dark tailored suit. The background is a clean, out-of-focus corporate gray. The image conveys authority and approachability in a modern business context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvrA8LVwYIH0_j6tYE9H0EawCfKzzJEc9jdj0qhz7YMSVJg4F7AoFQyUgwvIK15mrOriXxgT_cwN8bfDKHkMRNmKu4PcQgmlTn0Pt0sl2MltKMlTDT1FSiXPEnCFcE1gcyig95wAunUH1z5vgPZPEeopM_cCkAj_SPRS17PuIgkbn8Gu159LjxwPgYQrulaVSCmZmXLkFvZeW-OV9d4XIyqGvP_oeOldY9oJ9KgjLrhyjUZ1Chtp-u"/>
+<div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-secondary rounded-full border border-surface"></div>
+</div>
+<div>
+<p class="font-body-sm text-body-sm font-semibold text-on-surface">Sarah Jenkins</p>
+<p class="font-label-caps text-[10px] text-on-surface-variant">ClientOS • Sender</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-surface-variant text-on-surface-variant rounded text-[10px] font-label-caps">Drafting</span>
+</div>
+<!-- Connecting Line indicator -->
+<div class="w-0.5 h-4 bg-outline-variant/30 ml-8"></div>
+<!-- Party 2 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low border border-outline-variant/50 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary/50"></div>
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-10 h-10 rounded-full bg-surface-bright flex items-center justify-center border border-outline-variant border-dashed">
+<span class="material-symbols-outlined text-on-surface-variant">person_add</span>
+</div>
+</div>
+<div>
+<p class="font-body-sm text-body-sm font-semibold text-on-surface">Michael Chang</p>
+<p class="font-label-caps text-[10px] text-on-surface-variant">Acme Corp • Signer</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-secondary/10 text-secondary border border-secondary/20 rounded text-[10px] font-label-caps">Pending</span>
+</div>
+</div>
+</div>
+<!-- Contract History Timeline -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-5 flex-1">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md font-semibold text-on-surface">History</h3>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+</div>
+<div class="relative border-l border-outline-variant/50 ml-3 space-y-6">
+<!-- Timeline Item 1 -->
+<div class="relative pl-6">
+<div class="absolute -left-1.5 top-1 w-3 h-3 rounded-full bg-surface-container border-2 border-secondary z-10"></div>
+<div class="flex justify-between items-start mb-1">
+<p class="font-body-sm text-body-sm font-medium text-on-surface">Ready for Signature</p>
+<span class="text-xs text-on-surface-variant whitespace-nowrap">2h ago</span>
+</div>
+<p class="text-xs text-on-surface-variant">Contract finalized and marked ready by Sarah Jenkins.</p>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative pl-6">
+<div class="absolute -left-1.5 top-1 w-3 h-3 rounded-full bg-surface-container border-2 border-outline-variant z-10"></div>
+<div class="flex justify-between items-start mb-1">
+<p class="font-body-sm text-body-sm font-medium text-on-surface">Variables Updated</p>
+<span class="text-xs text-on-surface-variant whitespace-nowrap">3h ago</span>
+</div>
+<p class="text-xs text-on-surface-variant">Payment terms updated to Net 30.</p>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative pl-6">
+<div class="absolute -left-1.5 top-1 w-3 h-3 rounded-full bg-surface-container border-2 border-outline-variant z-10"></div>
+<div class="flex justify-between items-start mb-1">
+<p class="font-body-sm text-body-sm font-medium text-on-surface">Draft Created</p>
+<span class="text-xs text-on-surface-variant whitespace-nowrap">Yesterday</span>
+</div>
+<p class="text-xs text-on-surface-variant">Generated from template 'Standard MSA v2.1'.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom Navigation (Visible only on md:hidden) -->
+<!-- Suppressed based on semantic rules: This is a focused document view, not a top-level hub -->
+</body></html>

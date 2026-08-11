@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>About Us &amp; Mission - ClientOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-low": "#131b2e",
+                        "surface-container-high": "#222a3d",
+                        "secondary-fixed-dim": "#4edea3",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#07006c",
+                        "on-tertiary-container": "#0d0096",
+                        "surface-container": "#171f33",
+                        "tertiary-container": "#8083ff",
+                        "inverse-primary": "#005bc1",
+                        "error": "#ffb4ab",
+                        "inverse-on-surface": "#283044",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary": "#002e69",
+                        "background": "#0b1326",
+                        "primary-container": "#4b8eff",
+                        "outline": "#8b90a0",
+                        "on-secondary-fixed-variant": "#005236",
+                        "outline-variant": "#414755",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "on-primary-fixed": "#001a41",
+                        "on-surface-variant": "#c1c6d7",
+                        "tertiary-fixed": "#e1e0ff",
+                        "on-primary-fixed-variant": "#004493",
+                        "surface-container-highest": "#2d3449",
+                        "on-background": "#dae2fd",
+                        "on-error-container": "#ffdad6",
+                        "surface": "#0b1326",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-secondary-container": "#00311f",
+                        "inverse-surface": "#dae2fd",
+                        "secondary": "#4edea3",
+                        "on-tertiary": "#1000a9",
+                        "on-surface": "#dae2fd",
+                        "surface-variant": "#2d3449",
+                        "surface-dim": "#0b1326",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary": "#003824",
+                        "surface-bright": "#31394d",
+                        "on-primary-container": "#00285c",
+                        "primary": "#adc6ff",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "tertiary": "#c0c1ff",
+                        "on-error": "#690005",
+                        "secondary-container": "#00a572",
+                        "surface-container-lowest": "#060e20"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "gutter": "16px",
+                        "sidebar-width": "240px",
+                        "card-gap": "12px",
+                        "container-padding": "24px",
+                        "unit": "4px"
+                    },
+                    fontFamily: {
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display": ["Inter"],
+                        "lead-score": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    fontSize: {
+                        "label-caps": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "500" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "display": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "lead-score": ["14px", { lineHeight: "14px", fontWeight: "700" }],
+                        "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col pb-20 overflow-x-hidden md:hidden">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface w-full top-0 sticky border-b border-outline-variant dark:border-outline-variant z-40 transition-colors duration-200 flex justify-between items-center px-gutter h-16">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary dark:text-primary hover:bg-surface-container-high dark:hover:bg-surface-container-high p-2 rounded-full cursor-pointer transition-colors duration-200">arrow_back</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary">ClientOS</h1>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
+</div>
+</header>
+<main class="flex-grow flex flex-col p-gutter gap-6">
+<!-- Hero Section -->
+<section class="flex flex-col gap-4 pt-4">
+<div class="inline-flex items-center self-start bg-surface-container px-3 py-1 rounded border border-outline-variant">
+<span class="font-label-caps text-label-caps text-primary tracking-widest uppercase">Our Mission</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">We are engineering the future of intelligent sales velocity.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                ClientOS was built on a singular premise: high-performance teams shouldn't be slowed down by their tools. We combine minimal design with maximum data density to empower the modern enterprise.
+            </p>
+</section>
+<!-- Featured Image -->
+<div class="w-full h-64 rounded-xl overflow-hidden border border-outline-variant shadow-lg relative">
+<img alt="ClientOS Workspace" class="object-cover w-full h-full opacity-80" data-alt="A sophisticated, high-end professional workspace shot from a low, dramatic angle. The desk features a sleek, minimal laptop alongside architectural blueprints or data charts. The lighting is moody and cinematic, dominated by deep navy blues and pristine whites, with subtle glowing accents from screens reflecting off polished surfaces. The overall aesthetic is modern corporate, premium, and highly analytical, perfectly suited for a dark-mode, high-velocity sales platform context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNhsgAOM-_OOOXTUVEgW5rW15JNLafnyqiH7ZhW63wpNVWWrbIpClKmrt5qZBdMEGKYaZuwlNshC-UtzpjVgtxJSlzEFM3uIcViLmNQDrscBVm26J6P1ksukEYDUaVCwUsA79j8OO96-dTDHXGbjFw5dvi0FjnKliXe1Va8W2WWqJSTsAGYNyQTGhsYsKo1-I1AnXuGtch0We-o42oziFh61-sw2LiDkz_JVZVIKmpHm0q8RmmMDNf"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+</div>
+<!-- Core Values Section -->
+<section class="flex flex-col gap-6 mt-4">
+<h3 class="font-headline-md text-headline-md text-on-surface border-b border-outline-variant pb-2">Core Values</h3>
+<div class="flex flex-col gap-4">
+<!-- Value: Transparency -->
+<div class="bg-surface-container rounded-lg p-5 border border-outline-variant flex flex-col gap-3 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl text-primary">visibility</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="visibility">visibility</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Transparency</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant relative z-10">
+                         Clear, unobstructed views into your data pipelines. We believe in surfacing truth without unnecessary complexity.
+                     </p>
+</div>
+<!-- Value: Automation -->
+<div class="bg-surface-container rounded-lg p-5 border border-outline-variant flex flex-col gap-3 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl text-secondary">auto_mode</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-secondary" data-icon="auto_mode">auto_mode</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Automation</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant relative z-10">
+                         Relentless efficiency. We build systems that handle the routine so your team can focus on high-leverage strategy.
+                     </p>
+</div>
+<!-- Value: Growth -->
+<div class="bg-surface-container rounded-lg p-5 border border-outline-variant flex flex-col gap-3 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl text-primary-container">trending_up</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary-container" data-icon="trending_up">trending_up</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Growth</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant relative z-10">
+                         Scalable architecture designed to compound your success. Our tools grow linearly with your ambitions.
+                     </p>
+</div>
+</div>
+</section>
+<!-- Stats/Timeline Bento -->
+<section class="grid grid-cols-2 gap-3 mt-6">
+<div class="col-span-2 bg-surface-container-low p-4 rounded-xl border border-outline-variant flex justify-between items-center">
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-1">FOUNDED</span>
+<span class="font-headline-md text-headline-md text-on-surface">2023</span>
+</div>
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary">flag</span>
+</div>
+</div>
+<div class="bg-surface-container p-4 rounded-xl border border-outline-variant flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">ACTIVE USERS</span>
+<span class="font-headline-md text-headline-md text-secondary">50k+</span>
+<div class="w-full bg-surface-container-highest h-1 mt-auto rounded-full overflow-hidden">
+<div class="bg-secondary w-3/4 h-full rounded-full"></div>
+</div>
+</div>
+<div class="bg-surface-container p-4 rounded-xl border border-outline-variant flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">DATA PROCESSED</span>
+<span class="font-headline-md text-headline-md text-primary">2.4PB</span>
+<div class="w-full bg-surface-container-highest h-1 mt-auto rounded-full overflow-hidden">
+<div class="bg-primary w-full h-full rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- Contact CTA -->
+<div class="mt-8 mb-6 p-6 bg-surface-container-high rounded-xl border border-outline-variant flex flex-col items-center text-center gap-4">
+<h4 class="font-headline-md text-headline-md text-on-surface">Join the Evolution</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Ready to accelerate your sales velocity?</p>
+<button class="w-full bg-primary text-on-primary font-label-caps text-label-caps py-3 rounded hover:bg-primary-container transition-colors duration-200 mt-2">
+                 CONTACT SALES
+             </button>
+</div>
+</main>
+<!-- BottomNavBar (Hidden on MD, Visible on Mobile) -->
+<!-- Suppressed on linear/focused pages, but as this is a general info page, we will hide it assuming it's a sub-page of 'Home' or similar, but the prompt implies it's a destination. Wait, the prompt says "A mobile version of the About Us & Mission page". Let's suppress it as it's typically a sub-page, but to strictly follow the instruction to render if it's a destination... Let's omit it to prioritize the content canvas as it's an 'About Us' task-focused or deep-dive page. Actually, I will render it and highlight 'Home' to show context if needed. Let's omit as per suppression rules for non-core ecosystem items. -->
+</body></html>

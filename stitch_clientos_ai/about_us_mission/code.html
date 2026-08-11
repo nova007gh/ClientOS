@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>About Us | ClientOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#171f33",
+                    "error": "#ffb4ab",
+                    "on-tertiary-fixed": "#07006c",
+                    "surface-container-high": "#222a3d",
+                    "on-primary": "#002e69",
+                    "inverse-surface": "#dae2fd",
+                    "surface-tint": "#adc6ff",
+                    "tertiary-fixed": "#e1e0ff",
+                    "primary-fixed": "#d8e2ff",
+                    "error-container": "#93000a",
+                    "secondary-fixed-dim": "#4edea3",
+                    "surface-container-lowest": "#060e20",
+                    "surface": "#0b1326",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-primary-fixed": "#001a41",
+                    "on-secondary-fixed": "#002113",
+                    "on-tertiary-fixed-variant": "#2f2ebe",
+                    "on-secondary": "#003824",
+                    "secondary": "#4edea3",
+                    "primary": "#adc6ff",
+                    "primary-container": "#4b8eff",
+                    "on-primary-container": "#00285c",
+                    "outline-variant": "#414755",
+                    "on-surface-variant": "#c1c6d7",
+                    "tertiary-fixed-dim": "#c0c1ff",
+                    "inverse-on-surface": "#283044",
+                    "inverse-primary": "#005bc1",
+                    "surface-bright": "#31394d",
+                    "on-secondary-container": "#00311f",
+                    "on-tertiary-container": "#0d0096",
+                    "tertiary": "#c0c1ff",
+                    "surface-variant": "#2d3449",
+                    "outline": "#8b90a0",
+                    "surface-dim": "#0b1326",
+                    "secondary-container": "#00a572",
+                    "on-secondary-fixed-variant": "#005236",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-surface": "#dae2fd",
+                    "on-background": "#dae2fd",
+                    "tertiary-container": "#8083ff",
+                    "surface-container-highest": "#2d3449",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-fixed-variant": "#004493",
+                    "on-tertiary": "#1000a9",
+                    "surface-container-low": "#131b2e",
+                    "on-error": "#690005",
+                    "background": "#0b1326"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "sidebar-width": "240px",
+                    "gutter": "16px",
+                    "card-gap": "12px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "label-caps": [
+                            "JetBrains Mono"
+                    ],
+                    "display": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Inter"
+                    ],
+                    "body-sm": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "lead-score": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display": [
+                            "48px",
+                            {
+                                    "lineHeight": "56px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "lead-score": [
+                            "14px",
+                            {
+                                    "lineHeight": "14px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "600"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-lg text-body-lg">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md dark:bg-surface/80 border-b border-outline-variant">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-container-padding h-16">
+<div class="font-display text-headline-md font-bold text-on-surface">ClientOS</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-lg text-body-lg" href="#">Features</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-lg text-body-lg" href="#">Solutions</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-lg text-body-lg" href="#">Pricing</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-lg text-body-lg scale-95 transition-transform" href="#">About</a>
+</div>
+<div class="flex items-center gap-4 hidden md:flex">
+<button class="font-body-lg text-body-lg font-medium text-on-surface-variant hover:text-primary transition-colors duration-200">Login</button>
+<button class="bg-primary text-on-primary font-body-lg text-body-lg font-medium px-4 py-2 rounded hover:bg-primary-container transition-colors duration-200">Join Network</button>
+</div>
+<!-- Mobile Menu Button -->
+<button class="md:hidden text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-24 pb-16">
+<div class="max-w-7xl mx-auto px-container-padding">
+<!-- Hero Section -->
+<section class="py-16 md:py-24 text-center">
+<h1 class="font-display text-display text-on-surface mb-6">Building the Future of Agency Intelligence</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-12">
+                    Our mission is to empower high-velocity agencies through applied AI. We build tools that process complex lead data with absolute clarity, transforming raw information into actionable intelligence.
+                </p>
+<div class="w-full h-64 md:h-96 rounded-xl overflow-hidden border border-subtle relative">
+<div class="bg-cover bg-center w-full h-full absolute inset-0" data-alt="A sleek, modern server room bathed in cool blue and cyan lighting. Racks of high-performance computing equipment glow softly. The atmosphere is quiet, highly technological, and impeccably organized, reflecting a premium corporate aesthetic. The lighting creates a high-contrast, moody dark theme environment." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAjAlKOc37WyRZ1c59gyYoHLMIhcHCAh-o9tBEDvk3TaLKP1tINvHFMUvpD1955OfTeKVpsRf7iOJffKAnaE6sE3nAkpQUUjTi1A2NDsK1tubkaebyhwwttoWojSW6rsjoVp3ZhJRTM0MemNT6_GpRsI2KweVQhMiNWS5oUn9GxJHwSf0Dxst-b1CcwF7fyYaOneOZpro8HdBYxEfwoYEEd8-UOFFRkoS6tcpBkLzWspaCub1_iyz9a')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+</div>
+</section>
+<!-- Values Section (Bento Grid) -->
+<section class="py-16">
+<div class="flex items-center gap-4 mb-8">
+<div class="h-px bg-outline-variant flex-grow"></div>
+<h2 class="font-label-caps text-label-caps text-primary uppercase tracking-widest">Core Values</h2>
+<div class="h-px bg-outline-variant flex-grow"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-card-gap">
+<!-- Transparency Card -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-6 hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-shadow duration-300 group">
+<div class="w-12 h-12 rounded bg-surface-container-high flex items-center justify-center mb-4 border border-outline-variant group-hover:border-primary transition-colors duration-300">
+<span class="material-symbols-outlined text-primary" data-icon="visibility">visibility</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Transparency</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                            Absolute clarity in data processing. We believe in providing complete visibility into how intelligence is gathered and applied, ensuring trust at every layer.
+                        </p>
+</div>
+<!-- Automation Card -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-6 hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-shadow duration-300 group">
+<div class="w-12 h-12 rounded bg-surface-container-high flex items-center justify-center mb-4 border border-outline-variant group-hover:border-secondary transition-colors duration-300">
+<span class="material-symbols-outlined text-secondary" data-icon="autorenew">autorenew</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Automation</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                            Relentless efficiency. We automate the friction out of high-velocity sales, allowing agencies to focus on strategy and relationship building rather than manual tasks.
+                        </p>
+</div>
+<!-- Growth Card -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-6 hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-shadow duration-300 group md:col-span-1">
+<div class="w-12 h-12 rounded bg-surface-container-high flex items-center justify-center mb-4 border border-outline-variant group-hover:border-tertiary transition-colors duration-300">
+<span class="material-symbols-outlined text-tertiary" data-icon="trending_up">trending_up</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Growth</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                            Scalable architecture designed for expansion. Our tools are built to support and accelerate your agency's trajectory, adapting to increasing complexity.
+                        </p>
+</div>
+</div>
+</section>
+<!-- Network Section -->
+<section class="py-16">
+<div class="bg-surface-container-high rounded-xl border border-outline-variant overflow-hidden flex flex-col md:flex-row">
+<div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">The ClientOS Network</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-6">
+                             Join a curated ecosystem of top-tier agencies leveraging our intelligence layer. The network provides shared insights, strategic partnerships, and early access to experimental features designed to redefine industry standards.
+                         </p>
+<button class="self-start px-6 py-3 border border-outline hover:border-primary text-on-surface font-body-lg text-body-lg font-medium rounded transition-all duration-200">
+                             Apply for Network Access
+                         </button>
+</div>
+<div class="md:w-1/2 relative min-h-[300px]">
+<div class="bg-cover bg-center w-full h-full absolute inset-0" data-alt="A macro, abstract shot of fiber optic cables glowing with neon green and blue light against a deep black background. The image evokes themes of connectivity, high-speed data transfer, and a premium modern corporate intelligence network. Sharp focus on the lit tips of the fibers." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB7YYhUChOqWTWuaruzxMiRJdppGyKkuYs5hb26XRVo69goHXs6sPLhK3PxS_1FAVCxpPDGGXDhMCHvjR1e7EZeEZijGC438WUm5jA0Vu6pcNs8hMhmlTjvcJZKiRYtBJaUx2u-efu9SRM4d7anAUVdR9WRVsjKXUDTDNgFaJ58xG26VW8I2v_ztbBGuJBhVPGZTiMFuKGt4_brKWBYx_PMlHQoc9mPEbMebnhBQM9ns2-FGoe0Wrfo')"></div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant py-12">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter max-w-7xl mx-auto px-container-padding">
+<div class="col-span-2 md:col-span-1 mb-8 md:mb-0">
+<div class="font-display text-headline-md font-bold text-on-surface mb-4">ClientOS</div>
+<div class="text-on-surface-variant font-body-sm text-body-sm mt-4">
+                    © 2024 ClientOS AI. All rights reserved.
+                </div>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-200 font-body-sm text-body-sm" href="#">Resources</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-200 font-body-sm text-body-sm" href="#">Case Studies</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-200 font-body-sm text-body-sm" href="#">API Docs</a>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-200 font-body-sm text-body-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-200 font-body-sm text-body-sm" href="#">Terms of Service</a>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-200 font-body-sm text-body-sm" href="#">Careers</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-200 font-body-sm text-body-sm" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

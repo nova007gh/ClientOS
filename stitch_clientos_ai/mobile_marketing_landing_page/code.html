@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ClientOS - The Operating System for High-Velocity Agencies</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#131b2e",
+                    "surface-container-high": "#222a3d",
+                    "secondary-fixed-dim": "#4edea3",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed": "#07006c",
+                    "on-tertiary-container": "#0d0096",
+                    "surface-container": "#171f33",
+                    "tertiary-container": "#8083ff",
+                    "inverse-primary": "#005bc1",
+                    "error": "#ffb4ab",
+                    "inverse-on-surface": "#283044",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-secondary-fixed": "#002113",
+                    "on-primary": "#002e69",
+                    "background": "#0b1326",
+                    "primary-container": "#4b8eff",
+                    "outline": "#8b90a0",
+                    "on-secondary-fixed-variant": "#005236",
+                    "outline-variant": "#414755",
+                    "on-tertiary-fixed-variant": "#2f2ebe",
+                    "on-primary-fixed": "#001a41",
+                    "on-surface-variant": "#c1c6d7",
+                    "tertiary-fixed": "#e1e0ff",
+                    "on-primary-fixed-variant": "#004493",
+                    "surface-container-highest": "#2d3449",
+                    "on-background": "#dae2fd",
+                    "on-error-container": "#ffdad6",
+                    "surface": "#0b1326",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-secondary-container": "#00311f",
+                    "inverse-surface": "#dae2fd",
+                    "secondary": "#4edea3",
+                    "on-tertiary": "#1000a9",
+                    "on-surface": "#dae2fd",
+                    "surface-variant": "#2d3449",
+                    "surface-dim": "#0b1326",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-tint": "#adc6ff",
+                    "on-secondary": "#003824",
+                    "surface-bright": "#31394d",
+                    "on-primary-container": "#00285c",
+                    "primary": "#adc6ff",
+                    "tertiary-fixed-dim": "#c0c1ff",
+                    "tertiary": "#c0c1ff",
+                    "on-error": "#690005",
+                    "secondary-container": "#00a572",
+                    "surface-container-lowest": "#060e20"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "sidebar-width": "240px",
+                    "card-gap": "12px",
+                    "container-padding": "24px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "label-caps": [
+                            "JetBrains Mono"
+                    ],
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "body-sm": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "display": [
+                            "Inter"
+                    ],
+                    "lead-score": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display": [
+                            "48px",
+                            {
+                                    "lineHeight": "56px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "lead-score": [
+                            "14px",
+                            {
+                                    "lineHeight": "14px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(173, 198, 255, 0.15) 0%, transparent 60%),
+                        radial-gradient(circle at bottom left, rgba(78, 222, 163, 0.1) 0%, transparent 50%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- TopAppBar (Marketing version, hidden on mobile logic handled by utility classes) -->
+<header class="w-full top-0 sticky z-50 flex justify-between items-center px-gutter h-16 bg-surface border-b border-outline-variant flat no shadows transition-colors duration-200">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bubble_chart</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">ClientOS</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors hidden md:block">Log In</button>
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-4 py-2 rounded-full hover:bg-primary-fixed-dim transition-colors">Start Free Trial</button>
+</div>
+</header>
+<main class="flex-grow flex flex-col items-center justify-start w-full px-4 md:px-container-padding py-12 md:py-24 hero-gradient relative">
+<!-- Hero Section -->
+<section class="w-full max-w-4xl mx-auto flex flex-col items-center text-center gap-6 z-10 mb-16">
+<div class="inline-flex items-center gap-2 bg-surface-container-high border border-outline-variant rounded-full px-3 py-1 mb-4">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">ClientOS Alpha V2.0 Live</span>
+</div>
+<h1 class="font-display text-[40px] leading-[48px] md:text-display font-bold text-on-surface tracking-tight max-w-3xl">
+                The Operating System for <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">High-Velocity Agencies</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mt-2 mb-4">
+                Process complex lead data with absolute clarity. Minimalist design meets high-density intelligence to accelerate your sales pipeline.
+            </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full mt-4">
+<button class="w-full sm:w-auto bg-primary text-on-primary font-label-caps text-label-caps px-8 py-4 rounded-lg hover:bg-primary-fixed-dim transition-all shadow-[0_0_20px_rgba(173,198,255,0.2)] hover:shadow-[0_0_30px_rgba(173,198,255,0.4)] flex items-center justify-center gap-2">
+                    Start Free Trial
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<button class="w-full sm:w-auto bg-transparent border border-outline text-on-surface font-label-caps text-label-caps px-8 py-4 rounded-lg hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">play_circle</span>
+                    Watch Demo
+                </button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant/50 mt-4">No credit card required. 14-day free trial.</p>
+</section>
+<!-- Product Visual / Dashboard Preview (Mobile Stacked) -->
+<section class="w-full max-w-5xl mx-auto mt-8 mb-24 relative z-10">
+<div class="w-full rounded-xl border border-outline-variant bg-surface-container shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden relative group">
+<!-- Abstract Dashboard Visual representation instead of raw image -->
+<div class="w-full h-64 md:h-96 bg-surface-container-low flex flex-col p-4 md:p-8 gap-4 relative overflow-hidden" data-alt="A highly detailed, modern, minimalist dashboard interface mockup displayed on a dark sleek background. The UI features stark contrast, sharp neon blue and mint green accents representing data visualizations, and high information density. It conveys a premium professional, high-velocity sales tool aesthetic with razor-sharp alignment and subtle depth. Deep blacks and pristine whites dominate the structure." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDEuQ9UBCNlu86aaJWSOiXZ3JBbnB7tqWAVGna0qSJrKAydBUFtvPMALdECK1BERFNmiobmoey536CIh784IZlBVpZrNnUWPBqp_UR7GKe8xbhMI0a7SDi_rQJyR-lCOioci1Q1qkLHy_YSykwDDyIfohIKyF32A-GTwgQFZpPSM014xPf3xTBsHzSC8aGmzS90QDyXQqvX3hlRe16MY7x2563agreeum2Kum-hc739afAKGdCPZnHk')">
+<!-- Decorative UI Elements to simulate interface -->
+<div class="flex justify-between items-center border-b border-outline-variant/30 pb-4 mb-4">
+<div class="flex gap-2">
+<div class="w-3 h-3 rounded-full bg-outline-variant/50"></div>
+<div class="w-3 h-3 rounded-full bg-outline-variant/50"></div>
+<div class="w-3 h-3 rounded-full bg-outline-variant/50"></div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 h-full">
+<div class="col-span-1 bg-surface-container p-4 rounded border border-outline-variant/30 flex flex-col justify-between">
+<div class="w-1/2 h-2 bg-outline-variant/40 rounded mb-4"></div>
+<div class="w-full h-full rounded border border-outline-variant/20 bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-outline-variant/50 text-4xl">monitoring</span>
+</div>
+</div>
+<div class="col-span-1 md:col-span-2 bg-surface-container p-4 rounded border border-outline-variant/30 flex flex-col">
+<div class="w-1/3 h-2 bg-outline-variant/40 rounded mb-4"></div>
+<div class="w-full flex-grow rounded border border-outline-variant/20 bg-surface-container-low relative overflow-hidden">
+<!-- Decorative chart lines -->
+<svg class="absolute bottom-0 left-0 w-full h-1/2 text-primary/20" preserveaspectratio="none" viewbox="0 0 100 50">
+<path d="M0,50 L0,40 C20,40 30,20 50,30 C70,40 80,10 100,20 L100,50 Z" fill="currentColor"></path>
+</svg>
+<svg class="absolute bottom-0 left-0 w-full h-1/2 text-secondary/20" preserveaspectratio="none" style="transform: scaleX(-1);" viewbox="0 0 100 50">
+<path d="M0,50 L0,30 C20,20 40,40 60,10 C80,-10 90,30 100,10 L100,50 Z" fill="currentColor"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+<!-- Overlay Gradient for sleek fade -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent pointer-events-none opacity-60"></div>
+</div>
+</section>
+<!-- Feature Grid (Stacked for Mobile) -->
+<section class="w-full max-w-5xl mx-auto flex flex-col gap-12 mb-24 z-10">
+<div class="text-center mb-8">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg font-bold text-on-surface mb-4">Precision Instruments for Growth</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Everything you need to manage complex pipelines without the clutter.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Feature 1 -->
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-shadow duration-300 flex flex-col items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary-container/10 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary">data_exploration</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">High-Density Intelligence</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Access critical lead data instantly. Our fluid grid layouts ensure maximum information visibility without visual noise.</p>
+</div>
+<!-- Feature 2 -->
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-shadow duration-300 flex flex-col items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/10 flex items-center justify-center border border-secondary/20">
+<span class="material-symbols-outlined text-secondary">bolt</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">Velocity Workflows</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Built for speed. Navigate between Sales, Outreach, and Intelligence with zero friction and sub-second load times.</p>
+</div>
+<!-- Feature 3 -->
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-shadow duration-300 flex flex-col items-start gap-4 md:col-span-2 lg:col-span-1">
+<div class="w-12 h-12 rounded-lg bg-tertiary-container/10 flex items-center justify-center border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary">tune</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">Predictive Scoring</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Visual lead scoring indicators adapt dynamically, moving from new to high-priority states to guide your attention.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-surface-container-low border-t border-outline-variant py-8 px-4 md:px-container-padding flex flex-col md:flex-row justify-between items-center gap-4 z-10 pb-24 md:pb-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">bubble_chart</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">© 2024 ClientOS</span>
+</div>
+<div class="flex gap-6">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Terms</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">System Status</a>
+</div>
+</footer>
+<!-- Decorative Background Elements -->
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-secondary/5 blur-[120px]"></div>
+</div>
+</body></html>

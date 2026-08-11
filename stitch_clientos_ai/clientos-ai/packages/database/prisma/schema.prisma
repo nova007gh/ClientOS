@@ -1,0 +1,943 @@
+// ClientOS AI — Prisma Schema
+// SQLite for local development (no enums — SQLite doesn't support them)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ── Identity ───────────────────────────────────
+
+model User {
+  id              String        @id @default(uuid())
+  email           String        @unique
+  passwordHash    String?
+  firstName       String
+  lastName        String
+  avatarUrl       String?
+  emailVerifiedAt DateTime?
+  status          String        @default("ACTIVE")
+  twoFactorSecret String?
+  twoFactorEnabled Boolean      @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  ownedOrganizations  Organization[]
+  organizationMembers OrganizationMember[]
+  emailAccounts       EmailAccount[]
+  activities          Activity[]
+  aiRuns              AiRun[]
+  auditLogs           AuditLog[]
+  notifications       Notification[]
+
+  @@map("users")
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  country   String?
+  currency  String   @default("USD")
+  timezone  String   @default("UTC")
+  ownerId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner              User                @relation(fields: [ownerId], references: [id])
+  members            OrganizationMember[]
+  services           Service[]
+  prospects          Prospect[]
+  prospectSources    ProspectSource[]
+  opportunities      Opportunity[]
+  activities         Activity[]
+  emailAccounts      EmailAccount[]
+  campaigns          Campaign[]
+  proposals          Proposal[]
+  emailThreads       EmailThread[]
+  contracts          Contract[]
+  projects           Project[]
+  reviews            Review[]
+  portfolios         Portfolio[]
+  aiRuns             AiRun[]
+  suppressionList    SuppressionList[]
+  auditLogs          AuditLog[]
+  notifications      Notification[]
+  webhooks           Webhook[]
+
+  @@map("organizations")
+}
+
+model OrganizationMember {
+  id             String   @id @default(uuid())
+  organizationId String
+  userId         String
+  role           String   @default("VIEWER")
+  status         String   @default("ACTIVE")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([organizationId])
+  @@map("organization_members")
+}
+
+// ── Services & Industries ──────────────────────
+
+model Service {
+  id             String   @id @default(uuid())
+  organizationId String
+  name           String
+  description    String   @default("")
+  startingPrice  Float?
+  currency       String   @default("USD")
+  deliveryDays   Int?
+  idealCustomer  String?
+  keywords       String   @default("[]")
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization      Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  serviceIndustries ServiceIndustry[]
+  opportunities     ProspectOpportunity[]
+
+  @@index([organizationId])
+  @@map("services")
+}
+
+model Industry {
+  id    String @id @default(uuid())
+  name  String
+  slug  String @unique
+
+  serviceIndustries ServiceIndustry[]
+  prospects         Prospect[]
+
+  @@map("industries")
+}
+
+model ServiceIndustry {
+  serviceId  String
+  industryId String
+
+  service  Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  industry Industry @relation(fields: [industryId], references: [id], onDelete: Cascade)
+
+  @@id([serviceId, industryId])
+  @@map("service_industries")
+}
+
+// ── Business Discovery & Prospects ─────────────
+
+model ProspectSource {
+  id            String   @id @default(uuid())
+  organizationId String
+  provider      String
+  externalId    String
+  rawReference  String?
+  createdAt     DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  prospects    Prospect[]
+
+  @@unique([provider, externalId])
+  @@index([organizationId])
+  @@map("prospect_sources")
+}
+
+model Prospect {
+  id              String          @id @default(uuid())
+  organizationId  String
+  companyName     String
+  industryId      String?
+  website         String?
+  phone           String?
+  email           String?
+  country         String?
+  city            String?
+  address         String?
+  description     String?
+  latitude        Float?
+  longitude       Float?
+  status          String          @default("NEW")
+  sourceId        String?
+  leadScore       Int?
+  assignedUserId  String?
+  rating          Float?
+  reviewCount     Int?
+  websiteStatus   String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  organization  Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  industry      Industry?          @relation(fields: [industryId], references: [id])
+  source        ProspectSource?    @relation(fields: [sourceId], references: [id])
+  contacts      ProspectContact[]
+  websiteAudits WebsiteAudit[]
+  opportunities ProspectOpportunity[]
+  activities    Activity[]
+  emailThreads  EmailThread[]
+  campaignProspects CampaignProspect[]
+
+  @@index([organizationId])
+  @@index([organizationId, status])
+  @@index([organizationId, leadScore])
+  @@map("prospects")
+}
+
+model ProspectContact {
+  id          String   @id @default(uuid())
+  prospectId  String
+  name        String
+  title       String?
+  email       String?
+  phone       String?
+  linkedinUrl String?
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  prospect Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+
+  @@index([prospectId])
+  @@map("prospect_contacts")
+}
+
+// ── Website Audit ──────────────────────────────
+
+model WebsiteAudit {
+  id                 String      @id @default(uuid())
+  prospectId         String
+  websiteUrl         String
+  status             String      @default("PENDING")
+  overallScore       Int?
+  performanceScore   Int?
+  seoScore           Int?
+  accessibilityScore Int?
+  mobileScore        Int?
+  httpsEnabled       Boolean?
+  sslValid           Boolean?
+  pageTitle          String?
+  metaDescription    String?
+  hasSitemap         Boolean?
+  hasRobotsTxt       Boolean?
+  hasContactInfo     Boolean?
+  hasCTA             Boolean?
+  hasSocialLinks     Boolean?
+  hasForms           Boolean?
+  startedAt          DateTime?
+  completedAt        DateTime?
+  createdAt          DateTime    @default(now())
+
+  prospect  Prospect        @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+  findings  AuditFinding[]
+
+  @@index([prospectId])
+  @@map("website_audits")
+}
+
+model AuditFinding {
+  id            String   @id @default(uuid())
+  auditId       String
+  category      String
+  severity      String
+  title         String
+  description   String
+  evidence      String?
+  recommendation String?
+  createdAt     DateTime @default(now())
+
+  audit WebsiteAudit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  @@index([auditId])
+  @@map("audit_findings")
+}
+
+// ── Opportunities ──────────────────────────────
+
+model ProspectOpportunity {
+  id           String   @id @default(uuid())
+  prospectId   String
+  serviceId    String
+  problem      String
+  recommendation String
+  score        Int
+  aiConfidence Float
+  createdAt    DateTime @default(now())
+
+  prospect Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+  service  Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([prospectId])
+  @@map("prospect_opportunities")
+}
+
+model Opportunity {
+  id               String           @id @default(uuid())
+  prospectId       String
+  organizationId   String
+  ownerId          String
+  title            String
+  stage            String           @default("NEW")
+  value            Float?
+  currency         String           @default("USD")
+  probability      Int              @default(0)
+  expectedCloseDate DateTime?
+  wonAt            DateTime?
+  lostAt           DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  proposals    Proposal[]
+  contracts    Contract[]
+
+  @@index([organizationId])
+  @@index([organizationId, stage])
+  @@map("opportunities")
+}
+
+// ── Activities ─────────────────────────────────
+
+model Activity {
+  id             String       @id @default(uuid())
+  organizationId String
+  prospectId     String?
+  userId         String
+  activityType   String
+  description    String
+  metadata       String?
+  createdAt      DateTime     @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  prospect     Prospect?     @relation(fields: [prospectId], references: [id])
+  user         User          @relation(fields: [userId], references: [id])
+
+  @@index([organizationId])
+  @@index([prospectId])
+  @@map("activities")
+}
+
+// ── Email ──────────────────────────────────────
+
+model EmailAccount {
+  id                  String   @id @default(uuid())
+  organizationId      String
+  userId              String
+  provider            String
+  email               String
+  encryptedCredentials String
+  status              String   @default("CONNECTED")
+  dailyLimit          Int      @default(50)
+  signature           String?
+  sendingHoursStart   String?  @default("09:00")
+  sendingHoursEnd     String?  @default("17:00")
+  replyTo             String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaigns    Campaign[]
+
+  @@index([organizationId])
+  @@map("email_accounts")
+}
+
+model EmailThread {
+  id             String   @id @default(uuid())
+  organizationId String
+  prospectId     String?
+  campaignId     String?
+  subject        String
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  prospect     Prospect?     @relation(fields: [prospectId], references: [id])
+  campaign     Campaign?     @relation(fields: [campaignId], references: [id])
+  messages     Message[]
+
+  @@index([organizationId])
+  @@index([prospectId])
+  @@map("email_threads")
+}
+
+model Message {
+  id                String         @id @default(uuid())
+  threadId          String
+  direction         String
+  providerMessageId String?
+  sender            String
+  recipient         String
+  subject           String
+  bodyHtml          String?
+  bodyText          String?
+  status            String         @default("DRAFT")
+  classification    String?
+  sentAt            DateTime?
+  receivedAt        DateTime?
+  createdAt         DateTime       @default(now())
+
+  thread EmailThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([threadId])
+  @@map("messages")
+}
+
+// ── Campaigns ──────────────────────────────────
+
+model Campaign {
+  id             String          @id @default(uuid())
+  organizationId String
+  name           String
+  status         String          @default("DRAFT")
+  emailAccountId String
+  objective      String          @default("")
+  dailyLimit     Int             @default(50)
+  timezone       String          @default("UTC")
+  createdBy      String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  emailAccount EmailAccount       @relation(fields: [emailAccountId], references: [id])
+  steps        CampaignStep[]
+  prospects    CampaignProspect[]
+  emailThreads EmailThread[]
+
+  @@index([organizationId])
+  @@map("campaigns")
+}
+
+model CampaignStep {
+  id           String   @id @default(uuid())
+  campaignId   String
+  stepNumber   Int
+  delayDays    Int      @default(0)
+  type         String
+  instructions String
+  createdAt    DateTime @default(now())
+
+  campaign         Campaign             @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  generatedMessages GeneratedMessage[]
+
+  @@index([campaignId])
+  @@map("campaign_steps")
+}
+
+model CampaignProspect {
+  id            String                  @id @default(uuid())
+  campaignId    String
+  prospectId    String
+  status        String                  @default("PENDING")
+  currentStep   Int                     @default(0)
+  lastContactAt DateTime?
+  nextActionAt  DateTime?
+  createdAt     DateTime                @default(now())
+
+  campaign          Campaign            @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  prospect          Prospect            @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+  generatedMessages GeneratedMessage[]
+
+  @@unique([campaignId, prospectId])
+  @@index([campaignId])
+  @@map("campaign_prospects")
+}
+
+model GeneratedMessage {
+  id                    String   @id @default(uuid())
+  campaignProspectId    String
+  stepId                String
+  generatedText         String
+  subject               String?
+  personalizationScore  Float?
+  spamScore             Float?
+  ctaStrength           Float?
+  approvedBy            String?
+  generatedAt           DateTime @default(now())
+
+  campaignProspect CampaignProspect @relation(fields: [campaignProspectId], references: [id], onDelete: Cascade)
+  step             CampaignStep     @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@index([campaignProspectId])
+  @@map("generated_messages")
+}
+
+// ── Proposals ──────────────────────────────────
+
+model Proposal {
+  id             String         @id @default(uuid())
+  organizationId String
+  opportunityId  String?
+  clientId       String?
+  title          String
+  status         String         @default("DRAFT")
+  total          Float?
+  currency       String         @default("USD")
+  publicToken    String         @unique
+  expiresAt      DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  opportunity  Opportunity?      @relation(fields: [opportunityId], references: [id])
+  sections     ProposalSection[]
+
+  @@index([organizationId])
+  @@map("proposals")
+}
+
+model ProposalSection {
+  id          String   @id @default(uuid())
+  proposalId  String
+  sectionType String
+  title       String
+  content     String
+  sortOrder   Int
+
+  proposal Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  @@index([proposalId])
+  @@map("proposal_sections")
+}
+
+// ── Contracts ──────────────────────────────────
+
+model Contract {
+  id             String         @id @default(uuid())
+  organizationId String
+  opportunityId  String?
+  projectId      String?        @unique
+  title          String
+  status         String         @default("DRAFT")
+  value          Float?
+  currency       String         @default("USD")
+  startDate      DateTime?
+  endDate        DateTime?
+  publicToken    String         @unique
+  documentHash   String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  opportunity  Opportunity?       @relation(fields: [opportunityId], references: [id])
+  project      Project?           @relation("ProjectContract", fields: [projectId], references: [id])
+  versions     ContractVersion[]
+  parties      ContractParty[]
+  signatures   ContractSignature[]
+
+  @@index([organizationId])
+  @@map("contracts")
+}
+
+model ContractVersion {
+  id         String   @id @default(uuid())
+  contractId String
+  version    Int
+  content    String
+  createdBy  String
+  createdAt  DateTime @default(now())
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@index([contractId])
+  @@map("contract_versions")
+}
+
+model ContractParty {
+  id         String   @id @default(uuid())
+  contractId String
+  name       String
+  email      String
+  role       String
+
+  contract    Contract            @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  signatures  ContractSignature[]
+
+  @@index([contractId])
+  @@map("contract_parties")
+}
+
+model ContractSignature {
+  id            String   @id @default(uuid())
+  contractId    String
+  partyId       String
+  signatureData String
+  signedAt      DateTime @default(now())
+  auditMetadata String
+
+  contract Contract       @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  party    ContractParty  @relation(fields: [partyId], references: [id], onDelete: Cascade)
+
+  @@index([contractId])
+  @@map("contract_signatures")
+}
+
+// ── Projects ───────────────────────────────────
+
+model Project {
+  id             String         @id @default(uuid())
+  organizationId String
+  clientId       String?
+  name           String
+  description    String         @default("")
+  status         String         @default("PLANNING")
+  startDate      DateTime?
+  dueDate        DateTime?
+  budget         Float?
+  currency       String         @default("USD")
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  contract     Contract?          @relation("ProjectContract")
+  members      ProjectMember[]
+  milestones   Milestone[]
+  tasks        Task[]
+  projectMessages ProjectMessage[]
+  reviews      Review[]
+
+  @@index([organizationId])
+  @@map("projects")
+}
+
+model ProjectMember {
+  projectId    String
+  userId       String
+  projectRole  String   @default("TEAM_MEMBER")
+  createdAt    DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, userId])
+  @@map("project_members")
+}
+
+model Milestone {
+  id          String           @id @default(uuid())
+  projectId   String
+  name        String
+  description String           @default("")
+  dueDate     DateTime?
+  status      String           @default("PLANNED")
+  createdAt   DateTime         @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks   Task[]
+
+  @@index([projectId])
+  @@map("milestones")
+}
+
+model Task {
+  id            String       @id @default(uuid())
+  projectId     String
+  milestoneId   String?
+  parentTaskId  String?
+  title         String
+  description   String       @default("")
+  status        String       @default("TODO")
+  priority      String       @default("MEDIUM")
+  assignedTo    String?
+  startDate     DateTime?
+  dueDate       DateTime?
+  aiGenerated   Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  project       Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  milestone     Milestone?       @relation(fields: [milestoneId], references: [id])
+  parent        Task?            @relation("TaskHierarchy", fields: [parentTaskId], references: [id])
+  children      Task[]           @relation("TaskHierarchy")
+  dependencies  TaskDependency[] @relation("TaskDependent")
+  dependents    TaskDependency[] @relation("TaskDependency")
+  comments      TaskComment[]
+
+  @@index([projectId])
+  @@index([assignedTo])
+  @@map("tasks")
+}
+
+model TaskDependency {
+  taskId         String
+  dependsOnTaskId String
+
+  task       Task @relation("TaskDependent", fields: [taskId], references: [id], onDelete: Cascade)
+  dependsOn  Task @relation("TaskDependency", fields: [dependsOnTaskId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, dependsOnTaskId])
+  @@map("task_dependencies")
+}
+
+model TaskComment {
+  id        String   @id @default(uuid())
+  taskId    String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@map("task_comments")
+}
+
+model ProjectMessage {
+  id         String   @id @default(uuid())
+  projectId  String
+  userId     String?
+  content    String
+  isInternal Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("project_messages")
+}
+
+// ── Reviews & Portfolio ────────────────────────
+
+model Review {
+  id                  String         @id @default(uuid())
+  organizationId      String
+  projectId           String
+  clientId            String
+  rating              Int
+  review              String
+  status              String         @default("PENDING")
+  verifiedAt          DateTime?
+  permissionToPublish Boolean        @default(false)
+  createdAt           DateTime       @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  project     Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("reviews")
+}
+
+model Portfolio {
+  id             String   @id @default(uuid())
+  organizationId String
+  username       String   @unique
+  headline       String   @default("")
+  bio            String   @default("")
+  published      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  items        PortfolioItem[]
+
+  @@index([organizationId])
+  @@map("portfolios")
+}
+
+model PortfolioItem {
+  id            String   @id @default(uuid())
+  portfolioId   String
+  projectId     String
+  title         String
+  description   String   @default("")
+  featuredImage String?
+  published     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  @@index([portfolioId])
+  @@map("portfolio_items")
+}
+
+// ── Notifications ──────────────────────────────
+
+model Notification {
+  id             String   @id @default(uuid())
+  organizationId String
+  userId         String
+  type           String
+  title          String
+  body           String?
+  entityType     String?
+  entityId       String?
+  readAt         DateTime?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@map("notifications")
+}
+
+// ── AI ─────────────────────────────────────────
+
+model AiRun {
+  id             String      @id @default(uuid())
+  organizationId String
+  userId         String
+  agentType      String
+  entityType     String
+  entityId       String
+  model          String
+  promptVersion  String      @default("1")
+  inputTokens    Int         @default(0)
+  outputTokens   Int         @default(0)
+  estimatedCost  Float       @default(0)
+  status         String      @default("PENDING")
+  result         String?
+  createdAt      DateTime    @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id])
+  feedback     AiFeedback[]
+
+  @@index([organizationId])
+  @@index([entityType, entityId])
+  @@map("ai_runs")
+}
+
+model AiFeedback {
+  id        String   @id @default(uuid())
+  aiRunId   String
+  userId    String
+  rating    Int
+  feedback  String?
+  createdAt DateTime @default(now())
+
+  aiRun AiRun @relation(fields: [aiRunId], references: [id], onDelete: Cascade)
+
+  @@map("ai_feedback")
+}
+
+// ── Compliance ─────────────────────────────────
+
+model SuppressionList {
+  id             String   @id @default(uuid())
+  organizationId String
+  email          String
+  reason         String
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, email])
+  @@index([organizationId])
+  @@map("suppression_list")
+}
+
+model UnsubscribeEvent {
+  id          String   @id @default(uuid())
+  email       String
+  campaignId  String?
+  occurredAt  DateTime @default(now())
+
+  @@index([email])
+  @@map("unsubscribe_events")
+}
+
+model AuditLog {
+  id             String   @id @default(uuid())
+  organizationId String
+  userId         String?
+  action         String
+  entityType     String
+  entityId       String
+  metadata       String?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User?         @relation(fields: [userId], references: [id])
+
+  @@index([organizationId])
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}
+
+// ── Webhooks ───────────────────────────────────
+
+model Webhook {
+  id             String   @id @default(uuid())
+  organizationId String
+  url            String
+  event          String
+  secret         String
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("webhooks")
+}
+
+// ── Billing ────────────────────────────────────
+
+model Plan {
+  id              String   @id @default(uuid())
+  name            String
+  slug            String   @unique
+  priceMonthly    Float
+  priceAnnual     Float
+  currency        String   @default("USD")
+  prospectLimit   Int      @default(50)
+  auditLimit      Int      @default(10)
+  aiCredits       Int      @default(100)
+  features        String   @default("[]")
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id             String              @id @default(uuid())
+  organizationId String
+  planId         String
+  status         String              @default("ACTIVE")
+  billingCycle   String              @default("MONTHLY")
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  canceledAt     DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  plan Plan @relation(fields: [planId], references: [id])
+
+  @@map("subscriptions")
+}
+
+model UsageRecord {
+  id             String   @id @default(uuid())
+  organizationId String
+  resourceType   String
+  quantity       Int
+  periodStart    DateTime
+  periodEnd      DateTime
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, resourceType])
+  @@map("usage_records")
+}
+
+model CreditLedger {
+  id             String   @id @default(uuid())
+  organizationId String
+  credits        Int
+  balance        Int
+  reason         String
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId])
+  @@map("credit_ledger")
+}

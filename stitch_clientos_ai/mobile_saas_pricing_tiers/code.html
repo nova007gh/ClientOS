@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pricing - ClientOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#131b2e",
+                        "surface-container-high": "#222a3d",
+                        "secondary-fixed-dim": "#4edea3",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#07006c",
+                        "on-tertiary-container": "#0d0096",
+                        "surface-container": "#171f33",
+                        "tertiary-container": "#8083ff",
+                        "inverse-primary": "#005bc1",
+                        "error": "#ffb4ab",
+                        "inverse-on-surface": "#283044",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary": "#002e69",
+                        "background": "#0b1326",
+                        "primary-container": "#4b8eff",
+                        "outline": "#8b90a0",
+                        "on-secondary-fixed-variant": "#005236",
+                        "outline-variant": "#414755",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "on-primary-fixed": "#001a41",
+                        "on-surface-variant": "#c1c6d7",
+                        "tertiary-fixed": "#e1e0ff",
+                        "on-primary-fixed-variant": "#004493",
+                        "surface-container-highest": "#2d3449",
+                        "on-background": "#dae2fd",
+                        "on-error-container": "#ffdad6",
+                        "surface": "#0b1326",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-secondary-container": "#00311f",
+                        "inverse-surface": "#dae2fd",
+                        "secondary": "#4edea3",
+                        "on-tertiary": "#1000a9",
+                        "on-surface": "#dae2fd",
+                        "surface-variant": "#2d3449",
+                        "surface-dim": "#0b1326",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary": "#003824",
+                        "surface-bright": "#31394d",
+                        "on-primary-container": "#00285c",
+                        "primary": "#adc6ff",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "tertiary": "#c0c1ff",
+                        "on-error": "#690005",
+                        "secondary-container": "#00a572",
+                        "surface-container-lowest": "#060e20"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "sidebar-width": "240px",
+                        "card-gap": "12px",
+                        "container-padding": "24px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display": ["Inter"],
+                        "lead-score": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "lead-score": ["14px", { "lineHeight": "14px", "fontWeight": "700" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24 font-body-lg">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline-variant flex justify-between items-center px-gutter h-16 transition-colors duration-200">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary dark:text-primary" style="font-variation-settings: 'FILL' 1;">bubble_chart</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary">ClientOS</span>
+</div>
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant border border-outline-variant">
+<span class="material-symbols-outlined text-sm">person</span>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="px-gutter pt-8 pb-12 flex flex-col gap-6">
+<!-- Header Section -->
+<div class="text-center mb-6">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Pricing Plans</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Choose the perfect tier for your high-velocity sales team.</p>
+</div>
+<!-- Pricing Cards Stack -->
+<div class="flex flex-col gap-6">
+<!-- Starter Plan -->
+<div class="bg-surface-container rounded-xl p-6 border border-outline-variant flex flex-col relative overflow-hidden">
+<div class="mb-4">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Starter</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">For individuals and small teams.</p>
+</div>
+<div class="mb-6 flex items-baseline gap-1">
+<span class="font-display text-display text-on-surface">$29</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/mo</span>
+</div>
+<ul class="flex flex-col gap-3 mb-8 font-body-sm text-body-sm text-on-surface">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Up to 1,000 Leads</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Basic Intelligence</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Email Sequences</span>
+</li>
+</ul>
+<button class="w-full mt-auto py-3 px-4 rounded-lg border border-outline-variant bg-transparent text-on-surface font-body-sm text-body-sm font-medium hover:bg-surface-container-high transition-colors text-center">
+                    Get Started
+                </button>
+</div>
+<!-- Pro Agency Plan (Highlighted) -->
+<div class="bg-surface-container-highest rounded-xl p-6 border border-primary relative flex flex-col">
+<div class="absolute top-0 right-0 bg-primary text-on-primary font-label-caps text-label-caps px-3 py-1 rounded-bl-lg rounded-tr-xl">
+                    Most Popular
+                </div>
+<div class="mb-4 pr-24">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Pro Agency</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">For scaling outbound operations.</p>
+</div>
+<div class="mb-6 flex items-baseline gap-1">
+<span class="font-display text-display text-on-surface">$99</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/mo</span>
+</div>
+<ul class="flex flex-col gap-3 mb-8 font-body-sm text-body-sm text-on-surface">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Unlimited Leads</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Advanced Intent Data</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Multi-channel Sequences</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Priority Support</span>
+</li>
+</ul>
+<button class="w-full mt-auto py-3 px-4 rounded-lg bg-primary text-on-primary font-body-sm text-body-sm font-medium hover:bg-primary-container transition-colors text-center shadow-[0_0_15px_rgba(173,198,255,0.2)]">
+                    Start Pro Trial
+                </button>
+</div>
+<!-- Enterprise Plan -->
+<div class="bg-surface-container rounded-xl p-6 border border-outline-variant flex flex-col">
+<div class="mb-4">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Enterprise</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Custom solutions for large orgs.</p>
+</div>
+<div class="mb-6 flex items-baseline gap-1">
+<span class="font-display text-display text-on-surface">Custom</span>
+</div>
+<ul class="flex flex-col gap-3 mb-8 font-body-sm text-body-sm text-on-surface">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Dedicated Account Manager</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Custom Integrations</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>SLA Guarantees</span>
+</li>
+</ul>
+<button class="w-full mt-auto py-3 px-4 rounded-lg border border-outline-variant bg-transparent text-on-surface font-body-sm text-body-sm font-medium hover:bg-surface-container-high transition-colors text-center">
+                    Contact Sales
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Suppressed for this specific page intent as it's a linear/transactional intent page - pricing.  But per instructions, if rendered, here is the shell. I will render it since it might be accessed from within the app, but typically pricing is outside the main nav loop. Let's assume it's part of settings/upgrade flow and keep it hidden based on "Linear/Transactional" rule in prompt. Wait, the prompt says "Display the pricing cards... Maintain dark-navy aesthetic." I will suppress the bottom nav as pricing is a transactional screen.) -->
+<!-- Suppressed BottomNavBar due to transactional nature of Pricing page -->
+</body></html>

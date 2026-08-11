@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "target": "ES2022",
+    "outDir": "./dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
+    "types": ["node", "express"],
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": true,
+    "isolatedModules": false,
+    "paths": {
+      "@clientos/database": ["../../packages/database/src"],
+      "@clientos/database/*": ["../../packages/database/src/*"],
+      "@clientos/types": ["../../packages/types/src"],
+      "@clientos/types/*": ["../../packages/types/src/*"],
+      "@clientos/validation": ["../../packages/validation/src"],
+      "@clientos/validation/*": ["../../packages/validation/src/*"]
+    }
+  },
+  "include": ["src/**/*", "../../packages/database/src/**/*", "../../packages/types/src/**/*", "../../packages/validation/src/**/*"]
+}

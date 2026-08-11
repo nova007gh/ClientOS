@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ClientOS AI | The Operating System for High-Velocity Agencies</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#171f33",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#07006c",
+                        "surface-container-high": "#222a3d",
+                        "on-primary": "#002e69",
+                        "inverse-surface": "#dae2fd",
+                        "surface-tint": "#adc6ff",
+                        "tertiary-fixed": "#e1e0ff",
+                        "primary-fixed": "#d8e2ff",
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-container-lowest": "#060e20",
+                        "surface": "#0b1326",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-primary-fixed": "#001a41",
+                        "on-secondary-fixed": "#002113",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "on-secondary": "#003824",
+                        "secondary": "#4edea3",
+                        "primary": "#adc6ff",
+                        "primary-container": "#4b8eff",
+                        "on-primary-container": "#00285c",
+                        "outline-variant": "#414755",
+                        "on-surface-variant": "#c1c6d7",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "inverse-on-surface": "#283044",
+                        "inverse-primary": "#005bc1",
+                        "surface-bright": "#31394d",
+                        "on-secondary-container": "#00311f",
+                        "on-tertiary-container": "#0d0096",
+                        "tertiary": "#c0c1ff",
+                        "surface-variant": "#2d3449",
+                        "outline": "#8b90a0",
+                        "surface-dim": "#0b1326",
+                        "secondary-container": "#00a572",
+                        "on-secondary-fixed-variant": "#005236",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-surface": "#dae2fd",
+                        "on-background": "#dae2fd",
+                        "tertiary-container": "#8083ff",
+                        "surface-container-highest": "#2d3449",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#004493",
+                        "on-tertiary": "#1000a9",
+                        "surface-container-low": "#131b2e",
+                        "on-error": "#690005",
+                        "background": "#0b1326"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "sidebar-width": "240px",
+                        "gutter": "16px",
+                        "card-gap": "12px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["JetBrains Mono"],
+                        "display": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "lead-score": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "lead-score": ["14px", { "lineHeight": "14px", "fontWeight": "700" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-grid-pattern {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glow-effect {
+            box-shadow: 0 0 40px rgba(173, 198, 255, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-container-padding h-16">
+<div class="flex items-center gap-8">
+<a class="font-display text-headline-md font-bold text-on-surface" href="#">ClientOS</a>
+<div class="hidden md:flex gap-6">
+<a class="font-body-lg text-body-lg text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#features">Features</a>
+<a class="font-body-lg text-body-lg text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#solutions">Solutions</a>
+<a class="font-body-lg text-body-lg text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#pricing">Pricing</a>
+<a class="font-body-lg text-body-lg text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#about">About</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<a class="font-body-lg text-body-lg text-on-surface-variant hover:text-primary transition-colors duration-200 hidden sm:block" href="#">Login</a>
+<a class="bg-primary text-on-primary font-body-lg text-body-lg font-medium px-4 py-2 rounded hover:bg-primary-container hover:text-on-primary-container transition-colors duration-200" href="#">Join Network</a>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+<div class="absolute inset-0 bg-grid-pattern opacity-30"></div>
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-container-padding relative z-10 text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-outline-variant bg-surface-container-low mb-8">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">ClientOS v2.0 is Live</span>
+</div>
+<h1 class="font-display text-display text-on-surface mb-6 max-w-4xl mx-auto md:leading-[64px]">
+                The Operating System for <span class="text-primary">High-Velocity Agencies</span>
+</h1>
+<p class="font-body-lg text-body-lg md:text-[20px] md:leading-[32px] text-on-surface-variant max-w-2xl mx-auto mb-10">
+                Automate your entire sales pipeline. Deploy AI-driven lead audits, orchestrate multi-channel outreach, and close deals with unprecedented speed and intelligence.
+            </p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20">
+<button class="w-full sm:w-auto bg-primary text-on-primary font-body-lg text-body-lg font-medium px-8 py-3 rounded hover:bg-primary-container hover:text-on-primary-container transition-all duration-200 glow-effect">
+                    Start Free Trial
+                </button>
+<button class="w-full sm:w-auto bg-transparent border border-outline-variant text-on-surface font-body-lg text-body-lg font-medium px-8 py-3 rounded hover:bg-surface-container-high transition-colors duration-200 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+                    Watch Demo
+                </button>
+</div>
+<!-- Dashboard Mockup -->
+<div class="relative w-full max-w-5xl mx-auto rounded-xl border border-outline-variant bg-surface-container-low p-2 shadow-2xl glow-effect overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10 opacity-60"></div>
+<img class="w-full h-auto rounded-lg relative z-0 transition-transform duration-700 group-hover:scale-[1.02]" data-alt="A highly detailed, ultra-realistic digital mockup of a complex B2B SaaS dashboard interface. The UI features a dark mode aesthetic with deep navy blues, crisp white text, and vibrant cyan data visualizations. The layout includes a sidebar navigation, a top metrics row with glowing trend lines, a dense data table showing lead scores and status tags, and a sophisticated AI analysis pane on the right. The design is sleek, modern, and communicates high-performance data processing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8HjfHuJdcvmlc22pnyybpHZk8fw9OIp1-aOeaNF0OG9b9lcrJC2dvJfeqUOPTWi5JYzUs-BTMh-Ie26Swie3rDyO7cozNArs29E7_kAD4Aeq5kH0gg_UceKdfJeDy1QJi40Z42kxF7UN3wdkOZZ1ji9VFEbhG0HbK_bTo-lI-MnhXTHbEN1rNpx3ydFIl38GktwMPcF_OLehIE1sIM4DZ176OlKjVj5JfSY_n8oXl6fh0F-ob2vC-"/>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant mt-20">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter max-w-7xl mx-auto px-container-padding py-12">
+<div class="col-span-2 md:col-span-1">
+<a class="font-display text-headline-md font-bold text-on-surface block mb-4" href="#">ClientOS</a>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Empowering agencies with AI-driven intelligence and automation.</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">© 2024 ClientOS AI. All rights reserved.</p>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface mb-4">Product</h4>
+<ul class="space-y-2">
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors duration-200" href="#">Resources</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors duration-200" href="#">Case Studies</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors duration-200" href="#">API Docs</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface mb-4">Company</h4>
+<ul class="space-y-2">
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors duration-200" href="#">About Us</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors duration-200" href="#">Careers</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors duration-200" href="#">Contact</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface mb-4">Legal</h4>
+<ul class="space-y-2">
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors duration-200" href="#">Privacy Policy</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors duration-200" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ClientOS AI - Organization Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#8b90a0",
+                        "on-tertiary-fixed": "#07006c",
+                        "on-surface-variant": "#c1c6d7",
+                        "tertiary-fixed": "#e1e0ff",
+                        "on-primary-fixed": "#001a41",
+                        "surface-container": "#171f33",
+                        "primary-fixed-dim": "#adc6ff",
+                        "background": "#0b1326",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-container": "#00285c",
+                        "surface-bright": "#31394d",
+                        "error": "#ffb4ab",
+                        "inverse-surface": "#dae2fd",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "tertiary": "#c0c1ff",
+                        "on-tertiary-container": "#0d0096",
+                        "surface-dim": "#0b1326",
+                        "primary-container": "#4b8eff",
+                        "outline-variant": "#414755",
+                        "surface": "#0b1326",
+                        "surface-variant": "#2d3449",
+                        "secondary": "#4edea3",
+                        "inverse-primary": "#005bc1",
+                        "on-secondary-container": "#00311f",
+                        "on-primary-fixed-variant": "#004493",
+                        "on-background": "#dae2fd",
+                        "surface-container-high": "#222a3d",
+                        "on-primary": "#002e69",
+                        "surface-container-highest": "#2d3449",
+                        "primary": "#adc6ff",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary-container": "#00a572",
+                        "tertiary-container": "#8083ff",
+                        "surface-container-low": "#131b2e",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "on-secondary": "#003824",
+                        "on-error": "#690005",
+                        "on-tertiary": "#1000a9",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#283044",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface-container-lowest": "#060e20",
+                        "on-surface": "#dae2fd",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "card-gap": "12px",
+                        "sidebar-width": "240px",
+                        "unit": "4px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "lead-score": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "lead-score": ["14px", { "lineHeight": "14px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+        .glass-card { background: rgba(34, 42, 61, 0.4); backdrop-filter: blur(12px); border: 1px solid theme('colors.outline-variant'); border-radius: theme('borderRadius.xl'); }
+    </style>
+</head>
+<body class="flex bg-background h-screen overflow-hidden text-on-surface">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen w-sidebar-width fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant py-container-padding">
+<div class="px-container-padding mb-8">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">ClientOS AI</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Agency Growth</p>
+</div>
+<div class="px-container-padding mb-6">
+<button class="w-full bg-primary text-on-primary py-2 rounded-lg font-label-caps text-label-caps hover:bg-primary-fixed transition-colors">
+                New Campaign
+            </button>
+</div>
+<nav class="flex-1 px-4 space-y-2 overflow-y-auto">
+<a class="flex items-center gap-unit text-on-surface-variant px-4 py-3 rounded-lg hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Home
+            </a>
+<a class="flex items-center gap-unit text-on-surface-variant px-4 py-3 rounded-lg hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                Sales
+            </a>
+<a class="flex items-center gap-unit text-on-surface-variant px-4 py-3 rounded-lg hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+                Outreach
+            </a>
+<a class="flex items-center gap-unit text-on-surface-variant px-4 py-3 rounded-lg hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="handshake">handshake</span>
+                Clients
+            </a>
+<a class="flex items-center gap-unit text-on-surface-variant px-4 py-3 rounded-lg hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="task_alt">task_alt</span>
+                Work
+            </a>
+<a class="flex items-center gap-unit text-on-surface-variant px-4 py-3 rounded-lg hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+                Intelligence
+            </a>
+</nav>
+<div class="px-4 mt-auto space-y-2">
+<a class="flex items-center gap-unit text-primary font-bold border-r-2 border-primary px-4 py-3 bg-surface-container-highest rounded-lg transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-unit text-on-surface-variant px-4 py-3 rounded-lg hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                Support
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col md:ml-sidebar-width w-full md:w-[calc(100%-240px)] h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-container-padding sticky top-0 z-50 h-16 bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="bg-surface-container pl-10 pr-4 py-2 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary text-body-sm font-body-sm w-64 text-on-surface" placeholder="Search..." type="text"/>
+</div>
+<button class="md:hidden text-on-surface">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary hover:bg-surface-container-high rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a corporate user with a clean, dark aesthetic background, subtle studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrAjvs0sU8TQCkGVSeSXSY-YYI4SyyGMcczex_-XS40ycZppFlICiFou_uTivMUMFMpSuGy_DrVvL3YUfdUMZjhuphKKaQusjZ6RHTeRn_TpeX_SSWl31va3VZHAW2ZRCaMbwgjJae0k1huWibrqrpRbzIBt2qAegFStHOK-__gv5OfzPdJLuJ2Vt89rCV2fs5PLBulLl5Wm7dBy1ANF79WJxzIfXPMJuID0nAK-DmksLkyocc5i7N"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="flex-1 overflow-y-auto p-container-padding">
+<div class="max-w-6xl mx-auto space-y-8">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg md:text-headline-lg text-on-surface">Organization Settings</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Manage your team, billing, and connected services.</p>
+</div>
+</div>
+<!-- Tabs -->
+<div class="border-b border-outline-variant flex space-x-8">
+<button class="pb-4 font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">General</button>
+<button class="pb-4 font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Team</button>
+<button class="pb-4 font-label-caps text-label-caps text-primary border-b-2 border-primary">Integrations</button>
+<button class="pb-4 font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">Billing</button>
+</div>
+<!-- Integrations Content -->
+<div class="space-y-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Connected Services</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Integration Card 1 (Connected) -->
+<div class="glass-card p-6 flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div class="h-12 w-12 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-3xl text-primary" data-icon="cloud">cloud</span>
+</div>
+<span class="bg-secondary/20 text-secondary px-3 py-1 rounded font-label-caps text-label-caps border border-secondary/30">Connected</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2">Google Workspace</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6 flex-1">Sync calendar events, emails, and contacts automatically with ClientOS AI.</p>
+<div class="mt-auto">
+<button class="w-full py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors font-body-sm text-body-sm">
+                                    Manage Settings
+                                </button>
+</div>
+</div>
+<!-- Integration Card 2 (Connect) -->
+<div class="glass-card p-6 flex flex-col h-full opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex justify-between items-start mb-4">
+<div class="h-12 w-12 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-3xl text-primary" data-icon="window">window</span>
+</div>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2">Microsoft 365</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6 flex-1">Connect your Outlook and Office apps for seamless lead data flow.</p>
+<div class="mt-auto">
+<button class="w-full py-2 rounded-lg bg-primary text-on-primary hover:bg-primary-fixed transition-colors font-label-caps text-label-caps">
+                                    Connect
+                                </button>
+</div>
+</div>
+<!-- Integration Card 3 (CRM Sync) -->
+<div class="glass-card p-6 flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div class="h-12 w-12 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-3xl text-tertiary" data-icon="sync">sync</span>
+</div>
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded font-label-caps text-label-caps border border-outline-variant">Configuring</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2">CRM Sync</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6 flex-1">Two-way sync with Salesforce, HubSpot, or custom endpoints.</p>
+<div class="mt-auto">
+<button class="w-full py-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors font-body-sm text-body-sm">
+                                    Setup Webhooks
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- API Keys Section -->
+<div class="glass-card p-6 mt-8">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4">API Keys</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Manage API keys for custom integrations and developer access.</p>
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-4 flex items-center justify-between mb-4">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1">Production Key</p>
+<p class="font-body-sm text-body-sm text-on-surface font-mono">sk_live_***************************8f2a</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="content_copy">content_copy</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<button class="text-primary hover:text-primary-fixed transition-colors font-label-caps text-label-caps flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                        Generate New Key
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

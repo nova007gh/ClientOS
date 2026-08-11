@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ClientOS AI - Onboarding</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-background": "#dae2fd",
+                      "tertiary-fixed": "#e1e0ff",
+                      "surface-container-high": "#222a3d",
+                      "error": "#ffb4ab",
+                      "surface-container-lowest": "#060e20",
+                      "on-tertiary-fixed-variant": "#2f2ebe",
+                      "inverse-on-surface": "#283044",
+                      "secondary": "#4edea3",
+                      "surface": "#0b1326",
+                      "tertiary-container": "#8083ff",
+                      "on-secondary-fixed": "#002113",
+                      "outline-variant": "#414755",
+                      "on-error": "#690005",
+                      "tertiary": "#c0c1ff",
+                      "primary-fixed": "#d8e2ff",
+                      "on-tertiary": "#1000a9",
+                      "error-container": "#93000a",
+                      "surface-dim": "#0b1326",
+                      "primary": "#adc6ff",
+                      "on-primary": "#002e69",
+                      "background": "#0b1326",
+                      "secondary-fixed-dim": "#4edea3",
+                      "secondary-fixed": "#6ffbbe",
+                      "primary-fixed-dim": "#adc6ff",
+                      "inverse-primary": "#005bc1",
+                      "on-surface-variant": "#c1c6d7",
+                      "secondary-container": "#00a572",
+                      "on-surface": "#dae2fd",
+                      "on-error-container": "#ffdad6",
+                      "on-primary-fixed-variant": "#004493",
+                      "primary-container": "#4b8eff",
+                      "on-secondary-container": "#00311f",
+                      "surface-bright": "#31394d",
+                      "on-secondary": "#003824",
+                      "on-tertiary-container": "#0d0096",
+                      "on-primary-container": "#00285c",
+                      "on-secondary-fixed-variant": "#005236",
+                      "surface-container": "#171f33",
+                      "on-tertiary-fixed": "#07006c",
+                      "surface-tint": "#adc6ff",
+                      "surface-container-low": "#131b2e",
+                      "tertiary-fixed-dim": "#c0c1ff",
+                      "surface-variant": "#2d3449",
+                      "outline": "#8b90a0",
+                      "on-primary-fixed": "#001a41",
+                      "inverse-surface": "#dae2fd",
+                      "surface-container-highest": "#2d3449"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "container-padding": "24px",
+                      "unit": "4px",
+                      "gutter": "16px",
+                      "sidebar-width": "240px",
+                      "card-gap": "12px"
+              },
+              "fontFamily": {
+                      "display": ["Inter"],
+                      "label-caps": ["JetBrains Mono"],
+                      "headline-lg": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "lead-score": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                      "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                      "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                      "lead-score": ["14px", { "lineHeight": "14px", "fontWeight": "700" }],
+                      "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                      "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                      "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar { display: none; }
+        
+        .step-transition {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .step-hidden {
+            opacity: 0;
+            transform: translateX(20px);
+            pointer-events: none;
+            position: absolute;
+            visibility: hidden;
+        }
+        .step-active {
+            opacity: 1;
+            transform: translateX(0);
+            position: relative;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center justify-center p-4 sm:p-container-padding antialiased relative overflow-hidden">
+<!-- Ambient Background Glow -->
+<div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 blur-[120px] rounded-full pointer-events-none"></div>
+<!-- Brand Header -->
+<div class="mb-8 text-center z-10">
+<div class="inline-flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">ClientOS AI</h1>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Set up your workspace for high-velocity intelligence.</p>
+</div>
+<!-- Onboarding Container -->
+<main class="w-full max-w-[680px] bg-surface border border-outline-variant rounded-xl shadow-2xl relative z-10 overflow-hidden flex flex-col">
+<!-- Progress Stepper Header -->
+<header class="p-8 border-b border-outline-variant bg-surface-container-lowest/50">
+<div class="flex items-center justify-between relative">
+<!-- Connecting Line -->
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-surface-container-highest -z-10 -translate-y-1/2 rounded-full"></div>
+<!-- Progress Line Fill -->
+<div class="absolute top-1/2 left-0 h-[2px] bg-primary -z-10 -translate-y-1/2 rounded-full transition-all duration-500 ease-out w-0" id="progress-bar"></div>
+<!-- Step 1 Indicator -->
+<div class="flex flex-col items-center gap-3 bg-surface-container-lowest px-2 relative group cursor-pointer" onclick="setStep(1)">
+<div class="w-10 h-10 rounded-full flex items-center justify-center font-label-caps text-label-caps bg-primary text-on-primary ring-4 ring-surface-container-lowest transition-colors shadow-lg" id="indicator-1">
+                        1
+                    </div>
+<span class="font-label-caps text-label-caps text-primary absolute -bottom-6 whitespace-nowrap" id="label-1">Profile</span>
+</div>
+<!-- Step 2 Indicator -->
+<div class="flex flex-col items-center gap-3 bg-surface-container-lowest px-2 relative group cursor-pointer" onclick="setStep(2)">
+<div class="w-10 h-10 rounded-full flex items-center justify-center font-label-caps text-label-caps bg-surface-container-highest text-on-surface-variant ring-4 ring-surface-container-lowest transition-colors" id="indicator-2">
+                        2
+                    </div>
+<span class="font-label-caps text-label-caps text-on-surface-variant absolute -bottom-6 whitespace-nowrap" id="label-2">Organization</span>
+</div>
+<!-- Step 3 Indicator -->
+<div class="flex flex-col items-center gap-3 bg-surface-container-lowest px-2 relative group cursor-pointer" onclick="setStep(3)">
+<div class="w-10 h-10 rounded-full flex items-center justify-center font-label-caps text-label-caps bg-surface-container-highest text-on-surface-variant ring-4 ring-surface-container-lowest transition-colors" id="indicator-3">
+                        3
+                    </div>
+<span class="font-label-caps text-label-caps text-on-surface-variant absolute -bottom-6 whitespace-nowrap" id="label-3">Services</span>
+</div>
+</div>
+</header>
+<!-- Dynamic Content Area -->
+<div class="p-8 relative min-h-[400px]">
+<!-- Step 1: User Profile -->
+<section class="step-transition step-active w-full flex flex-col gap-6" id="step-1-content">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Personal Details</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Tell us a bit about yourself to personalize your experience.</p>
+</div>
+<div class="space-y-5">
+<!-- Full Name -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="fullName">Full Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">person</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface font-body-sm text-body-sm rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-outline/50" id="fullName" placeholder="Jane Doe" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<!-- Country -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="country">Country</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">public</span>
+<select class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface font-body-sm text-body-sm rounded-lg pl-10 pr-10 py-3 appearance-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="country">
+<option disabled="" selected="" value="">Select Country</option>
+<option value="us">United States</option>
+<option value="uk">United Kingdom</option>
+<option value="ca">Canada</option>
+<option value="au">Australia</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Timezone -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="timezone">Timezone</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">schedule</span>
+<select class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface font-body-sm text-body-sm rounded-lg pl-10 pr-10 py-3 appearance-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="timezone">
+<option disabled="" selected="" value="">Select Timezone</option>
+<option value="pst">Pacific Time (PT)</option>
+<option value="est">Eastern Time (ET)</option>
+<option value="utc">UTC</option>
+<option value="cet">Central European (CET)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Step 2: Organization Setup -->
+<section class="step-transition step-hidden w-full flex flex-col gap-6 w-full" id="step-2-content">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Organization Profile</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Establish your agency's identity within ClientOS.</p>
+</div>
+<div class="space-y-5">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<!-- Company Name -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="companyName">Company Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">domain</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface font-body-sm text-body-sm rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-outline/50" id="companyName" placeholder="Acme Agency" type="text"/>
+</div>
+</div>
+<!-- Website -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="website">Website URL</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">language</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface font-body-sm text-body-sm rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-outline/50" id="website" placeholder="https://acme.com" type="url"/>
+</div>
+</div>
+</div>
+<!-- Logo Upload -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Company Logo</label>
+<div class="w-full border-2 border-dashed border-outline-variant rounded-xl bg-surface-container-lowest/50 hover:bg-surface-container-low hover:border-primary/50 transition-colors cursor-pointer flex flex-col items-center justify-center py-8 px-4 text-center group">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center mb-3 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">cloud_upload</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface font-medium mb-1">Click to upload or drag and drop</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant">SVG, PNG, JPG or GIF (max. 2MB)</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Step 3: Service Selection -->
+<section class="step-transition step-hidden w-full flex flex-col gap-6 w-full" id="step-3-content">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Core Capabilities</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Select the primary services you offer to align the AI engine.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Service Card 1 -->
+<label class="relative flex flex-col items-start p-4 border border-outline-variant rounded-xl bg-surface-container-lowest hover:border-primary hover:bg-surface-container-low cursor-pointer transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+<input class="peer sr-only" name="service" type="checkbox" value="webdev"/>
+<div class="flex items-center justify-between w-full mb-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-primary border border-outline-variant/50">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">code</span>
+</div>
+<div class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center peer-checked:bg-primary peer-checked:border-primary transition-colors">
+<span class="material-symbols-outlined text-[14px] text-on-primary opacity-0 peer-checked:opacity-100 font-bold">check</span>
+</div>
+</div>
+<h3 class="font-body-lg text-body-lg font-medium text-on-surface mb-1">Web Development</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Custom sites, web apps, and CMS implementations.</p>
+</label>
+<!-- Service Card 2 -->
+<label class="relative flex flex-col items-start p-4 border border-outline-variant rounded-xl bg-surface-container-lowest hover:border-primary hover:bg-surface-container-low cursor-pointer transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+<input class="peer sr-only" name="service" type="checkbox" value="seo"/>
+<div class="flex items-center justify-between w-full mb-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-secondary border border-outline-variant/50">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+<div class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center peer-checked:bg-primary peer-checked:border-primary transition-colors">
+<span class="material-symbols-outlined text-[14px] text-on-primary opacity-0 peer-checked:opacity-100 font-bold">check</span>
+</div>
+</div>
+<h3 class="font-body-lg text-body-lg font-medium text-on-surface mb-1">SEO Optimization</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Technical SEO, content strategy, and link building.</p>
+</label>
+<!-- Service Card 3 -->
+<label class="relative flex flex-col items-start p-4 border border-outline-variant rounded-xl bg-surface-container-lowest hover:border-primary hover:bg-surface-container-low cursor-pointer transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+<input class="peer sr-only" name="service" type="checkbox" value="ai"/>
+<div class="flex items-center justify-between w-full mb-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-tertiary border border-outline-variant/50">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center peer-checked:bg-primary peer-checked:border-primary transition-colors">
+<span class="material-symbols-outlined text-[14px] text-on-primary opacity-0 peer-checked:opacity-100 font-bold">check</span>
+</div>
+</div>
+<h3 class="font-body-lg text-body-lg font-medium text-on-surface mb-1">AI Automation</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Workflow automation, custom GPTs, and AI integrations.</p>
+</label>
+<!-- Service Card 4 -->
+<label class="relative flex flex-col items-start p-4 border border-outline-variant rounded-xl bg-surface-container-lowest hover:border-primary hover:bg-surface-container-low cursor-pointer transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+<input class="peer sr-only" name="service" type="checkbox" value="design"/>
+<div class="flex items-center justify-between w-full mb-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-error border border-outline-variant/50">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">brush</span>
+</div>
+<div class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center peer-checked:bg-primary peer-checked:border-primary transition-colors">
+<span class="material-symbols-outlined text-[14px] text-on-primary opacity-0 peer-checked:opacity-100 font-bold">check</span>
+</div>
+</div>
+<h3 class="font-body-lg text-body-lg font-medium text-on-surface mb-1">UI/UX Design</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Product design, wireframing, and interactive prototypes.</p>
+</label>
+</div>
+</section>
+</div>
+<!-- Footer Actions -->
+<footer class="p-6 border-t border-outline-variant bg-surface-container-lowest/80 backdrop-blur-sm flex items-center justify-between mt-auto">
+<button class="px-6 py-2.5 rounded-lg font-body-sm text-body-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors invisible" id="btn-back" onclick="prevStep()">
+                Back
+            </button>
+<button class="px-6 py-2.5 rounded-lg font-body-sm text-body-sm font-medium bg-primary text-on-primary hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-2 ml-auto" id="btn-next" onclick="nextStep()">
+                Continue
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</footer>
+</main>
+<!-- Simple Logic for Presentation -->
+<script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function updateUI() {
+            // Update Content Visibility
+            for (let i = 1; i <= totalSteps; i++) {
+                const section = document.getElementById(`step-${i}-content`);
+                if (i === currentStep) {
+                    section.classList.remove('step-hidden');
+                    section.classList.add('step-active');
+                } else {
+                    section.classList.remove('step-active');
+                    section.classList.add('step-hidden');
+                }
+            }
+
+            // Update Buttons
+            const btnBack = document.getElementById('btn-back');
+            const btnNext = document.getElementById('btn-next');
+            
+            if (currentStep === 1) {
+                btnBack.classList.add('invisible');
+            } else {
+                btnBack.classList.remove('invisible');
+            }
+
+            if (currentStep === totalSteps) {
+                btnNext.innerHTML = `Complete Setup <span class="material-symbols-outlined text-sm">check_circle</span>`;
+            } else {
+                btnNext.innerHTML = `Continue <span class="material-symbols-outlined text-sm">arrow_forward</span>`;
+            }
+
+            // Update Stepper Visuals
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = `${((currentStep - 1) / (totalSteps - 1)) * 100}%`;
+
+            for (let i = 1; i <= totalSteps; i++) {
+                const indicator = document.getElementById(`indicator-${i}`);
+                const label = document.getElementById(`label-${i}`);
+                
+                if (i < currentStep) {
+                    // Completed
+                    indicator.className = 'w-10 h-10 rounded-full flex items-center justify-center font-label-caps text-label-caps bg-primary text-on-primary ring-4 ring-surface-container-lowest transition-colors';
+                    indicator.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span>';
+                    label.className = 'font-label-caps text-label-caps text-primary absolute -bottom-6 whitespace-nowrap opacity-80';
+                } else if (i === currentStep) {
+                    // Active
+                    indicator.className = 'w-10 h-10 rounded-full flex items-center justify-center font-label-caps text-label-caps bg-primary text-on-primary ring-4 ring-surface-container-lowest transition-colors shadow-lg shadow-primary/20 scale-110';
+                    indicator.innerHTML = i;
+                    label.className = 'font-label-caps text-label-caps text-primary absolute -bottom-6 whitespace-nowrap font-bold';
+                } else {
+                    // Inactive
+                    indicator.className = 'w-10 h-10 rounded-full flex items-center justify-center font-label-caps text-label-caps bg-surface-container text-on-surface-variant ring-4 ring-surface-container-lowest transition-colors';
+                    indicator.innerHTML = i;
+                    label.className = 'font-label-caps text-label-caps text-on-surface-variant absolute -bottom-6 whitespace-nowrap';
+                }
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateUI();
+            } else {
+                // Handle completion (mock)
+                const btnNext = document.getElementById('btn-next');
+                btnNext.innerHTML = `<span class="material-symbols-outlined animate-spin text-sm">sync</span> Processing...`;
+                btnNext.classList.add('opacity-80', 'pointer-events-none');
+                setTimeout(() => {
+                    alert("Onboarding Complete!");
+                    btnNext.innerHTML = `Complete Setup <span class="material-symbols-outlined text-sm">check_circle</span>`;
+                    btnNext.classList.remove('opacity-80', 'pointer-events-none');
+                }, 1000);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        }
+
+        function setStep(step) {
+            // Optional: Allow clicking previous steps
+            if (step < currentStep) {
+                currentStep = step;
+                updateUI();
+            }
+        }
+
+        // Initialize
+        updateUI();
+    </script>
+</body></html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Prospect Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#131b2e",
+                        "on-secondary": "#003824",
+                        "surface-variant": "#2d3449",
+                        "on-primary": "#002e69",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-fixed": "#e1e0ff",
+                        "surface-tint": "#adc6ff",
+                        "primary": "#adc6ff",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary": "#1000a9",
+                        "tertiary": "#c0c1ff",
+                        "surface": "#0b1326",
+                        "on-secondary-container": "#00311f",
+                        "secondary-container": "#00a572",
+                        "inverse-primary": "#005bc1",
+                        "on-secondary-fixed": "#002113",
+                        "surface-dim": "#0b1326",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "error-container": "#93000a",
+                        "on-surface-variant": "#c1c6d7",
+                        "on-primary-fixed": "#001a41",
+                        "on-tertiary-fixed": "#07006c",
+                        "secondary-fixed-dim": "#4edea3",
+                        "error": "#ffb4ab",
+                        "on-surface": "#dae2fd",
+                        "primary-container": "#4b8eff",
+                        "on-primary-fixed-variant": "#004493",
+                        "background": "#0b1326",
+                        "inverse-on-surface": "#283044",
+                        "on-tertiary-container": "#0d0096",
+                        "on-error": "#690005",
+                        "surface-container-high": "#222a3d",
+                        "surface-bright": "#31394d",
+                        "outline": "#8b90a0",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-background": "#dae2fd",
+                        "secondary": "#4edea3",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#8083ff",
+                        "surface-container-highest": "#2d3449",
+                        "outline-variant": "#414755",
+                        "surface-container-lowest": "#060e20",
+                        "on-primary-container": "#00285c",
+                        "surface-container": "#171f33",
+                        "on-secondary-fixed-variant": "#005236",
+                        "primary-fixed-dim": "#adc6ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-padding": "16px",
+                        "sidebar-width": "240px",
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "card-gap": "12px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "display": ["Inter"],
+                        "lead-score": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "lead-score": ["14px", { "lineHeight": "14px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .circular-chart {
+            display: block;
+            margin: 0 auto;
+            max-width: 80%;
+            max-height: 250px;
+        }
+        .circle-bg {
+            fill: none;
+            stroke: #171f33;
+            stroke-width: 3.8;
+        }
+        .circle {
+            fill: none;
+            stroke-width: 2.8;
+            stroke-linecap: round;
+            animation: progress 1s ease-out forwards;
+        }
+        @keyframes progress {
+            0% { stroke-dasharray: 0 100; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased font-body-sm selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full flex justify-between items-center px-container-padding h-16 z-50 bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="text-primary dark:text-primary active:scale-95 duration-150 p-2 -ml-2 rounded-full hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary tracking-tight">Loomis AI</h1>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A small, professional headshot of a business user in a modern corporate setting with deep blue and subtle neon accents, perfectly circular for an avatar placeholder." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBgMQVaj7xGDTJhF6Syr2yvratc7Miq34fph0rUMlYMTOukYVNZi68DC3s6IRy07afm2lmGET6SZKPsOxShygffoD1Ua39GmqBjtPtcCtktzCdnVmQgmRU-HWeOwguCVlOTar5PiWSr0sSuc7qQtCHukEnq2pJn9OoD1aZqsL-iF9-jLiQ9d2b0i5lhSSvaw8QzOSHtF43Tdzq4n44e5np5wq05sfK6b_jCBuFnC8VFtfEFuVgLdGa"/>
+</div>
+</header>
+<main class="flex-1 mt-16 p-container-padding flex flex-col gap-6">
+<!-- Profile Header -->
+<section class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl bg-surface-container flex-shrink-0 flex items-center justify-center border border-outline-variant p-2 overflow-hidden">
+<img class="w-full h-full object-contain" data-alt="A high-end, minimalist abstract logo for a tech company, featuring sharp geometric shapes in deep blues and bright cyan against a dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYisJzGNpLficCz8eEUOXI9k-Zyhc0skAVgm--yYfqvPH5qcFeRTMYDPg5XcRyjBychjvDuc-QgqYZduJPvZfU1xWSEJjvUcLESH2lHT16O50AJ_w5Zk-mEqrc3mafO6GtM_qJYbKkSkaxid9pdXwCloi-SkQ_DWZh3iVJHVhdM0u4OA0Z9aFJvSTgddgneTLVbs1SqqjKSVM9vJc3VYYQ-nxKfUBMmT-CZJsCYWcJudaujoAC9hPH"/>
+</div>
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Acme Corp</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-caps text-label-caps border border-outline-variant">Enterprise</span>
+<a class="text-primary hover:underline font-body-sm text-body-sm flex items-center gap-1" href="#">acme.com <span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
+</div>
+</div>
+</section>
+<!-- AI Fit Score -->
+<section class="bg-surface-container rounded-xl p-4 border border-outline-variant flex flex-col items-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent pointer-events-none"></div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant self-start mb-2 uppercase tracking-wider">AI Fit Score</h3>
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="circular-chart text-secondary" viewbox="0 0 36 36">
+<path class="circle-bg" d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+<path class="circle stroke-current" d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="92, 100"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-display text-display text-on-surface leading-none">92</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> High Propensity
+            </p>
+</section>
+<!-- Firmographics Grid -->
+<section class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container p-3 rounded-lg border border-outline-variant">
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-1">Industry</span>
+<span class="font-body-sm text-body-sm text-on-surface">SaaS / Cloud Tech</span>
+</div>
+<div class="bg-surface-container p-3 rounded-lg border border-outline-variant">
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-1">Company Size</span>
+<span class="font-body-sm text-body-sm text-on-surface">1,000 - 5,000</span>
+</div>
+<div class="bg-surface-container p-3 rounded-lg border border-outline-variant">
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-1">Est. Revenue</span>
+<span class="font-body-sm text-body-sm text-on-surface">$50M - $100M</span>
+</div>
+<div class="bg-surface-container p-3 rounded-lg border border-outline-variant">
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-1">Location</span>
+<span class="font-body-sm text-body-sm text-on-surface">San Francisco, CA</span>
+</div>
+</section>
+<!-- Buying Triggers -->
+<section class="bg-surface-container rounded-xl p-4 border border-outline-variant">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4 uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">bolt</span> Buying Triggers
+            </h3>
+<ul class="space-y-3">
+<li class="flex items-start gap-3">
+<div class="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center mt-0.5 flex-shrink-0">
+<span class="material-symbols-outlined text-[14px]">person_add</span>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-on-surface font-semibold">New VP of Sales Hired</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-xs">Sarah Jenkins joined 2 days ago.</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<div class="w-6 h-6 rounded-full bg-secondary/20 text-secondary flex items-center justify-center mt-0.5 flex-shrink-0">
+<span class="material-symbols-outlined text-[14px]">campaign</span>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-on-surface font-semibold">Funding Round Closed</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-xs">$40M Series C announced last week.</p>
+</div>
+</li>
+</ul>
+</section>
+<!-- Primary Action Strategy -->
+<section class="bg-gradient-to-br from-surface-container to-surface-variant rounded-xl p-4 border border-outline-variant shadow-lg relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
+<h3 class="font-label-caps text-label-caps text-primary mb-2 uppercase tracking-wider">AI Recommended Strategy</h3>
+<p class="font-body-sm text-body-sm text-on-surface mb-4">Lead with value around accelerating onboarding for new sales hires, referencing their recent VP appointment. Emphasize time-to-revenue metrics.</p>
+<div class="flex gap-3 mt-4">
+<button class="flex-1 bg-primary text-on-primary font-body-sm text-body-sm font-semibold py-2.5 px-4 rounded-lg active:scale-95 transition-transform flex justify-center items-center gap-2 shadow-md">
+<span class="material-symbols-outlined text-[18px]">edit_document</span> Draft Email
+                </button>
+<button class="flex-1 bg-transparent border border-outline text-on-surface font-body-sm text-body-sm font-semibold py-2.5 px-4 rounded-lg active:scale-95 transition-transform flex justify-center items-center gap-2 hover:bg-surface-variant/50">
+<span class="material-symbols-outlined text-[18px]">sync</span> Sync CRM
+                </button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<!-- Suppressed on detailed profile screen as it's a focused task/sub-page view -->
+</body></html>

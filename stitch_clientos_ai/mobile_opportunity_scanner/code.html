@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Opportunity Scanner Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#131b2e",
+                        "on-secondary": "#003824",
+                        "surface-variant": "#2d3449",
+                        "on-primary": "#002e69",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-fixed": "#e1e0ff",
+                        "surface-tint": "#adc6ff",
+                        "primary": "#adc6ff",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary": "#1000a9",
+                        "tertiary": "#c0c1ff",
+                        "surface": "#0b1326",
+                        "on-secondary-container": "#00311f",
+                        "secondary-container": "#00a572",
+                        "inverse-primary": "#005bc1",
+                        "on-secondary-fixed": "#002113",
+                        "surface-dim": "#0b1326",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "error-container": "#93000a",
+                        "on-surface-variant": "#c1c6d7",
+                        "on-primary-fixed": "#001a41",
+                        "on-tertiary-fixed": "#07006c",
+                        "secondary-fixed-dim": "#4edea3",
+                        "error": "#ffb4ab",
+                        "on-surface": "#dae2fd",
+                        "primary-container": "#4b8eff",
+                        "on-primary-fixed-variant": "#004493",
+                        "background": "#0b1326",
+                        "inverse-on-surface": "#283044",
+                        "on-tertiary-container": "#0d0096",
+                        "on-error": "#690005",
+                        "surface-container-high": "#222a3d",
+                        "surface-bright": "#31394d",
+                        "outline": "#8b90a0",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-background": "#dae2fd",
+                        "secondary": "#4edea3",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#8083ff",
+                        "surface-container-highest": "#2d3449",
+                        "outline-variant": "#414755",
+                        "surface-container-lowest": "#060e20",
+                        "on-primary-container": "#00285c",
+                        "surface-container": "#171f33",
+                        "on-secondary-fixed-variant": "#005236",
+                        "primary-fixed-dim": "#adc6ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "sidebar-width": "240px",
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "card-gap": "12px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "display": ["Inter"],
+                        "lead-score": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "lead-score": ["14px", { "lineHeight": "14px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .bg-gradient-scan {
+            background: linear-gradient(135deg, rgba(75, 142, 255, 0.1) 0%, rgba(0, 165, 114, 0.05) 100%);
+        }
+        .progress-ring {
+            transition: stroke-dashoffset 0.8s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-sm min-h-screen flex flex-col md:hidden pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline-variant flex justify-between items-center px-container-padding h-16 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary dark:text-primary" data-icon="bubble_chart" data-weight="fill" style="font-variation-settings: 'FILL' 1;">bubble_chart</span>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary tracking-tight">Loomis AI</h1>
+</div>
+<div>
+<img class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A small, circular profile picture of a professional individual in a corporate setting. High-quality corporate headshot photography style with soft lighting, matching the premium deep navy blue and sleek tech aesthetic of the application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbuga0LiqcaJ-Iw_WMAM_HlqGN4-YFftJVh_l4uTF33IFH7E5gwytZUcVXaoogg9jRqxdq6Yy52XNdp3olmgxtmVEhV2weuoYqEQ_I9xEIYK6yA3bwUgsbxVRmz7pQXYRQbIRhJuN4GaPP7a0Ex0ofepO15liJQQ968tRvE2WmA51yfZzkegY-kMT6iH_Rh7PCvCjZuiVo5I0_uRV-txdTCm1hooZk_OKORt1G_iDOAX9hu1Sl0WS3"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 mt-16 px-4 pt-6 space-y-6">
+<!-- Header & Action -->
+<section class="space-y-4">
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background mb-1">Intelligence</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Live Opportunity Scanner</p>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-colors active:scale-95 duration-150 shadow-[0_0_15px_rgba(173,198,255,0.2)]">
+<span class="material-symbols-outlined" data-icon="radar">radar</span>
+<span class="font-body-lg text-body-lg font-semibold">Scan for New Opportunities</span>
+</button>
+</section>
+<!-- Summary Stats Bento -->
+<section class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container rounded-xl p-4 border border-outline-variant bg-gradient-scan">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase">Today's Leads</p>
+<div class="flex items-end gap-2">
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">14</span>
+<span class="font-body-sm text-body-sm text-secondary mb-1 flex items-center"><span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span> +3</span>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-4 border border-outline-variant">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase">Avg Fit Score</p>
+<div class="flex items-end gap-2">
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-secondary">86</span>
+</div>
+</div>
+</section>
+<!-- Opportunity List -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-background">High-Intent Opportunities</h3>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="filter_list">filter_list</span>
+</div>
+<!-- List Item 1 -->
+<div class="bg-surface-container rounded-xl p-4 border border-outline-variant hover:border-primary/50 transition-colors">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-variant flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="domain">domain</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-semibold text-on-background">Acme Corp</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Enterprise Software</p>
+</div>
+</div>
+<!-- Lead Score Ring -->
+<div class="relative w-10 h-10 flex items-center justify-center">
+<svg class="absolute inset-0 w-full h-full transform -rotate-90" viewbox="0 0 40 40">
+<circle class="text-surface-variant" cx="20" cy="20" fill="none" r="16" stroke="currentColor" stroke-width="3"></circle>
+<circle class="text-secondary progress-ring" cx="20" cy="20" fill="none" r="16" stroke="currentColor" stroke-dasharray="100" stroke-dashoffset="6" stroke-width="3"></circle>
+</svg>
+<span class="font-lead-score text-lead-score text-secondary z-10 relative">94</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center px-2 py-1 rounded bg-secondary-container/20 text-secondary border border-secondary-container/30 font-label-caps text-label-caps uppercase">
+                            Tech Stack Change
+                        </span>
+<span class="inline-flex items-center px-2 py-1 rounded bg-surface-variant text-on-surface-variant border border-outline-variant font-label-caps text-label-caps uppercase">
+                            Recent Funding
+                        </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 line-clamp-2">Detected addition of key competitor tools to tech stack indicating potential migration window within Q3.</p>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="bg-surface-container rounded-xl p-4 border border-outline-variant hover:border-primary/50 transition-colors">
+<div class="flex items-start justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-variant flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="apartment">apartment</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-semibold text-on-background">Stark Industries</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Manufacturing</p>
+</div>
+</div>
+<!-- Lead Score Ring -->
+<div class="relative w-10 h-10 flex items-center justify-center">
+<svg class="absolute inset-0 w-full h-full transform -rotate-90" viewbox="0 0 40 40">
+<circle class="text-surface-variant" cx="20" cy="20" fill="none" r="16" stroke="currentColor" stroke-width="3"></circle>
+<circle class="text-primary progress-ring" cx="20" cy="20" fill="none" r="16" stroke="currentColor" stroke-dasharray="100" stroke-dashoffset="12" stroke-width="3"></circle>
+</svg>
+<span class="font-lead-score text-lead-score text-primary z-10 relative">88</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center px-2 py-1 rounded bg-primary-container/20 text-primary border border-primary-container/30 font-label-caps text-label-caps uppercase">
+                            Hiring for Sales
+                        </span>
+<span class="inline-flex items-center px-2 py-1 rounded bg-surface-variant text-on-surface-variant border border-outline-variant font-label-caps text-label-caps uppercase">
+                            Exec Change
+                        </span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-safe px-2 bg-surface-container-low dark:bg-surface-container-low border-t border-outline-variant dark:border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="leaderboard">leaderboard</span>
+<span class="font-label-caps text-label-caps">Sales</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="send_time_extension">send_time_extension</span>
+<span class="font-label-caps text-label-caps">Outreach</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="psychology" data-weight="fill" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="font-label-caps text-label-caps">Intelligence</span>
+</a>
+</nav>
+<script>
+        // Simple animation trigger for rings on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const rings = document.querySelectorAll('.progress-ring');
+                rings.forEach(ring => {
+                    const val = ring.getAttribute('stroke-dashoffset');
+                    ring.style.strokeDashoffset = '100';
+                    setTimeout(() => {
+                        ring.style.strokeDashoffset = val;
+                    }, 50);
+                });
+            }, 100);
+        });
+    </script>
+</body></html>

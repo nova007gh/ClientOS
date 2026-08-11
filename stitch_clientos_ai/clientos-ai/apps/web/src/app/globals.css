@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-surface text-on-surface font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: 'opsz' 32;
+  }
+
+  * {
+    @apply border-outline-variant;
+  }
+}
+
+@layer components {
+  .sidebar-link {
+    @apply flex items-center gap-3 rounded px-3 py-2 text-body-sm text-on-surface-variant transition-colors hover:bg-surface-high hover:text-on-surface;
+  }
+
+  .sidebar-link-active {
+    @apply bg-surface-highest text-on-surface;
+  }
+}

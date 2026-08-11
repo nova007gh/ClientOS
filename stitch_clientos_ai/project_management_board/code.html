@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Work - ClientOS AI Project Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#d8e2ff",
+                        "on-tertiary-container": "#0d0096",
+                        "surface-container-lowest": "#060e20",
+                        "on-primary-fixed": "#001a41",
+                        "surface-container-high": "#222a3d",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-background": "#dae2fd",
+                        "inverse-primary": "#005bc1",
+                        "primary": "#adc6ff",
+                        "secondary": "#4edea3",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-primary": "#002e69",
+                        "surface": "#0b1326",
+                        "on-primary-fixed-variant": "#004493",
+                        "outline-variant": "#414755",
+                        "on-surface": "#dae2fd",
+                        "on-secondary-container": "#00311f",
+                        "surface-container": "#171f33",
+                        "tertiary-fixed": "#e1e0ff",
+                        "tertiary": "#c0c1ff",
+                        "error-container": "#93000a",
+                        "background": "#0b1326",
+                        "primary-fixed-dim": "#adc6ff",
+                        "primary-container": "#4b8eff",
+                        "surface-variant": "#2d3449",
+                        "on-secondary": "#003824",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#00285c",
+                        "secondary-container": "#00a572",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-dim": "#0b1326",
+                        "inverse-on-surface": "#283044",
+                        "on-surface-variant": "#c1c6d7",
+                        "outline": "#8b90a0",
+                        "surface-container-low": "#131b2e",
+                        "tertiary-container": "#8083ff",
+                        "on-tertiary": "#1000a9",
+                        "surface-container-highest": "#2d3449",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "on-tertiary-fixed": "#07006c",
+                        "on-secondary-fixed": "#002113",
+                        "surface-bright": "#31394d",
+                        "surface-tint": "#adc6ff",
+                        "on-error": "#690005"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "card-gap": "12px",
+                        "unit": "4px",
+                        "sidebar-width": "240px",
+                        "gutter": "16px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "lead-score": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "lead-score": ["14px", { "lineHeight": "14px", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #0b1326; color: #dae2fd; margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; }
+        .glass-panel { background: rgba(23, 31, 51, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid #414755; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .glow-effect:hover { box-shadow: 0 0 15px rgba(173, 198, 255, 0.15); border-color: rgba(173, 198, 255, 0.4); }
+        .task-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .task-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); border-color: #8b90a0; }
+        
+        /* Custom animated gradient for AI Planner */
+        .ai-gradient-bg {
+            background: linear-gradient(135deg, rgba(75, 142, 255, 0.1) 0%, rgba(192, 193, 255, 0.05) 100%);
+            background-size: 200% 200%;
+            animation: gradientMove 8s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface flex flex-col md:flex-row h-screen antialiased">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden md:flex flex-col h-screen w-sidebar-width fixed left-0 top-0 bg-surface-container-low dark:bg-surface-dim border-r border-outline-variant dark:border-outline-variant py-container-padding z-40">
+<div class="px-container-padding mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-on-primary-container font-bold">C</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary">ClientOS AI</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Agency Growth</p>
+</div>
+</div>
+<div class="flex-1 px-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Home
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                Sales
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+                Outreach
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="handshake">handshake</span>
+                Clients
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface-container-highest text-primary dark:text-primary font-bold border-r-2 border-primary transition-all scale-[0.98] font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="task_alt" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+                Work
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+                Intelligence
+            </a>
+</div>
+<div class="px-4 mb-4">
+<button class="w-full py-3 rounded-lg bg-primary text-on-primary font-label-caps text-label-caps font-bold hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Campaign
+            </button>
+</div>
+<div class="px-4 border-t border-outline-variant pt-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="help">help</span>
+                Support
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col w-full md:ml-sidebar-width h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-container-padding py-4 sticky top-0 z-30 bg-surface/80 backdrop-blur-md border-b border-outline-variant h-16 shrink-0">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Acme Corp Implementation</h2>
+<span class="bg-secondary-container/20 text-secondary border border-secondary/30 px-2 py-1 rounded font-label-caps text-label-caps flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    On Track
+                </span>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center bg-surface-container rounded-full border border-outline-variant px-3 py-1.5 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px] mr-2">search</span>
+<input class="bg-transparent border-none focus:outline-none text-body-sm font-body-sm text-on-surface w-48 placeholder-on-surface-variant" placeholder="Search tasks..." type="text"/>
+</div>
+<button class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full font-label-caps text-label-caps font-semibold flex items-center gap-2 hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-[16px]">smart_toy</span>
+                    AI Copilot
+                </button>
+<div class="flex items-center gap-2 border-l border-outline-variant pl-4 ml-2">
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Dashboard Content Scrollable Area -->
+<div class="flex-1 overflow-y-auto overflow-x-hidden p-container-padding bg-background scrollbar-hide">
+<!-- Top Dashboard Row: AI Planner & Health -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-gutter">
+<!-- AI Project Planner Banner (Spans 2 cols) -->
+<div class="lg:col-span-2 rounded-xl glass-panel ai-gradient-bg p-6 relative overflow-hidden flex flex-col justify-between border border-primary/30">
+<div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[120px] text-primary">auto_awesome</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">smart_toy</span>
+<h3 class="font-label-caps text-label-caps text-primary tracking-widest uppercase">AI Project Planner Active</h3>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Contract parsed. 42 tasks generated.</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-lg mb-6">ClientOS AI has automatically broken down the 'Enterprise SaaS Migration' contract into phases, assigned team members based on capacity, and estimated timelines.</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-primary text-on-primary px-4 py-2 rounded font-label-caps text-label-caps hover:bg-primary-fixed transition-colors">Review Plan</button>
+<button class="px-4 py-2 rounded font-label-caps text-label-caps text-on-surface-variant border border-outline-variant hover:bg-surface-container transition-colors">Regenerate</button>
+<div class="ml-auto flex items-center gap-3">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-container border-2 border-surface flex items-center justify-center text-[10px] font-bold text-on-surface z-30">JD</div>
+<div class="w-8 h-8 rounded-full bg-tertiary-container border-2 border-surface flex items-center justify-center text-[10px] font-bold text-on-tertiary-container z-20">AK</div>
+<div class="w-8 h-8 rounded-full bg-secondary-container border-2 border-surface flex items-center justify-center text-[10px] font-bold text-on-secondary-container z-10">MR</div>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Team Assigned</span>
+</div>
+</div>
+</div>
+<!-- Project Health -->
+<div class="rounded-xl glass-panel p-6 flex flex-col">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-4">Project Health</h3>
+<div class="flex-1 flex flex-col justify-center gap-6">
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-sm text-body-sm text-on-surface">Timeline</span>
+<span class="font-label-caps text-label-caps text-secondary">Week 2 of 8</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-1/4 rounded-full"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-sm text-body-sm text-on-surface">Budget Burn</span>
+<span class="font-label-caps text-label-caps text-primary">22% ($14k/$65k)</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[22%] rounded-full"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-2">
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-1">Tasks Done</div>
+<div class="font-headline-md text-headline-md text-on-surface">12 <span class="text-body-sm text-on-surface-variant">/ 42</span></div>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-1">Blockers</div>
+<div class="font-headline-md text-headline-md text-error">1</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Kanban Board Section -->
+<div class="flex-1 flex flex-col min-h-[500px]">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">Active Sprint Tasks</h3>
+<div class="flex items-center gap-2">
+<button class="p-1.5 rounded bg-surface-container-high border border-outline-variant text-primary hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined text-[18px]">view_kanban</span>
+</button>
+<button class="p-1.5 rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+</button>
+<button class="p-1.5 rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+</button>
+</div>
+</div>
+<!-- Kanban Columns Container -->
+<div class="flex-1 flex gap-gutter overflow-x-auto pb-4 scrollbar-hide">
+<!-- To Do Column -->
+<div class="min-w-[320px] max-w-[320px] flex flex-col bg-surface-container-low/50 rounded-xl border border-outline-variant/50 p-3 h-full">
+<div class="flex justify-between items-center mb-4 px-1">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+<h4 class="font-label-caps text-label-caps text-on-surface">To Do</h4>
+<span class="bg-surface-container px-1.5 py-0.5 rounded text-on-surface-variant text-[10px]">5</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[16px]">add</span></button>
+</div>
+<div class="flex flex-col gap-3 overflow-y-auto scrollbar-hide flex-1">
+<!-- Task Card 1 (AI Generated) -->
+<div class="task-card bg-surface p-4 rounded-lg border border-primary/40 relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-8 h-8 bg-primary/10 rounded-bl-lg flex items-center justify-center border-b border-l border-primary/20">
+<span class="material-symbols-outlined text-[14px] text-primary" title="AI Generated">auto_awesome</span>
+</div>
+<div class="flex gap-2 mb-2">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-caps text-[10px]">Phase 1</span>
+<span class="px-2 py-0.5 rounded bg-error/10 text-error font-label-caps text-[10px] border border-error/20">High</span>
+</div>
+<h5 class="font-body-sm text-body-sm font-semibold text-on-surface mb-2 pr-6">Setup Cloud Infrastructure environments</h5>
+<div class="flex justify-between items-center mt-4">
+<div class="flex -space-x-1.5">
+<div class="w-6 h-6 rounded-full bg-tertiary-container flex items-center justify-center text-[9px] font-bold text-on-tertiary-container ring-1 ring-surface z-20">AK</div>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[12px]">calendar_today</span>
+<span class="font-label-caps text-[10px]">Oct 12</span>
+</div>
+</div>
+</div>
+<!-- Task Card 2 -->
+<div class="task-card bg-surface p-4 rounded-lg border border-outline-variant">
+<div class="flex gap-2 mb-2">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-caps text-[10px]">Design</span>
+</div>
+<h5 class="font-body-sm text-body-sm font-semibold text-on-surface mb-2">Review initial wireframes with stakeholder</h5>
+<div class="flex justify-between items-center mt-4">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant ring-1 ring-surface border border-dashed border-outline-variant">
+<span class="material-symbols-outlined text-[12px]">person_add</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[12px]">calendar_today</span>
+<span class="font-label-caps text-[10px]">Oct 14</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- In Progress Column -->
+<div class="min-w-[320px] max-w-[320px] flex flex-col bg-surface-container-low/50 rounded-xl border border-outline-variant/50 p-3 h-full">
+<div class="flex justify-between items-center mb-4 px-1">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<h4 class="font-label-caps text-label-caps text-on-surface">In Progress</h4>
+<span class="bg-surface-container px-1.5 py-0.5 rounded text-on-surface-variant text-[10px]">3</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[16px]">more_horiz</span></button>
+</div>
+<div class="flex flex-col gap-3 overflow-y-auto scrollbar-hide flex-1">
+<!-- Task Card 3 -->
+<div class="task-card bg-surface p-4 rounded-lg border border-outline-variant shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
+<div class="flex gap-2 mb-2">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-caps text-[10px]">Data</span>
+<span class="px-2 py-0.5 rounded bg-tertiary-container/20 text-tertiary font-label-caps text-[10px] border border-tertiary/20">Blocked</span>
+</div>
+<h5 class="font-body-sm text-body-sm font-semibold text-on-surface mb-2">Map legacy DB schema to new architecture</h5>
+<div class="w-full bg-surface-container h-1 rounded-full mb-3 overflow-hidden">
+<div class="bg-primary h-full w-[45%]"></div>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="flex -space-x-1.5">
+<div class="w-6 h-6 rounded-full bg-secondary-container flex items-center justify-center text-[9px] font-bold text-on-secondary-container ring-1 ring-surface z-10">MR</div>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<div class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-[12px]">forum</span>
+<span class="font-label-caps text-[10px]">3</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Task Card 4 (AI Generated) -->
+<div class="task-card bg-surface p-4 rounded-lg border border-primary/40 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-8 h-8 bg-primary/10 rounded-bl-lg flex items-center justify-center border-b border-l border-primary/20">
+<span class="material-symbols-outlined text-[14px] text-primary" title="AI Generated">auto_awesome</span>
+</div>
+<div class="flex gap-2 mb-2">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-caps text-[10px]">Phase 1</span>
+</div>
+<h5 class="font-body-sm text-body-sm font-semibold text-on-surface mb-2 pr-6">Configure SSO and Role-based access control</h5>
+<div class="w-full bg-surface-container h-1 rounded-full mb-3 overflow-hidden">
+<div class="bg-primary h-full w-[80%]"></div>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="flex -space-x-1.5">
+<div class="w-6 h-6 rounded-full bg-surface-container border-2 border-surface flex items-center justify-center text-[9px] font-bold text-on-surface z-30">JD</div>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[12px]">calendar_today</span>
+<span class="font-label-caps text-[10px]">Today</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Review Column -->
+<div class="min-w-[320px] max-w-[320px] flex flex-col bg-surface-container-low/50 rounded-xl border border-outline-variant/50 p-3 h-full opacity-70 hover:opacity-100 transition-opacity">
+<div class="flex justify-between items-center mb-4 px-1">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<h4 class="font-label-caps text-label-caps text-on-surface">Review</h4>
+<span class="bg-surface-container px-1.5 py-0.5 rounded text-on-surface-variant text-[10px]">2</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[16px]">more_horiz</span></button>
+</div>
+<div class="flex flex-col gap-3 overflow-y-auto scrollbar-hide flex-1">
+<!-- Task Card 5 -->
+<div class="task-card bg-surface p-4 rounded-lg border border-outline-variant">
+<div class="flex gap-2 mb-2">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-caps text-[10px]">Compliance</span>
+</div>
+<h5 class="font-body-sm text-body-sm font-semibold text-on-surface mb-2">Security audit documentation sign-off</h5>
+<div class="flex justify-between items-center mt-4">
+<div class="flex -space-x-1.5">
+<div class="w-6 h-6 rounded-full bg-surface-container border-2 border-surface flex items-center justify-center text-[9px] font-bold text-on-surface z-30">JD</div>
+<div class="w-6 h-6 rounded-full bg-secondary-container flex items-center justify-center text-[9px] font-bold text-on-secondary-container ring-1 ring-surface z-10">MR</div>
+</div>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[14px]">flaky</span>
+<span class="font-label-caps text-[10px]">Pending Client</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Done Column (Visual indicator only, no tasks shown to save space) -->
+<div class="min-w-[60px] flex flex-col bg-surface-container-low/30 rounded-xl border border-dashed border-outline-variant/30 p-3 h-full items-center justify-start opacity-50">
+<div class="w-2 h-2 rounded-full bg-secondary mb-4 mt-1"></div>
+<h4 class="font-label-caps text-label-caps text-on-surface writing-vertical-rl transform rotate-180 tracking-widest">DONE</h4>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

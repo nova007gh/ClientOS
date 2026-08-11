@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Intelligence &amp; Analytics Dashboard - ClientOS Alpha</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#ffdad6",
+                    "inverse-on-surface": "#283044",
+                    "surface-container-lowest": "#060e20",
+                    "background": "#0b1326",
+                    "surface-bright": "#31394d",
+                    "tertiary-container": "#8083ff",
+                    "secondary": "#4edea3",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed-dim": "#c0c1ff",
+                    "tertiary-fixed": "#e1e0ff",
+                    "on-secondary-fixed-variant": "#005236",
+                    "inverse-surface": "#dae2fd",
+                    "on-tertiary": "#1000a9",
+                    "secondary-container": "#00a572",
+                    "on-error": "#690005",
+                    "surface-container-low": "#131b2e",
+                    "primary": "#adc6ff",
+                    "on-primary-fixed-variant": "#004493",
+                    "outline-variant": "#414755",
+                    "on-tertiary-fixed-variant": "#2f2ebe",
+                    "surface-container-highest": "#2d3449",
+                    "surface-tint": "#adc6ff",
+                    "surface-container-high": "#222a3d",
+                    "inverse-primary": "#005bc1",
+                    "on-secondary-container": "#00311f",
+                    "on-primary": "#002e69",
+                    "surface-variant": "#2d3449",
+                    "secondary-fixed-dim": "#4edea3",
+                    "secondary-fixed": "#6ffbbe",
+                    "primary-container": "#4b8eff",
+                    "surface": "#0b1326",
+                    "on-secondary": "#003824",
+                    "primary-fixed": "#d8e2ff",
+                    "on-tertiary-fixed": "#07006c",
+                    "surface-dim": "#0b1326",
+                    "on-surface": "#dae2fd",
+                    "on-tertiary-container": "#0d0096",
+                    "on-secondary-fixed": "#002113",
+                    "on-primary-fixed": "#001a41",
+                    "on-primary-container": "#00285c",
+                    "outline": "#8b90a0",
+                    "error-container": "#93000a",
+                    "primary-fixed-dim": "#adc6ff",
+                    "surface-container": "#171f33",
+                    "on-surface-variant": "#c1c6d7",
+                    "tertiary": "#c0c1ff",
+                    "on-background": "#dae2fd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "card-gap": "12px",
+                    "gutter": "16px",
+                    "sidebar-width": "240px",
+                    "container-padding": "24px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "label-caps": [
+                            "JetBrains Mono"
+                    ],
+                    "display": [
+                            "Inter"
+                    ],
+                    "body-sm": [
+                            "Inter"
+                    ],
+                    "lead-score": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display": [
+                            "48px",
+                            {
+                                    "lineHeight": "56px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "lead-score": [
+                            "14px",
+                            {
+                                    "lineHeight": "14px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ]
+            }
+          },
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for mobile elements if needed, though mobile usually hides it natively */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #414755;
+            border-radius: 4px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex flex-col pb-20 md:hidden">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline-variant z-40 flex justify-between items-center px-gutter h-16 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-primary">bubble_chart</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary">ClientOS</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A polished, professional corporate headshot of a young business executive against a dark, moody studio background. Lighting is dramatic and high-contrast, emphasizing sharp facial features and a confident expression. The overall tone is premium, modern, and aligned with a high-end tech platform aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUVXovEFyHFa3mL-r4EDZrsDIo4lJzh_uX-KLeVsIlSjorMqCuAk7g8MRng0M7noqyngOF1SwMCJnsLl0kHg3SGsftwRuscE-TSDv0lDDTBQmjZP6QgD5SW5xYpxri0DDTvRN4CQu76MgOBFHvo6BW8onmT9AhSO1oSQhi4LhyHs9PeRZLE5RLlDcuCGT2dZxGhD6Jr53LXMxxna5z-5ggLBlG60NrBGvPhkXQOpOH3WxxhxXczoDh"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col p-4 gap-6">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile">Intelligence</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Real-time performance analytics</p>
+</div>
+<button class="bg-primary text-on-primary rounded-full px-4 py-2 font-label-caps text-label-caps flex items-center gap-2 hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined" style="font-size: 16px;">download</span>
+                EXPORT
+            </button>
+</div>
+<!-- KPI Cards Grid -->
+<div class="grid grid-cols-2 gap-card-gap">
+<!-- KPI 1 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-4 flex flex-col gap-2 hover:bg-surface-container-high transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Q3 Revenue</span>
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">trending_up</span>
+</div>
+<div class="font-headline-md text-headline-md">$1.24M</div>
+<div class="font-body-sm text-body-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 14px;">arrow_upward</span> 14.2% vs last Q
+                </div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-4 flex flex-col gap-2 hover:bg-surface-container-high transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Win Rate</span>
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">military_tech</span>
+</div>
+<div class="font-headline-md text-headline-md">68%</div>
+<div class="font-body-sm text-body-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 14px;">arrow_upward</span> 2.4% vs last Q
+                </div>
+</div>
+<!-- KPI 3 (Full Width) -->
+<div class="col-span-2 bg-surface-container border border-outline-variant rounded-xl p-4 flex flex-col gap-3 hover:bg-surface-container-high transition-colors relative overflow-hidden">
+<div class="absolute right-0 top-0 w-32 h-32 bg-primary-container opacity-10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+<div class="flex items-center justify-between relative z-10">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Active Campaigns</span>
+<span class="material-symbols-outlined text-primary" style="font-size: 18px;">campaign</span>
+</div>
+<div class="flex items-end gap-4 relative z-10">
+<div class="font-headline-md text-headline-md">12</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mb-1">yielding <span class="text-on-background font-semibold">4.5k</span> active leads</div>
+</div>
+<!-- Mini sparkline mock -->
+<div class="w-full h-8 flex items-end gap-1 mt-2 relative z-10">
+<div class="w-1/6 bg-primary h-2 rounded-t-sm opacity-40"></div>
+<div class="w-1/6 bg-primary h-3 rounded-t-sm opacity-50"></div>
+<div class="w-1/6 bg-primary h-5 rounded-t-sm opacity-70"></div>
+<div class="w-1/6 bg-primary h-4 rounded-t-sm opacity-60"></div>
+<div class="w-1/6 bg-primary h-7 rounded-t-sm opacity-80"></div>
+<div class="w-1/6 bg-primary h-full rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Sales Velocity Funnel (Scrollable Horizontal) -->
+<section class="mt-2 flex flex-col gap-3">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant px-1">Sales Velocity Funnel</h2>
+<div class="flex overflow-x-auto gap-4 pb-2 -mx-4 px-4 snap-x snap-mandatory hide-scrollbar">
+<!-- Stage 1 -->
+<div class="snap-center shrink-0 w-48 bg-surface-container-low border border-outline-variant rounded-xl p-4 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-label-caps text-primary">Discovery</span>
+<div class="bg-primary/10 text-primary px-2 py-0.5 rounded text-xs">24%</div>
+</div>
+<div>
+<div class="font-headline-md text-headline-md">450</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Prospects</div>
+</div>
+<div class="w-full bg-surface h-1 rounded-full overflow-hidden">
+<div class="bg-primary w-full h-full"></div>
+</div>
+</div>
+<!-- Stage 2 -->
+<div class="snap-center shrink-0 w-48 bg-surface-container-low border border-outline-variant rounded-xl p-4 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-label-caps text-secondary">Qualified</span>
+<div class="bg-secondary/10 text-secondary px-2 py-0.5 rounded text-xs">18%</div>
+</div>
+<div>
+<div class="font-headline-md text-headline-md">312</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Opportunities</div>
+</div>
+<div class="w-full bg-surface h-1 rounded-full overflow-hidden">
+<div class="bg-secondary w-3/4 h-full"></div>
+</div>
+</div>
+<!-- Stage 3 -->
+<div class="snap-center shrink-0 w-48 bg-surface-container-low border border-outline-variant rounded-xl p-4 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-label-caps text-tertiary">Proposal</span>
+<div class="bg-tertiary/10 text-tertiary px-2 py-0.5 rounded text-xs">42%</div>
+</div>
+<div>
+<div class="font-headline-md text-headline-md">84</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">In Negotiation</div>
+</div>
+<div class="w-full bg-surface h-1 rounded-full overflow-hidden">
+<div class="bg-tertiary w-1/2 h-full"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- AI Recommended Actions -->
+<section class="mt-4 flex flex-col gap-4">
+<div class="flex items-center gap-2 px-1">
+<span class="material-symbols-outlined text-tertiary" style="font-size: 20px;">psychology</span>
+<h2 class="font-label-caps text-label-caps text-on-surface-variant">AI Recommended Actions</h2>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Action Card 1 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-4 flex gap-4 items-start hover:bg-surface-container-high transition-colors">
+<div class="w-10 h-10 rounded-full bg-error-container/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error" style="font-size: 20px;">warning</span>
+</div>
+<div class="flex-1">
+<h3 class="font-body-sm text-body-sm font-semibold mb-1">High-Value Deal at Risk</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-3">Acme Corp engagement has dropped 40% this week. Suggesting immediate executive alignment call.</p>
+<button class="bg-surface border border-outline-variant text-on-surface rounded-lg px-3 py-1.5 font-label-caps text-label-caps text-xs flex items-center gap-1 hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined" style="font-size: 14px;">rocket_launch</span>
+                            Draft Email
+                        </button>
+</div>
+</div>
+<!-- Action Card 2 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-4 flex gap-4 items-start hover:bg-surface-container-high transition-colors">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary" style="font-size: 20px;">lightbulb</span>
+</div>
+<div class="flex-1">
+<h3 class="font-body-sm text-body-sm font-semibold mb-1">Upsell Opportunity Detected</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-3">Globex usage metrics indicate readiness for Enterprise Tier upgrade based on recent AI compute spikes.</p>
+<button class="bg-surface border border-outline-variant text-on-surface rounded-lg px-3 py-1.5 font-label-caps text-label-caps text-xs flex items-center gap-1 hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined" style="font-size: 14px;">visibility</span>
+                            Review Metrics
+                        </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container border-t border-outline-variant dark:border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary scale-95 active:scale-90 transition-transform duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">home</span>
+<span class="font-label-caps text-label-caps text-[10px] mt-1 group-hover:text-primary transition-colors">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary scale-95 active:scale-90 transition-transform duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">trending_up</span>
+<span class="font-label-caps text-label-caps text-[10px] mt-1 group-hover:text-primary transition-colors">Sales</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary scale-95 active:scale-90 transition-transform duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">auto_mode</span>
+<span class="font-label-caps text-label-caps text-[10px] mt-1 group-hover:text-primary transition-colors">Outreach</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-full px-4 py-1 scale-95 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-label-caps text-label-caps text-[10px] mt-1">Intelligence</span>
+</a>
+</nav>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

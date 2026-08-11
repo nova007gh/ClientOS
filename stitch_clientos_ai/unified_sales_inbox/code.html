@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Unified Sales Inbox - ClientOS AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#d8e2ff",
+                        "on-tertiary-container": "#0d0096",
+                        "surface-container-lowest": "#060e20",
+                        "on-primary-fixed": "#001a41",
+                        "surface-container-high": "#222a3d",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-background": "#dae2fd",
+                        "inverse-primary": "#005bc1",
+                        "primary": "#adc6ff",
+                        "secondary": "#4edea3",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-primary": "#002e69",
+                        "surface": "#0b1326",
+                        "on-primary-fixed-variant": "#004493",
+                        "outline-variant": "#414755",
+                        "on-surface": "#dae2fd",
+                        "on-secondary-container": "#00311f",
+                        "surface-container": "#171f33",
+                        "tertiary-fixed": "#e1e0ff",
+                        "tertiary": "#c0c1ff",
+                        "error-container": "#93000a",
+                        "background": "#0b1326",
+                        "primary-fixed-dim": "#adc6ff",
+                        "primary-container": "#4b8eff",
+                        "surface-variant": "#2d3449",
+                        "on-secondary": "#003824",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-container": "#00285c",
+                        "secondary-container": "#00a572",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-dim": "#0b1326",
+                        "inverse-on-surface": "#283044",
+                        "on-surface-variant": "#c1c6d7",
+                        "outline": "#8b90a0",
+                        "surface-container-low": "#131b2e",
+                        "tertiary-container": "#8083ff",
+                        "on-tertiary": "#1000a9",
+                        "surface-container-highest": "#2d3449",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "on-tertiary-fixed": "#07006c",
+                        "on-secondary-fixed": "#002113",
+                        "surface-bright": "#31394d",
+                        "surface-tint": "#adc6ff",
+                        "on-error": "#690005"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "card-gap": "12px",
+                        "unit": "4px",
+                        "sidebar-width": "240px",
+                        "gutter": "16px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "lead-score": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "lead-score": ["14px", { "lineHeight": "14px", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for a polished look */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #414755;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b90a0;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-lg antialiased h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-low dark:bg-surface-dim h-screen w-sidebar-width fixed left-0 top-0 border-r border-outline-variant dark:border-outline-variant flex flex-col h-full py-container-padding z-50">
+<div class="px-gutter mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary font-bold">
+                C
+            </div>
+<div>
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary leading-tight">ClientOS AI</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant">Agency Growth</div>
+</div>
+</div>
+<div class="px-gutter mb-6">
+<button class="w-full bg-primary text-on-primary rounded py-2 px-4 font-label-caps text-label-caps flex items-center justify-center gap-2 hover:bg-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                New Campaign
+            </button>
+</div>
+<ul class="flex-1 px-3 space-y-1">
+<!-- Home -->
+<li>
+<a class="flex items-center gap-unit text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors rounded px-3 py-2 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+                    Home
+                </a>
+</li>
+<!-- Sales -->
+<li>
+<a class="flex items-center gap-unit text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors rounded px-3 py-2 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+                    Sales
+                </a>
+</li>
+<!-- Outreach (Active for Inbox) -->
+<li>
+<a class="flex items-center gap-unit text-primary dark:text-primary font-bold border-r-2 border-primary bg-surface-container-highest rounded px-3 py-2 font-label-caps text-label-caps scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">mail</span>
+                    Outreach
+                </a>
+</li>
+<!-- Clients -->
+<li>
+<a class="flex items-center gap-unit text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors rounded px-3 py-2 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-[20px]">handshake</span>
+                    Clients
+                </a>
+</li>
+<!-- Work -->
+<li>
+<a class="flex items-center gap-unit text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors rounded px-3 py-2 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-[20px]">task_alt</span>
+                    Work
+                </a>
+</li>
+<!-- Intelligence -->
+<li>
+<a class="flex items-center gap-unit text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors rounded px-3 py-2 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+                    Intelligence
+                </a>
+</li>
+</ul>
+<ul class="px-3 space-y-1 mt-auto">
+<li>
+<a class="flex items-center gap-unit text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors rounded px-3 py-2 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+                    Settings
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-unit text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container-highest transition-colors rounded px-3 py-2 font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+                    Support
+                </a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Area -->
+<div class="ml-sidebar-width flex-1 flex flex-col h-full overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface flex justify-between items-center w-full px-container-padding sticky top-0 z-40 border-b border-outline-variant dark:border-outline-variant h-16 shrink-0">
+<div class="flex-1 flex items-center">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded pl-10 pr-4 py-1.5 font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Search conversations..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary font-bold font-label-caps text-label-caps flex items-center gap-1 hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-full px-3 py-1.5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">psychology</span>
+                    AI Copilot
+                </button>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+</button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors relative">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant ml-2 hover:bg-surface-container-high transition-colors">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate user in a modern office setting, dark mode aesthetic with blue accent lighting, shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbc6qx8q8JMRj8KEaoPDFBYsVow0BeGCWvyS0AQ9PWQSVDpNF2o0_3lw_O6L8zXy6rGcx8NvPRziD3dNR2RRcENotPR7HMb_T3RZF60VGjr4dCApFo6I8IIlPPD2iNQuz4Wn8QFlbWGQy9n59uoadXFigI_pic2fR7LZI6JicP9fAcS932nSKuBmlzHKWud0yhG6zMRK8D4UR6uvciBwtgA18LMfMGUWAln8_5qnF5g-CHsALZvq4K"/>
+</button>
+</div>
+</div>
+</header>
+<!-- Three Pane Layout -->
+<main class="flex-1 flex overflow-hidden bg-background">
+<!-- Left Pane: Conversation List -->
+<div class="w-80 border-r border-outline-variant bg-surface-container-lowest flex flex-col shrink-0">
+<div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface">
+<h2 class="font-headline-md text-headline-md text-on-surface">Inbox</h2>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto">
+<!-- Thread 1 (Active) -->
+<div class="p-4 border-b border-outline-variant bg-surface-container-highest cursor-pointer border-l-2 border-l-primary">
+<div class="flex justify-between items-start mb-1">
+<span class="font-body-sm text-body-sm font-bold text-on-surface">Acme Corp</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">10m ago</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant truncate mb-2">Re: Enterprise Scale Proposal</div>
+<div class="flex gap-2">
+<span class="bg-secondary/20 text-secondary border border-secondary/30 px-2 py-0.5 rounded font-label-caps text-[10px]">Meeting Request</span>
+<span class="bg-primary/20 text-primary border border-primary/30 px-2 py-0.5 rounded font-label-caps text-[10px]">High Intent</span>
+</div>
+</div>
+<!-- Thread 2 -->
+<div class="p-4 border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<span class="font-body-sm text-body-sm font-bold text-on-surface">TechFlow Inc</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">2h ago</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant truncate mb-2">Following up on the demo</div>
+<div class="flex gap-2">
+<span class="bg-tertiary/20 text-tertiary border border-tertiary/30 px-2 py-0.5 rounded font-label-caps text-[10px]">Interested</span>
+</div>
+</div>
+<!-- Thread 3 -->
+<div class="p-4 border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer opacity-70">
+<div class="flex justify-between items-start mb-1">
+<span class="font-body-sm text-body-sm text-on-surface">Global Logistics</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Yesterday</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant truncate mb-2">Not at this time</div>
+<div class="flex gap-2">
+<span class="bg-error/20 text-error border border-error/30 px-2 py-0.5 rounded font-label-caps text-[10px]">Objection</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Center Pane: Message Thread -->
+<div class="flex-1 flex flex-col min-w-0 bg-surface">
+<!-- Thread Header -->
+<div class="p-4 border-b border-outline-variant flex justify-between items-center shrink-0">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Re: Enterprise Scale Proposal</h2>
+<div class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-2 mt-1">
+<span>Sarah Jenkins</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>VP of Engineering @ Acme Corp</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded hover:bg-surface-container-high text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[20px]">snooze</span>
+</button>
+<button class="p-2 rounded hover:bg-surface-container-high text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[20px]">archive</span>
+</button>
+</div>
+</div>
+<!-- Messages Area -->
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<!-- Outbound Message -->
+<div class="flex flex-col items-end">
+<div class="max-w-[80%] bg-surface-container-high rounded-t-lg rounded-bl-lg p-4 border border-outline-variant/50">
+<p class="font-body-sm text-body-sm text-on-surface mb-2">Hi Sarah,</p>
+<p class="font-body-sm text-body-sm text-on-surface mb-2">Following up on our brief chat. I've put together a proposal showing how ClientOS can streamline Acme Corp's data pipelines, specifically addressing the bottleneck you mentioned in Q3.</p>
+<p class="font-body-sm text-body-sm text-on-surface">Would you be open to a 15-min walk-through this Thursday?</p>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">You • Yesterday, 10:24 AM</span>
+</div>
+<!-- Inbound Message -->
+<div class="flex flex-col items-start">
+<div class="max-w-[80%] bg-primary/10 rounded-t-lg rounded-br-lg p-4 border border-primary/20">
+<p class="font-body-sm text-body-sm text-on-surface mb-2">Hi,</p>
+<p class="font-body-sm text-body-sm text-on-surface mb-2">Thanks for sending this over. The proposed architecture looks interesting, but I have concerns about integration with our legacy CRM systems.</p>
+<p class="font-body-sm text-body-sm text-on-surface">I'd like to discuss this further. Are you available for a call tomorrow afternoon?</p>
+<p class="font-body-sm text-body-sm text-on-surface mt-2">- Sarah</p>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">Sarah Jenkins • Today, 9:15 AM</span>
+</div>
+</div>
+<!-- AI Reply Assistant & Composer -->
+<div class="p-4 border-t border-outline-variant bg-surface-container-lowest shrink-0">
+<div class="bg-surface border border-primary/30 rounded-lg p-3 shadow-[0_0_15px_rgba(75,142,255,0.1)] focus-within:border-primary focus-within:shadow-[0_0_15px_rgba(75,142,255,0.2)] transition-all">
+<!-- AI Suggestions -->
+<div class="flex gap-2 mb-3 overflow-x-auto pb-1">
+<button class="whitespace-nowrap bg-surface-container-high hover:bg-primary/20 text-on-surface font-body-sm text-body-sm px-3 py-1.5 rounded-full border border-outline-variant hover:border-primary/50 transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">auto_awesome</span>
+                                Accept meeting &amp; address CRM
+                            </button>
+<button class="whitespace-nowrap bg-surface-container-high hover:bg-primary/20 text-on-surface font-body-sm text-body-sm px-3 py-1.5 rounded-full border border-outline-variant hover:border-primary/50 transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">auto_awesome</span>
+                                Request different time
+                            </button>
+</div>
+<textarea class="w-full bg-transparent border-none p-0 focus:ring-0 font-body-sm text-body-sm text-on-surface resize-none" placeholder="Reply to Sarah... (or use AI suggestions above)" rows="3"></textarea>
+<div class="flex justify-between items-center mt-2 pt-2 border-t border-outline-variant/50">
+<div class="flex gap-1 text-on-surface-variant">
+<button class="p-1.5 rounded hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-[18px]">format_bold</span></button>
+<button class="p-1.5 rounded hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-[18px]">link</span></button>
+<button class="p-1.5 rounded hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-[18px]">attach_file</span></button>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-1.5 rounded hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Generate with AI">
+<span class="material-symbols-outlined text-[20px] text-primary">psychology</span>
+</button>
+<button class="bg-primary hover:bg-primary-container text-on-primary font-label-caps text-label-caps px-4 py-1.5 rounded transition-colors flex items-center gap-2">
+                                    Send
+                                    <span class="material-symbols-outlined text-[16px]">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Pane: Prospect Intelligence -->
+<div class="w-[320px] border-l border-outline-variant bg-surface-container-low flex flex-col shrink-0 overflow-y-auto">
+<div class="p-4 border-b border-outline-variant bg-surface sticky top-0 z-10 flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+<h2 class="font-label-caps text-label-caps font-bold">Prospect Intelligence</h2>
+</div>
+<div class="p-6 space-y-6">
+<!-- Profile Header -->
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-outline-variant shrink-0">
+<img alt="Sarah Jenkins" class="w-full h-full object-cover" data-alt="Professional headshot of a female executive in a modern corporate setting, dark background, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2Dj1Tul-4DqXaOY0PkirYw378RrOhkRQVylqxo3t5kXjrXawR9-jYkPVDhJ1EzZ_tCNjzqQPEJASsJdtY7H8Z-KJID2zkyMBn6APshxGElug9jTJ1i462o7GSPMZb6ndJbyp4COdwhEEeHckQZmIfPBYJzhIZK4aFL35AfFFavEqkUjfoeqQF3FtUd5tNSmFuYIqsQoVip0Dv89XvMgGkrQpFiVLDuc8BMNwy16CrRwWG2xD6NePe"/>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-bold text-on-surface">Sarah Jenkins</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant">VP Engineering, Acme Corp</div>
+</div>
+</div>
+<!-- Lead Score (Bento Card) -->
+<div class="bg-surface rounded-xl border border-outline-variant p-4">
+<div class="flex justify-between items-center mb-4">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Lead Score</span>
+<span class="font-label-caps text-label-caps text-secondary font-bold">High Intent</span>
+</div>
+<div class="flex items-center gap-4">
+<!-- Simple CSS radial progress approximation -->
+<div class="relative w-12 h-12 flex items-center justify-center rounded-full border-4 border-secondary/20 border-t-secondary border-r-secondary shrink-0">
+<span class="font-lead-score text-lead-score text-secondary">85</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+                                Engaged with pricing page 3x this week. Recent expansion funding announced.
+                            </div>
+</div>
+</div>
+<!-- Identified Problems (Bento Card) -->
+<div class="bg-surface rounded-xl border border-outline-variant p-4">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-3">Identified Friction Points</h3>
+<ul class="space-y-3">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-error mt-0.5">warning</span>
+<span class="font-body-sm text-body-sm text-on-surface">Legacy CRM integration concerns (Salesforce Classic)</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-error mt-0.5">warning</span>
+<span class="font-body-sm text-body-sm text-on-surface">Q3 data pipeline bottlenecks</span>
+</li>
+</ul>
+</div>
+<!-- Recommended Pitch (Glassmorphism Card) -->
+<div class="relative rounded-xl overflow-hidden border border-primary/30 p-4 bg-primary/5 backdrop-blur-sm">
+<!-- Subtle background glow -->
+<div class="absolute -top-10 -right-10 w-24 h-24 bg-primary/20 blur-2xl rounded-full"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-[18px] text-primary">campaign</span>
+<h3 class="font-label-caps text-label-caps text-primary font-bold">Recommended Pitch Angle</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface mb-3 italic">
+                                "Focus on our API-first approach that requires zero downtime to bridge their old CRM to our modern infrastructure."
+                            </p>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-high px-2 py-1 rounded font-label-caps text-[10px] text-on-surface-variant border border-outline-variant">Integration Case Study</span>
+<span class="bg-surface-container-high px-2 py-1 rounded font-label-caps text-[10px] text-on-surface-variant border border-outline-variant">API Docs</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
