@@ -132,7 +132,7 @@ export default function SettingsPage() {
 
       {activeTab === 'General' && (
         <Card className="border border-outline-variant/60 bg-surface-high/20">
-          <CardContent className="p-5 space-y-4">
+          <CardContent className="p-4 sm:p-5 space-y-4">
             <h2 className="font-headline-md text-headline-md font-semibold">Organization Details</h2>
             <form onSubmit={handleSaveOrg} className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div>
@@ -157,9 +157,9 @@ export default function SettingsPage() {
 
       {activeTab === 'Team' && (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-3">
             <Card className="border border-outline-variant/60 bg-surface-high/20">
-              <CardContent className="p-5">
+              <CardContent className="p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Total Members</p>
                 <p className="mt-1 text-3xl font-semibold text-on-surface">12</p>
                 <p className="mt-1 text-body-sm text-secondary flex items-center gap-1"><TrendingUp className="h-3.5 w-3.5" /> 2</p>
@@ -167,7 +167,7 @@ export default function SettingsPage() {
               </CardContent>
             </Card>
             <Card className="border border-outline-variant/60 bg-surface-high/20">
-              <CardContent className="p-5">
+              <CardContent className="p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Active Roles</p>
                 <p className="mt-1 text-3xl font-semibold text-on-surface">4</p>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -178,7 +178,7 @@ export default function SettingsPage() {
               </CardContent>
             </Card>
             <Card className="border border-outline-variant/60 bg-surface-high/20">
-              <CardContent className="p-5">
+              <CardContent className="p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Pending Invites</p>
                 <p className="mt-1 text-3xl font-semibold text-on-surface">3</p>
                 <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-highest">
@@ -195,13 +195,44 @@ export default function SettingsPage() {
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
                   <Input className="pl-9" placeholder="Search members..." />
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="outline">All Roles</Button>
-                  <Button variant="outline">Status</Button>
+                <div className="flex gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+                  <Button variant="outline" className="shrink-0">All Roles</Button>
+                  <Button variant="outline" className="shrink-0">Status</Button>
                 </div>
               </div>
 
-              <table className="w-full">
+              {/* Mobile Member Cards */}
+              <div className="space-y-3 lg:hidden">
+                {members.map((m) => (
+                  <div key={m.id} className="flex items-center gap-3 rounded-lg border border-outline-variant/60 bg-surface-high/20 p-3">
+                    <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
+                      m.status === 'Invited' ? 'bg-surface-highest text-on-surface-variant' : 'bg-primary text-on-primary'
+                    }`}>
+                      {m.initials}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium text-on-surface">{m.name}</p>
+                      <p className="truncate text-xs text-on-surface-variant">{m.email}</p>
+                      <div className="mt-1 flex items-center gap-2">
+                        <Badge className="bg-surface-highest text-on-surface-variant">{m.role}</Badge>
+                        <span className={`inline-flex items-center gap-1 text-[10px] ${
+                          m.status === 'Active' ? 'text-secondary' :
+                          m.status === 'Offline' ? 'text-on-surface-variant' : 'text-tertiary'
+                        }`}>
+                          <span className={`h-1.5 w-1.5 rounded-full ${
+                            m.status === 'Active' ? 'bg-secondary' :
+                            m.status === 'Offline' ? 'bg-on-surface-variant' : 'bg-tertiary'
+                          }`} />
+                          {m.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop Member Table */}
+              <table className="hidden w-full lg:block">
                 <thead>
                   <tr className="border-b border-outline-variant text-left text-xs uppercase tracking-wider text-on-surface-variant">
                     <th className="pb-3 font-medium">Member</th>
@@ -240,11 +271,11 @@ export default function SettingsPage() {
                       <td className="py-3">
                         <span className={`inline-flex items-center gap-1.5 text-body-sm ${
                           m.status === 'Active' ? 'text-secondary' :
-                          m.status === 'Offline' ? 'text-on-surface-variant' : 'text-warning'
+                          m.status === 'Offline' ? 'text-on-surface-variant' : 'text-tertiary'
                         }`}>
                           <span className={`h-2 w-2 rounded-full ${
                             m.status === 'Active' ? 'bg-secondary' :
-                            m.status === 'Offline' ? 'bg-on-surface-variant' : 'bg-warning'
+                            m.status === 'Offline' ? 'bg-on-surface-variant' : 'bg-tertiary'
                           }`} />
                           {m.status}
                         </span>
@@ -276,9 +307,9 @@ export default function SettingsPage() {
         <div className="space-y-6">
           <div>
             <h2 className="font-headline-md text-headline-md font-semibold">Connected Services</h2>
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-3">
               <Card className="border border-outline-variant/60 bg-surface-high/20">
-                <CardContent className="p-5 space-y-4">
+                <CardContent className="p-4 sm:p-5 space-y-4">
                   <div className="flex items-center justify-between">
                     <Cloud className="h-8 w-8 text-on-surface-variant" />
                     <Badge className="bg-secondary/10 text-secondary">Connected</Badge>
@@ -289,7 +320,7 @@ export default function SettingsPage() {
                 </CardContent>
               </Card>
               <Card className="border border-outline-variant/60 bg-surface-high/20">
-                <CardContent className="p-5 space-y-4">
+                <CardContent className="p-4 sm:p-5 space-y-4">
                   <div className="flex items-center justify-between">
                     <Grid className="h-8 w-8 text-on-surface-variant" />
                     <Badge className="bg-primary/10 text-primary">Connect</Badge>
@@ -300,10 +331,10 @@ export default function SettingsPage() {
                 </CardContent>
               </Card>
               <Card className="border border-outline-variant/60 bg-surface-high/20">
-                <CardContent className="p-5 space-y-4">
+                <CardContent className="p-4 sm:p-5 space-y-4">
                   <div className="flex items-center justify-between">
                     <RefreshCw className="h-8 w-8 text-on-surface-variant" />
-                    <Badge className="bg-warning/10 text-warning">Configuring</Badge>
+                    <Badge className="bg-tertiary/10 text-tertiary">Configuring</Badge>
                   </div>
                   <h3 className="font-headline-sm text-headline-sm font-semibold">CRM Sync</h3>
                   <p className="text-body-sm text-on-surface-variant">Two-way sync with Salesforce, HubSpot, or custom endpoints.</p>
@@ -341,7 +372,7 @@ export default function SettingsPage() {
 
       {activeTab === 'Billing' && (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3">
             <Card className="lg:col-span-2 border border-outline-variant/60 bg-surface-high/20">
               <CardContent className="p-5 space-y-6">
                 <div className="flex items-start justify-between">
@@ -385,7 +416,7 @@ export default function SettingsPage() {
             </Card>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-2">
             <Card className="border border-outline-variant/60 bg-surface-high/20">
               <CardContent className="p-5 space-y-4">
                 <div className="flex items-center justify-between">

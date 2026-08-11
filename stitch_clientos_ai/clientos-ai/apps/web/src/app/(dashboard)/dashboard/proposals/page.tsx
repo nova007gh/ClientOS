@@ -89,13 +89,55 @@ export default function ProposalsPage() {
 
       <ErrorBanner message={error} />
 
+      {/* Mobile Card List */}
+      <div className="space-y-3 lg:hidden">
+        {loading ? (
+          [...Array(4)].map((_, i) => (
+            <div key={i} className="h-24 animate-pulse rounded-lg bg-surface-highest" />
+          ))
+        ) : proposals.length === 0 ? (
+          <div className="py-12 text-center text-on-surface-variant">
+            No proposals yet. Generate one from an opportunity to send to a client.
+          </div>
+        ) : (
+          proposals.map((proposal) => (
+            <div
+              key={proposal.id}
+              className="cursor-pointer rounded-lg border border-outline-variant/60 bg-surface-high/20 p-3 transition-colors hover:bg-surface-high/40"
+              onClick={() => router.push(`/dashboard/proposals/${proposal.id}`)}
+            >
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-2 font-medium text-on-surface">
+                  <FileText className="h-3.5 w-3.5 text-on-surface-variant" />
+                  <span className="truncate">{proposal.title}</span>
+                </span>
+                <Badge variant={statusVariants[proposal.status] ?? 'neutral'}>
+                  {proposal.status}
+                </Badge>
+              </div>
+              {proposal.opportunity?.title && (
+                <p className="mt-1 truncate text-xs text-on-surface-variant">{proposal.opportunity.title}</p>
+              )}
+              <div className="mt-2 flex items-center justify-between text-xs text-on-surface-variant">
+                <span>{formatDate(proposal.createdAt)}</span>
+                {proposal.expiresAt && (
+                  <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3" /> {formatDate(proposal.expiresAt)}</span>
+                )}
+                <span className="font-medium text-on-surface">{formatCurrency(proposal.total, proposal.currency)}</span>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table */}
       <StateCard
         title="All Proposals"
         loading={loading}
         isEmpty={proposals.length === 0}
         emptyMessage="No proposals yet. Generate one from an opportunity to send to a client."
       >
-        <div className="overflow-x-auto">
+        <div className="hidden overflow-x-auto lg:block">
           <table className="w-full">
             <thead>
               <tr className="border-b border-outline-variant">
@@ -152,8 +194,8 @@ export default function ProposalsPage() {
       </StateCard>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-lg bg-surface p-6 shadow-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
+          <div className="w-full max-w-lg rounded-lg bg-surface p-4 sm:p-6 shadow-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <h2 className="font-headline-md text-headline-md font-semibold">New Proposal</h2>
               <button onClick={() => setShowModal(false)} className="text-on-surface-variant hover:text-on-surface">
@@ -176,7 +218,7 @@ export default function ProposalsPage() {
                   placeholder="Website Redesign Proposal — Acme Corp"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <Label>Total value</Label>
                   <Input

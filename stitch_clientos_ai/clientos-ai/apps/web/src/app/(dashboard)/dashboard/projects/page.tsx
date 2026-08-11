@@ -88,13 +88,53 @@ export default function ProjectsPage() {
 
       <ErrorBanner message={error} />
 
+      {/* Mobile Card List */}
+      <div className="space-y-3 lg:hidden">
+        {loading ? (
+          [...Array(4)].map((_, i) => (
+            <div key={i} className="h-24 animate-pulse rounded-lg bg-surface-highest" />
+          ))
+        ) : projects.length === 0 ? (
+          <div className="py-12 text-center text-on-surface-variant">
+            No projects yet. Create one to track deliverables, milestones, and tasks.
+          </div>
+        ) : (
+          projects.map((project) => (
+            <div
+              key={project.id}
+              className="cursor-pointer rounded-lg border border-outline-variant/60 bg-surface-high/20 p-3 transition-colors hover:bg-surface-high/40"
+              onClick={() => router.push(`/dashboard/projects/${project.id}`)}
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-on-surface">{project.name}</span>
+                <Badge variant={statusVariants[project.status] ?? 'neutral'}>
+                  {project.status.replace('_', ' ')}
+                </Badge>
+              </div>
+              {project.description && (
+                <p className="mt-1 truncate text-xs text-on-surface-variant">{project.description}</p>
+              )}
+              <div className="mt-2 flex items-center gap-3 text-xs text-on-surface-variant">
+                <span className="inline-flex items-center gap-1"><Flag className="h-3 w-3" /> {project._count?.milestones ?? 0}</span>
+                <span className="inline-flex items-center gap-1"><CheckSquare className="h-3 w-3" /> {project._count?.tasks ?? 0}</span>
+                {project.dueDate && (
+                  <span className="inline-flex items-center gap-1"><CalendarClock className="h-3 w-3" /> {formatDate(project.dueDate)}</span>
+                )}
+              </div>
+              <p className="mt-1 text-xs font-medium text-on-surface">{formatCurrency(project.budget, project.currency)}</p>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table */}
       <StateCard
         title="All Projects"
         loading={loading}
         isEmpty={projects.length === 0}
         emptyMessage="No projects yet. Create one to track deliverables, milestones, and tasks."
       >
-        <div className="overflow-x-auto">
+        <div className="hidden overflow-x-auto lg:block">
           <table className="w-full">
             <thead>
               <tr className="border-b border-outline-variant">
@@ -161,8 +201,8 @@ export default function ProjectsPage() {
       </StateCard>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-lg bg-surface p-6 shadow-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
+          <div className="w-full max-w-lg rounded-lg bg-surface p-4 sm:p-6 shadow-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <h2 className="font-headline-md text-headline-md font-semibold">New Project</h2>
               <button onClick={() => setShowModal(false)} className="text-on-surface-variant hover:text-on-surface">
@@ -204,7 +244,7 @@ export default function ProjectsPage() {
                   placeholder="10000"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <Label>Start date</Label>
                   <Input

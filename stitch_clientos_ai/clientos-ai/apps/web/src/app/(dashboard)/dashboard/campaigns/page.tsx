@@ -84,13 +84,51 @@ export default function CampaignsPage() {
 
       <ErrorBanner message={error} />
 
+      {/* Mobile Card List */}
+      <div className="space-y-3 lg:hidden">
+        {loading ? (
+          [...Array(4)].map((_, i) => (
+            <div key={i} className="h-24 animate-pulse rounded-lg bg-surface-highest" />
+          ))
+        ) : campaigns.length === 0 ? (
+          <div className="py-12 text-center text-on-surface-variant">
+            No campaigns yet. Create a campaign to start automated outreach sequences.
+          </div>
+        ) : (
+          campaigns.map((campaign) => (
+            <div
+              key={campaign.id}
+              className="cursor-pointer rounded-lg border border-outline-variant/60 bg-surface-high/20 p-3 transition-colors hover:bg-surface-high/40"
+              onClick={() => router.push(`/dashboard/campaigns/${campaign.id}`)}
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-on-surface">{campaign.name}</span>
+                <Badge variant={statusVariants[campaign.status] ?? 'neutral'}>
+                  {campaign.status}
+                </Badge>
+              </div>
+              {campaign.objective && (
+                <p className="mt-1 truncate text-xs text-on-surface-variant">{campaign.objective}</p>
+              )}
+              <div className="mt-2 flex items-center gap-3 text-xs text-on-surface-variant">
+                <span className="inline-flex items-center gap-1"><Layers className="h-3 w-3" /> {campaign._count?.steps ?? 0} steps</span>
+                <span className="inline-flex items-center gap-1"><Users className="h-3 w-3" /> {campaign._count?.prospects ?? 0} prospects</span>
+                <span className="inline-flex items-center gap-1"><Gauge className="h-3 w-3" /> {campaign.dailyLimit}/day</span>
+              </div>
+              <p className="mt-1 text-[10px] text-on-surface-variant">Created {formatDate(campaign.createdAt)}</p>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table */}
       <StateCard
         title="All Campaigns"
         loading={loading}
         isEmpty={campaigns.length === 0}
         emptyMessage="No campaigns yet. Create a campaign to start automated outreach sequences."
       >
-        <div className="overflow-x-auto">
+        <div className="hidden overflow-x-auto lg:block">
           <table className="w-full">
             <thead>
               <tr className="border-b border-outline-variant">
@@ -146,8 +184,8 @@ export default function CampaignsPage() {
       </StateCard>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-lg bg-surface p-6 shadow-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
+          <div className="w-full max-w-lg rounded-lg bg-surface p-4 sm:p-6 shadow-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <h2 className="font-headline-md text-headline-md font-semibold">New Campaign</h2>
               <button onClick={() => setShowModal(false)} className="text-on-surface-variant hover:text-on-surface">

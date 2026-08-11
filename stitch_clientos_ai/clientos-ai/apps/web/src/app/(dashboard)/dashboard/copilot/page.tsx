@@ -328,7 +328,7 @@ export default function CopilotPage() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-6rem)] flex-col overflow-hidden rounded-xl border border-outline-variant/60 bg-surface-high/20 sm:h-[calc(100vh-7rem)]">
+    <div className="flex h-[calc(100vh-9rem)] flex-col overflow-hidden rounded-xl border border-outline-variant/60 bg-surface-high/20 sm:h-[calc(100vh-7rem)] lg:h-[calc(100vh-6rem)]">
       {/* Background glow */}
       <div className="pointer-events-none absolute left-1/4 top-0 h-[400px] w-[800px] rounded-full bg-primary/5 blur-[120px]" />
 
@@ -393,7 +393,7 @@ export default function CopilotPage() {
           </div>
 
           {/* Chat Messages */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-6 sm:px-container-padding">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-4 sm:px-container-padding sm:py-6">
             <div className="mx-auto max-w-4xl space-y-6">
               <div className="flex justify-center">
                 <span className="rounded-full bg-surface-high px-4 py-1 font-label-caps text-[10px] text-on-surface-variant">Today at 9:41 AM</span>
@@ -412,8 +412,8 @@ export default function CopilotPage() {
                     </div>
                   )}
 
-                  <div className={`group max-w-[80%] space-y-3 ${m.role === 'user' ? 'order-first' : ''}`}>
-                    <div className={`rounded-2xl p-4 text-body-sm ${
+                  <div className={`group max-w-[85%] space-y-3 sm:max-w-[80%] ${m.role === 'user' ? 'order-first' : ''}`}>
+                    <div className={`rounded-2xl p-3 sm:p-4 text-body-sm ${
                       m.role === 'user'
                         ? 'rounded-tr-sm border border-outline-variant bg-surface-high text-on-surface'
                         : 'rounded-tl-sm bg-surface-container-low/60 text-on-surface'
@@ -434,7 +434,7 @@ export default function CopilotPage() {
                     </div>
 
                     {m.cards && (
-                      <div className="grid grid-cols-1 gap-3 sm:gap-4 xl:grid-cols-3">
+                      <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-2 xl:grid-cols-3">
                         {m.cards.map((card) => (
                           <div
                             key={card.company}
@@ -499,7 +499,7 @@ export default function CopilotPage() {
 
           {/* Quick Suggestions */}
           {messages.length <= 3 && !isTyping && (
-            <div className="px-4 pb-2 sm:px-container-padding">
+            <div className="px-3 pb-2 sm:px-container-padding">
               <div className="mx-auto max-w-4xl">
                 <div className="flex flex-wrap gap-2">
                   {quickSuggestions.map((s) => {
@@ -521,7 +521,7 @@ export default function CopilotPage() {
           )}
 
           {/* Input Area */}
-          <div className="shrink-0 border-t border-outline-variant/40 bg-surface-container-low/30 p-3 backdrop-blur-md sm:p-4">
+          <div className="shrink-0 border-t border-outline-variant/40 bg-surface-container-low/30 p-2 backdrop-blur-md sm:p-4">
             <div className="mx-auto max-w-4xl">
               <div className="relative rounded-xl border border-outline-variant bg-surface-container-low/70 p-2 shadow-lg backdrop-blur-xl">
                 <div className="mb-2 flex items-center gap-2 border-b border-outline-variant/50 px-3 pb-2.5 pt-2">
