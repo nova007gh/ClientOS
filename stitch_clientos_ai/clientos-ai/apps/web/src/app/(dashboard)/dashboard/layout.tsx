@@ -229,7 +229,7 @@ export default function DashboardLayout({
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-secondary opacity-75" />
           <span className="relative inline-flex h-3 w-3 rounded-full bg-secondary" />
         </span>
-        <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg bg-surface-container-high px-3 py-1.5 text-body-sm font-medium text-on-surface opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+        <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg bg-surface-high px-3 py-1.5 text-body-sm font-medium text-on-surface opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
           Ask AI Copilot
         </span>
       </button>

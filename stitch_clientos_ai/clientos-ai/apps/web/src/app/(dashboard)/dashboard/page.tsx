@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Button, Card, CardContent, LeadScoreRing, Input } from '@clientos/ui';
 import { Search, Sparkles, Filter, Briefcase, Calendar, AlertTriangle, CheckCircle, ChevronDown, ChevronUp, Globe, Plus, TrendingUp, Target, BarChart3, Zap } from 'lucide-react';
+import { Fragment } from 'react';
 import { api, ApiError } from '@/lib/api-client';
 import { useAuthStore } from '@/lib/auth-store';
 import { useRouter } from 'next/navigation';
@@ -328,12 +329,12 @@ export default function DashboardPage() {
               <div>
                 <div className="flex items-center justify-between text-body-sm">
                   <span className="flex items-center gap-2 text-on-surface">
-                    <span className="h-2.5 w-2.5 rounded-full bg-warning" /> Warm (60-79)
+                    <span className="h-2.5 w-2.5 rounded-full bg-tertiary" /> Warm (60-79)
                   </span>
                   <span className="font-medium text-on-surface">{stats.warmLeads}</span>
                 </div>
                 <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-surface-highest">
-                  <div className="h-full rounded-full bg-warning transition-all" style={{ width: `${stats.totalLeads > 0 ? (stats.warmLeads / stats.totalLeads) * 100 : 0}%` }} />
+                  <div className="h-full rounded-full bg-tertiary transition-all" style={{ width: `${stats.totalLeads > 0 ? (stats.warmLeads / stats.totalLeads) * 100 : 0}%` }} />
                 </div>
               </div>
               <div>
@@ -434,15 +435,15 @@ export default function DashboardPage() {
       <Card className="overflow-hidden border border-outline-variant/60">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[640px]">
               <thead>
                 <tr className="border-b border-outline-variant bg-surface-high/30 text-left text-xs font-medium uppercase tracking-wider text-on-surface-variant">
-                  <th className="px-4 py-3 font-medium">Business Name</th>
-                  <th className="px-4 py-3 font-medium">Industry & Location</th>
-                  <th className="px-4 py-3 font-medium">Web Status</th>
-                  <th className="px-4 py-3 font-medium">Score</th>
-                  <th className="px-4 py-3 font-medium">Recommended Service</th>
-                  <th className="px-4 py-3 font-medium text-right">Actions</th>
+                  <th className="px-3 py-3 font-medium sm:px-4">Business Name</th>
+                  <th className="hidden px-4 py-3 font-medium md:table-cell">Industry & Location</th>
+                  <th className="hidden px-4 py-3 font-medium lg:table-cell">Web Status</th>
+                  <th className="px-3 py-3 font-medium sm:px-4">Score</th>
+                  <th className="hidden px-4 py-3 font-medium lg:table-cell">Recommended Service</th>
+                  <th className="px-3 py-3 font-medium text-right sm:px-4">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -460,60 +461,62 @@ export default function DashboardPage() {
                   </tr>
                 ) : (
                   filtered.map((row) => (
-                    <>
+                    <Fragment key={row.id}>
                       <tr
-                        key={row.id}
                         className={`border-b border-outline-variant transition-colors hover:bg-surface-high/20 cursor-pointer ${selected === row.id ? 'bg-surface-high/40' : ''}`}
                         onClick={() => setSelected(selected === row.id ? null : row.id)}
                       >
-                        <td className="px-4 py-4">
+                        <td className="px-3 py-4 sm:px-4">
                           <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-on-primary">
-                              <Briefcase className="h-5 w-5" />
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary sm:h-10 sm:w-10">
+                              <Briefcase className="h-4 w-4 sm:h-5 sm:w-5" />
                             </div>
-                            <div>
-                              <p className="font-medium text-on-surface">{row.prospect.companyName}</p>
+                            <div className="min-w-0">
+                              <p className="truncate font-medium text-on-surface">{row.prospect.companyName}</p>
                               {row.score >= 80 ? (
                                 <p className="mt-0.5 flex items-center gap-1 text-xs text-secondary">
                                   <Zap className="h-3 w-3" /> Hot Lead
                                 </p>
                               ) : (
-                                <p className="text-body-sm text-on-surface-variant">Added {timeAgo(row.audit?.createdAt ?? row.prospect.createdAt)}</p>
+                                <p className="truncate text-body-sm text-on-surface-variant">Added {timeAgo(row.audit?.createdAt ?? row.prospect.createdAt)}</p>
                               )}
+                              <p className="mt-0.5 truncate text-xs text-on-surface-variant md:hidden">
+                                {row.prospect.industry?.name ?? 'Unknown'} · {[row.prospect.city, row.prospect.country].filter(Boolean).join(', ') || '—'}
+                              </p>
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-4">
+                        <td className="hidden px-4 py-4 md:table-cell">
                           <p className="text-body-sm text-on-surface">{row.prospect.industry?.name ?? 'Unknown'}</p>
                           <p className="text-body-sm text-on-surface-variant">
                             <Globe className="inline h-3 w-3 mr-1" />
                             {[row.prospect.city, row.prospect.country].filter(Boolean).join(', ') || '—'}
                           </p>
                         </td>
-                        <td className="px-4 py-4">
+                        <td className="hidden px-4 py-4 lg:table-cell">
                           <span className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium ${
                             row.webStatusColor === 'error' ? 'bg-error/10 text-error' :
-                            row.webStatusColor === 'warning' ? 'bg-warning/10 text-warning' :
+                            row.webStatusColor === 'warning' ? 'bg-tertiary/10 text-tertiary' :
                             row.webStatusColor === 'success' ? 'bg-secondary/10 text-secondary' :
                             'bg-surface-highest text-on-surface-variant'
                           }`}>
                             <span className={`h-2 w-2 rounded-full ${
                               row.webStatusColor === 'error' ? 'bg-error' :
-                              row.webStatusColor === 'warning' ? 'bg-warning' :
+                              row.webStatusColor === 'warning' ? 'bg-tertiary' :
                               row.webStatusColor === 'success' ? 'bg-secondary' :
                               'bg-on-surface-variant'
                             }`} />
                             {row.webStatus}
                           </span>
                         </td>
-                        <td className="px-4 py-4">
+                        <td className="px-3 py-4 sm:px-4">
                           <LeadScoreRing score={row.score} />
                         </td>
-                        <td className="px-4 py-4">
+                        <td className="hidden px-4 py-4 lg:table-cell">
                           <p className="text-body-sm font-medium text-on-surface">{row.recommendedService}</p>
                         </td>
-                        <td className="px-4 py-4 text-right">
-                          <div className="flex items-center justify-end gap-2">
+                        <td className="px-3 py-4 text-right sm:px-4">
+                          <div className="flex items-center justify-end gap-1.5 sm:gap-2">
                             <Button size="sm" variant="outline" className="hidden md:inline-flex" onClick={(e) => { e.stopPropagation(); }}>
                               Generate Pitch
                             </Button>
@@ -523,17 +526,17 @@ export default function DashboardPage() {
                               <span className="md:hidden">Add</span>
                             </Button>
                             {selected === row.id ? (
-                              <ChevronUp className="h-4 w-4 text-on-surface-variant" />
+                              <ChevronUp className="h-4 w-4 shrink-0 text-on-surface-variant" />
                             ) : (
-                              <ChevronDown className="h-4 w-4 text-on-surface-variant" />
+                              <ChevronDown className="h-4 w-4 shrink-0 text-on-surface-variant" />
                             )}
                           </div>
                         </td>
                       </tr>
                       {selected === row.id && (
                         <tr className="border-b border-outline-variant bg-surface-container-low/50">
-                          <td colSpan={6} className="px-4 py-5">
-                            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                          <td colSpan={6} className="px-3 py-4 sm:px-4 sm:py-5">
+                            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
                               <div className="rounded-lg border border-outline-variant/60 bg-surface-high/20 p-4">
                                 <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
                                   <Sparkles className="h-4 w-4" /> AI Quick Insight
@@ -544,11 +547,11 @@ export default function DashboardPage() {
                                   {row.painPoints.map((p, idx) => (
                                     <div key={idx} className="flex items-start gap-2">
                                       {p.priority === 'High' ? (
-                                        <AlertTriangle className="mt-0.5 h-4 w-4 text-error" />
+                                        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-error" />
                                       ) : p.priority === 'Medium' ? (
-                                        <AlertTriangle className="mt-0.5 h-4 w-4 text-warning" />
+                                        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-tertiary" />
                                       ) : (
-                                        <CheckCircle className="mt-0.5 h-4 w-4 text-secondary" />
+                                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
                                       )}
                                       <span className="text-body-sm text-on-surface">{p.text} <span className="text-on-surface-variant">({p.priority})</span></span>
                                     </div>
@@ -571,7 +574,7 @@ export default function DashboardPage() {
                           </td>
                         </tr>
                       )}
-                    </>
+                    </Fragment>
                   ))
                 )}
               </tbody>
