@@ -23,6 +23,14 @@ import {
   X,
 } from 'lucide-react';
 
+const mobileNavItems = [
+  { href: '/dashboard', label: 'Home', icon: Home },
+  { href: '/dashboard/opportunities', label: 'Sales', icon: TrendingUp },
+  { href: '/dashboard/inbox', label: 'Outreach', icon: Mail },
+  { href: '/dashboard/prospects', label: 'Clients', icon: Users },
+  { href: '/dashboard/audits', label: 'Intel', icon: Brain },
+];
+
 const topNav = [
   { href: '/dashboard', label: 'Home', icon: Home },
 ];
@@ -174,7 +182,26 @@ export default function DashboardLayout({
       </aside>
 
       <div className="flex flex-1 flex-col min-w-0">
-        <header className="flex h-16 items-center justify-between border-b border-outline-variant bg-surface-container-low px-4 sm:px-6">
+        {/* Mobile Header */}
+        <header className="flex h-14 items-center justify-between border-b border-outline-variant bg-surface-container-low px-3 lg:hidden">
+          <button
+            className="rounded-lg p-2 text-on-surface-variant hover:bg-surface-high"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-on-primary font-bold text-xs">C</div>
+            <span className="font-headline-md text-headline-md font-bold leading-none">ClientOS</span>
+          </div>
+          <button className="relative rounded-full p-2 text-on-surface-variant hover:bg-surface-high">
+            <Bell className="h-5 w-5" />
+            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-error" />
+          </button>
+        </header>
+
+        {/* Desktop Header */}
+        <header className="hidden h-16 items-center justify-between border-b border-outline-variant bg-surface-container-low px-4 sm:px-6 lg:flex">
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <button
               className="rounded-lg p-2 text-on-surface-variant hover:bg-surface-high lg:hidden"
@@ -213,15 +240,15 @@ export default function DashboardLayout({
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 sm:p-container-padding">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-container-padding pb-20 lg:pb-container-padding">
           {children}
         </main>
       </div>
 
-      {/* Floating AI Copilot Button */}
+      {/* Floating AI Copilot Button — desktop only */}
       <button
         onClick={() => router.push('/dashboard/copilot')}
-        className="group fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-on-primary shadow-lg shadow-primary/20 transition-all hover:scale-110 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30"
+        className="group fixed bottom-6 right-6 z-50 hidden h-14 w-14 items-center justify-center rounded-full bg-primary text-on-primary shadow-lg shadow-primary/20 transition-all hover:scale-110 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 lg:flex"
         aria-label="AI Copilot"
       >
         <Sparkles className="h-6 w-6 transition-transform group-hover:rotate-12" />
@@ -233,6 +260,54 @@ export default function DashboardLayout({
           Ask AI Copilot
         </span>
       </button>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-outline-variant bg-surface-container-low/95 px-1 py-1.5 backdrop-blur-lg lg:hidden">
+        {mobileNavItems.slice(0, 2).map((item) => {
+          const active = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.label}
+              href={item.href}
+              className={`flex flex-1 flex-col items-center gap-0.5 rounded-lg py-1.5 text-[10px] font-medium transition-colors ${
+                active ? 'text-primary' : 'text-on-surface-variant'
+              }`}
+            >
+              <Icon className="h-5 w-5" />
+              {item.label}
+            </Link>
+          );
+        })}
+        {/* Center AI Button */}
+        <button
+          onClick={() => router.push('/dashboard/copilot')}
+          className="relative -mt-6 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary shadow-lg shadow-primary/30 transition-transform active:scale-95"
+          aria-label="AI Copilot"
+        >
+          <Sparkles className="h-5 w-5" />
+          <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-secondary opacity-75" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-secondary" />
+          </span>
+        </button>
+        {mobileNavItems.slice(2).map((item) => {
+          const active = pathname === item.href || pathname.startsWith(item.href);
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.label}
+              href={item.href}
+              className={`flex flex-1 flex-col items-center gap-0.5 rounded-lg py-1.5 text-[10px] font-medium transition-colors ${
+                active ? 'text-primary' : 'text-on-surface-variant'
+              }`}
+            >
+              <Icon className="h-5 w-5" />
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 }

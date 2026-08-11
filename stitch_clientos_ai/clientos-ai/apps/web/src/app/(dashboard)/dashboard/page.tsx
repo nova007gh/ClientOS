@@ -223,9 +223,9 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Card className="border border-outline-variant/60 bg-surface-high/20">
+      {/* Stats Overview — horizontal scroll on mobile, grid on desktop */}
+      <div className="flex gap-3 overflow-x-auto pb-1 lg:grid lg:grid-cols-4 lg:overflow-visible lg:pb-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+        <Card className="border border-outline-variant/60 bg-surface-high/20 shrink-0 w-[140px] lg:w-auto">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -243,7 +243,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border border-outline-variant/60 bg-surface-high/20">
+        <Card className="border border-outline-variant/60 bg-surface-high/20 shrink-0 w-[140px] lg:w-auto">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -263,7 +263,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border border-outline-variant/60 bg-surface-high/20">
+        <Card className="border border-outline-variant/60 bg-surface-high/20 shrink-0 w-[140px] lg:w-auto">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -286,7 +286,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="border border-outline-variant/60 bg-surface-high/20">
+        <Card className="border border-outline-variant/60 bg-surface-high/20 shrink-0 w-[140px] lg:w-auto">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -308,10 +308,10 @@ export default function DashboardPage() {
       </div>
 
       {/* Lead Distribution & Industry Breakdown */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3">
         {/* Lead Score Distribution */}
         <Card className="border border-outline-variant/60 bg-surface-high/20">
-          <CardContent className="p-5">
+          <CardContent className="p-4 sm:p-5">
             <h3 className="font-headline-md text-headline-md font-semibold">Lead Distribution</h3>
             <p className="mt-0.5 text-body-sm text-on-surface-variant">By score tier</p>
             <div className="mt-4 space-y-3">
@@ -354,7 +354,7 @@ export default function DashboardPage() {
 
         {/* Industry Breakdown */}
         <Card className="border border-outline-variant/60 bg-surface-high/20 lg:col-span-2">
-          <CardContent className="p-5">
+          <CardContent className="p-4 sm:p-5">
             <h3 className="font-headline-md text-headline-md font-semibold">Industry Breakdown</h3>
             <p className="mt-0.5 text-body-sm text-on-surface-variant">Top sectors by lead count</p>
             <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -381,11 +381,11 @@ export default function DashboardPage() {
       </div>
 
       <Card className="border border-outline-variant/60 bg-surface-high/30">
-        <CardContent className="p-4">
+        <CardContent className="p-3 sm:p-4">
           <div className="flex items-center gap-2 pb-3 text-body-sm font-medium text-on-surface">
             <Filter className="h-4 w-4 text-on-surface-variant" /> Filters
           </div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
             <div>
               <label className="text-label-caps text-on-surface-variant">Industry</label>
               <select
@@ -417,7 +417,7 @@ export default function DashboardPage() {
                 ))}
               </select>
             </div>
-            <div className="flex items-end">
+            <div className="hidden items-end lg:flex">
               <Button variant="outline" className="w-full border-dashed">
                 <Filter className="mr-2 h-4 w-4" /> More Filters
               </Button>
@@ -432,18 +432,120 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <Card className="overflow-hidden border border-outline-variant/60">
+      {/* Mobile Card List */}
+      <div className="space-y-3 lg:hidden">
+        {loading ? (
+          [...Array(4)].map((_, i) => (
+            <div key={i} className="h-28 w-full animate-pulse rounded-lg bg-surface-highest" />
+          ))
+        ) : filtered.length === 0 ? (
+          <div className="rounded-lg border border-outline-variant/60 bg-surface-high/20 px-4 py-12 text-center text-on-surface-variant">
+            No opportunities found. Run audits to discover leads.
+          </div>
+        ) : (
+          filtered.map((row) => (
+            <div key={row.id} className="overflow-hidden rounded-lg border border-outline-variant/60 bg-surface-high/20">
+              <div
+                className={`flex items-center gap-3 p-3 cursor-pointer transition-colors ${selected === row.id ? 'bg-surface-high/40' : 'hover:bg-surface-high/30'}`}
+                onClick={() => setSelected(selected === row.id ? null : row.id)}
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Briefcase className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="truncate font-medium text-on-surface">{row.prospect.companyName}</p>
+                    {row.score >= 80 && (
+                      <span className="flex shrink-0 items-center gap-0.5 rounded-full bg-secondary/15 px-1.5 py-0.5 text-[10px] font-medium text-secondary">
+                        <Zap className="h-2.5 w-2.5" /> Hot
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-0.5 truncate text-xs text-on-surface-variant">
+                    {row.prospect.industry?.name ?? 'Unknown'} · {[row.prospect.city, row.prospect.country].filter(Boolean).join(', ') || '—'}
+                  </p>
+                  <div className="mt-1.5 flex items-center gap-2">
+                    <span className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium ${
+                      row.webStatusColor === 'error' ? 'bg-error/10 text-error' :
+                      row.webStatusColor === 'warning' ? 'bg-tertiary/10 text-tertiary' :
+                      row.webStatusColor === 'success' ? 'bg-secondary/10 text-secondary' :
+                      'bg-surface-highest text-on-surface-variant'
+                    }`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${
+                        row.webStatusColor === 'error' ? 'bg-error' :
+                        row.webStatusColor === 'warning' ? 'bg-tertiary' :
+                        row.webStatusColor === 'success' ? 'bg-secondary' :
+                        'bg-on-surface-variant'
+                      }`} />
+                      {row.webStatus}
+                    </span>
+                    <span className="text-[10px] text-on-surface-variant">{row.recommendedService}</span>
+                  </div>
+                </div>
+                <div className="flex shrink-0 flex-col items-center gap-1">
+                  <LeadScoreRing score={row.score} size={36} />
+                  {selected === row.id ? (
+                    <ChevronUp className="h-3.5 w-3.5 text-on-surface-variant" />
+                  ) : (
+                    <ChevronDown className="h-3.5 w-3.5 text-on-surface-variant" />
+                  )}
+                </div>
+              </div>
+              {selected === row.id && (
+                <div className="border-t border-outline-variant/50 bg-surface-container-low/50 p-3 space-y-3">
+                  <div className="rounded-lg border border-outline-variant/60 bg-surface-high/20 p-3">
+                    <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary">
+                      <Sparkles className="h-3.5 w-3.5" /> AI Quick Insight
+                    </div>
+                    <p className="mt-1.5 text-xs text-on-surface-variant">{row.insight}</p>
+                    <div className="mt-3 space-y-1.5">
+                      <p className="text-[10px] text-on-surface-variant uppercase tracking-wider">Pain Points</p>
+                      {row.painPoints.map((p, idx) => (
+                        <div key={idx} className="flex items-start gap-1.5">
+                          {p.priority === 'High' ? (
+                            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-error" />
+                          ) : p.priority === 'Medium' ? (
+                            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-tertiary" />
+                          ) : (
+                            <CheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-secondary" />
+                          )}
+                          <span className="text-xs text-on-surface">{p.text} <span className="text-on-surface-variant">({p.priority})</span></span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="rounded-lg border border-outline-variant/60 bg-surface-high/20 p-3">
+                    <p className="text-[10px] text-on-surface-variant uppercase tracking-wider">Pitch Strategy</p>
+                    <p className="mt-1.5 text-xs text-on-surface">{row.pitchStrategy}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" className="flex-1" onClick={() => router.push(`/dashboard/opportunities?prospect=${row.prospect.id}`)}>
+                      <Briefcase className="mr-1.5 h-3.5 w-3.5" /> Create
+                    </Button>
+                    <Button size="sm" variant="outline" className="flex-1" onClick={() => setShowCampaignSelect(row.id)}>
+                      <Plus className="mr-1.5 h-3.5 w-3.5" /> Add
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table */}
+      <Card className="hidden overflow-hidden border border-outline-variant/60 lg:block">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px]">
+            <table className="w-full">
               <thead>
                 <tr className="border-b border-outline-variant bg-surface-high/30 text-left text-xs font-medium uppercase tracking-wider text-on-surface-variant">
-                  <th className="px-3 py-3 font-medium sm:px-4">Business Name</th>
-                  <th className="hidden px-4 py-3 font-medium md:table-cell">Industry & Location</th>
-                  <th className="hidden px-4 py-3 font-medium lg:table-cell">Web Status</th>
-                  <th className="px-3 py-3 font-medium sm:px-4">Score</th>
-                  <th className="hidden px-4 py-3 font-medium lg:table-cell">Recommended Service</th>
-                  <th className="px-3 py-3 font-medium text-right sm:px-4">Actions</th>
+                  <th className="px-4 py-3 font-medium">Business Name</th>
+                  <th className="px-4 py-3 font-medium">Industry & Location</th>
+                  <th className="px-4 py-3 font-medium">Web Status</th>
+                  <th className="px-4 py-3 font-medium">Score</th>
+                  <th className="px-4 py-3 font-medium">Recommended Service</th>
+                  <th className="px-4 py-3 font-medium text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -466,34 +568,31 @@ export default function DashboardPage() {
                         className={`border-b border-outline-variant transition-colors hover:bg-surface-high/20 cursor-pointer ${selected === row.id ? 'bg-surface-high/40' : ''}`}
                         onClick={() => setSelected(selected === row.id ? null : row.id)}
                       >
-                        <td className="px-3 py-4 sm:px-4">
+                        <td className="px-4 py-4">
                           <div className="flex items-center gap-3">
-                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary sm:h-10 sm:w-10">
-                              <Briefcase className="h-4 w-4 sm:h-5 sm:w-5" />
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                              <Briefcase className="h-5 w-5" />
                             </div>
-                            <div className="min-w-0">
-                              <p className="truncate font-medium text-on-surface">{row.prospect.companyName}</p>
+                            <div>
+                              <p className="font-medium text-on-surface">{row.prospect.companyName}</p>
                               {row.score >= 80 ? (
                                 <p className="mt-0.5 flex items-center gap-1 text-xs text-secondary">
                                   <Zap className="h-3 w-3" /> Hot Lead
                                 </p>
                               ) : (
-                                <p className="truncate text-body-sm text-on-surface-variant">Added {timeAgo(row.audit?.createdAt ?? row.prospect.createdAt)}</p>
+                                <p className="text-body-sm text-on-surface-variant">Added {timeAgo(row.audit?.createdAt ?? row.prospect.createdAt)}</p>
                               )}
-                              <p className="mt-0.5 truncate text-xs text-on-surface-variant md:hidden">
-                                {row.prospect.industry?.name ?? 'Unknown'} · {[row.prospect.city, row.prospect.country].filter(Boolean).join(', ') || '—'}
-                              </p>
                             </div>
                           </div>
                         </td>
-                        <td className="hidden px-4 py-4 md:table-cell">
+                        <td className="px-4 py-4">
                           <p className="text-body-sm text-on-surface">{row.prospect.industry?.name ?? 'Unknown'}</p>
                           <p className="text-body-sm text-on-surface-variant">
                             <Globe className="inline h-3 w-3 mr-1" />
                             {[row.prospect.city, row.prospect.country].filter(Boolean).join(', ') || '—'}
                           </p>
                         </td>
-                        <td className="hidden px-4 py-4 lg:table-cell">
+                        <td className="px-4 py-4">
                           <span className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium ${
                             row.webStatusColor === 'error' ? 'bg-error/10 text-error' :
                             row.webStatusColor === 'warning' ? 'bg-tertiary/10 text-tertiary' :
@@ -509,21 +608,19 @@ export default function DashboardPage() {
                             {row.webStatus}
                           </span>
                         </td>
-                        <td className="px-3 py-4 sm:px-4">
+                        <td className="px-4 py-4">
                           <LeadScoreRing score={row.score} />
                         </td>
-                        <td className="hidden px-4 py-4 lg:table-cell">
+                        <td className="px-4 py-4">
                           <p className="text-body-sm font-medium text-on-surface">{row.recommendedService}</p>
                         </td>
-                        <td className="px-3 py-4 text-right sm:px-4">
-                          <div className="flex items-center justify-end gap-1.5 sm:gap-2">
-                            <Button size="sm" variant="outline" className="hidden md:inline-flex" onClick={(e) => { e.stopPropagation(); }}>
+                        <td className="px-4 py-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); }}>
                               Generate Pitch
                             </Button>
                             <Button size="sm" onClick={(e) => { e.stopPropagation(); setShowCampaignSelect(row.id); }}>
-                              <Plus className="h-3 w-3 md:hidden" />
-                              <span className="hidden md:inline">Add to Campaign</span>
-                              <span className="md:hidden">Add</span>
+                              <span>Add to Campaign</span>
                             </Button>
                             {selected === row.id ? (
                               <ChevronUp className="h-4 w-4 shrink-0 text-on-surface-variant" />
@@ -535,8 +632,8 @@ export default function DashboardPage() {
                       </tr>
                       {selected === row.id && (
                         <tr className="border-b border-outline-variant bg-surface-container-low/50">
-                          <td colSpan={6} className="px-3 py-4 sm:px-4 sm:py-5">
-                            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
+                          <td colSpan={6} className="px-4 py-5">
+                            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                               <div className="rounded-lg border border-outline-variant/60 bg-surface-high/20 p-4">
                                 <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
                                   <Sparkles className="h-4 w-4" /> AI Quick Insight
@@ -561,7 +658,7 @@ export default function DashboardPage() {
                               <div className="rounded-lg border border-outline-variant/60 bg-surface-high/20 p-4">
                                 <p className="text-xs text-on-surface-variant uppercase tracking-wider">Recommended Pitch Strategy</p>
                                 <p className="mt-2 text-body-sm text-on-surface">{row.pitchStrategy}</p>
-                                <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                                <div className="mt-4 flex gap-2">
                                   <Button size="sm" onClick={(e) => { e.stopPropagation(); router.push(`/dashboard/opportunities?prospect=${row.prospect.id}`); }}>
                                     <Briefcase className="mr-2 h-4 w-4" /> Create Opportunity
                                   </Button>
