@@ -65,9 +65,12 @@ function renderMarkdown(text: string) {
 
   lines.forEach((line, i) => {
     const olMatch = line.match(/^\d+\.\s+(.+)/);
-    const ulMatch = line.match(/^[-]\s+(.+)/);
+    const ulMatch = line.match(/^\s*[-]\s+(.+)/);
+    const subMatch = line.match(/^\s{2,}[-]\s+(.+)/);
 
-    if (olMatch) {
+    if (subMatch && listType === 'ol') {
+      listItems.push(<li key={`li-${i}`} className="text-on-surface-variant">{parseInline(subMatch[1])}</li>);
+    } else if (olMatch) {
       if (listType !== 'ol') { flushList(); listType = 'ol'; }
       listItems.push(<li key={`li-${i}`} className="text-on-surface">{parseInline(olMatch[1])}</li>);
     } else if (ulMatch) {
@@ -85,7 +88,7 @@ function renderMarkdown(text: string) {
 }
 
 function companyInitials(name: string) {
-  return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  return name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0] ?? '').join('').toUpperCase() || '?';
 }
 
 const history: HistoryItem[] = [
@@ -393,7 +396,7 @@ export default function CopilotPage() {
           <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-6 sm:px-container-padding">
             <div className="mx-auto max-w-4xl space-y-6">
               <div className="flex justify-center">
-                <span className="rounded-full bg-surface-container-high px-4 py-1 font-label-caps text-[10px] text-on-surface-variant">Today at 9:41 AM</span>
+                <span className="rounded-full bg-surface-high px-4 py-1 font-label-caps text-[10px] text-on-surface-variant">Today at 9:41 AM</span>
               </div>
 
               {messages.map((m) => (
@@ -412,7 +415,7 @@ export default function CopilotPage() {
                   <div className={`group max-w-[80%] space-y-3 ${m.role === 'user' ? 'order-first' : ''}`}>
                     <div className={`rounded-2xl p-4 text-body-sm ${
                       m.role === 'user'
-                        ? 'rounded-tr-sm border border-outline-variant bg-surface-container-high text-on-surface'
+                        ? 'rounded-tr-sm border border-outline-variant bg-surface-high text-on-surface'
                         : 'rounded-tl-sm bg-surface-container-low/60 text-on-surface'
                     }`}>
                       <div className="space-y-2">{renderMarkdown(m.text)}</div>
@@ -522,7 +525,7 @@ export default function CopilotPage() {
             <div className="mx-auto max-w-4xl">
               <div className="relative rounded-xl border border-outline-variant bg-surface-container-low/70 p-2 shadow-lg backdrop-blur-xl">
                 <div className="mb-2 flex items-center gap-2 border-b border-outline-variant/50 px-3 pb-2.5 pt-2">
-                  <button className="flex items-center gap-1 rounded px-2 py-1 font-label-caps text-[11px] text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-primary">
+                  <button className="flex items-center gap-1 rounded px-2 py-1 font-label-caps text-[11px] text-on-surface-variant transition-colors hover:bg-surface-high hover:text-primary">
                     <PlusCircle className="h-3.5 w-3.5" /> Add Context
                   </button>
                   <div className="h-4 w-px bg-outline-variant/50" />
