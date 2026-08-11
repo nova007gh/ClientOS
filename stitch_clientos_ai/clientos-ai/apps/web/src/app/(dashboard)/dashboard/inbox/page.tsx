@@ -80,7 +80,7 @@ export default function InboxPage() {
         </Button>
       </div>
 
-      <div className="grid h-[calc(100vh-12rem)] grid-cols-1 gap-4 overflow-hidden rounded-xl border border-outline-variant/60 bg-surface-high/20 lg:grid-cols-12">
+      <div className="grid h-[calc(100vh-10rem)] grid-cols-1 gap-4 overflow-hidden rounded-xl border border-outline-variant/60 bg-surface-high/20 lg:h-[calc(100vh-12rem)] lg:grid-cols-12">
         {/* Conversation list */}
         <div className={`col-span-1 overflow-y-auto border-r border-outline-variant p-3 lg:col-span-3 ${selected ? 'hidden lg:block' : 'block'}`}>
           <div className="space-y-2">
@@ -103,7 +103,7 @@ export default function InboxPage() {
                     <Badge key={tag} className={`text-xs ${
                       tag === 'High Intent' ? 'bg-secondary/10 text-secondary' :
                       tag === 'Meeting Request' ? 'bg-primary/10 text-primary' :
-                      tag === 'Interested' ? 'bg-warning/10 text-warning' :
+                      tag === 'Interested' ? 'bg-tertiary/10 text-tertiary' :
                       'bg-surface-highest text-on-surface-variant'
                     }`}>
                       {tag}
@@ -117,27 +117,27 @@ export default function InboxPage() {
 
         {/* Thread */}
         <div className={`col-span-1 flex flex-col border-r border-outline-variant lg:col-span-6 ${selected ? 'flex' : 'hidden lg:flex'}`}>
-          <div className="border-b border-outline-variant p-4">
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2">
+          <div className="border-b border-outline-variant p-3 sm:p-4">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
                 <button className="lg:hidden rounded-lg p-1 text-on-surface-variant hover:bg-surface-high" onClick={() => setSelected(null as any)}>
                   <ArrowLeft className="h-4 w-4" />
                 </button>
-                <div>
-                  <h2 className="font-headline-md text-headline-md font-semibold">{selected.title}</h2>
-                  <p className="text-body-sm text-on-surface-variant">{selected.contact} <span className="text-on-surface-variant/50">•</span> {selected.company}</p>
+                <div className="min-w-0">
+                  <h2 className="font-headline-md text-headline-md font-semibold truncate">{selected.title}</h2>
+                  <p className="text-body-sm text-on-surface-variant truncate">{selected.contact} <span className="text-on-surface-variant/50">•</span> {selected.company}</p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 shrink-0">
                 <Button size="sm" variant="ghost" className="p-2"><MoreVertical className="h-4 w-4" /></Button>
               </div>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-6">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 sm:space-y-6">
             {selected.messages.map((m) => (
               <div key={m.id} className={`flex ${m.isMe ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] rounded-2xl p-4 text-body-sm ${
+                <div className={`max-w-[85%] rounded-2xl p-3 sm:p-4 text-body-sm ${
                   m.isMe ? 'rounded-tr-none bg-primary/10 text-on-surface' : 'rounded-tl-none bg-surface-highest text-on-surface'
                 }`}>
                   <p className="whitespace-pre-wrap">{m.body}</p>
@@ -149,12 +149,12 @@ export default function InboxPage() {
             ))}
           </div>
 
-          <div className="border-t border-outline-variant p-4 space-y-3">
-            <div className="flex gap-2">
-              <Button size="sm" variant="outline" className="bg-surface-highest text-on-surface">
+          <div className="border-t border-outline-variant p-3 sm:p-4 space-y-3">
+            <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+              <Button size="sm" variant="outline" className="shrink-0 bg-surface-highest text-on-surface">
                 <Sparkles className="mr-2 h-3.5 w-3.5" /> Accept meeting & address CRM
               </Button>
-              <Button size="sm" variant="outline" className="bg-surface-highest text-on-surface">
+              <Button size="sm" variant="outline" className="shrink-0 bg-surface-highest text-on-surface">
                 Request call
               </Button>
             </div>
@@ -214,7 +214,7 @@ export default function InboxPage() {
             <p className="text-xs uppercase tracking-wider text-on-surface-variant">Identified Friction Points</p>
             {selected.friction.map((f) => (
               <div key={f} className="flex items-start gap-2 rounded-lg bg-surface-high/30 p-3">
-                <AlertTriangleIcon className="mt-0.5 h-4 w-4 text-warning" />
+                <AlertTriangleIcon className="mt-0.5 h-4 w-4 text-tertiary" />
                 <p className="text-body-sm text-on-surface">{f}</p>
               </div>
             ))}

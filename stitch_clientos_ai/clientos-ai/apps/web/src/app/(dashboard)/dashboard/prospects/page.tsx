@@ -125,7 +125,53 @@ export default function ProspectsPage() {
         </div>
       )}
 
-      <Card>
+      {/* Mobile Card List */}
+      <div className="space-y-3 lg:hidden">
+        {loading ? (
+          [...Array(5)].map((_, i) => (
+            <div key={i} className="h-20 animate-pulse rounded-lg bg-surface-highest" />
+          ))
+        ) : filtered.length === 0 ? (
+          <div className="py-12 text-center text-on-surface-variant">
+            No prospects found. Add your first prospect to get started.
+          </div>
+        ) : (
+          filtered.map((prospect) => (
+            <div
+              key={prospect.id}
+              className="flex items-center gap-3 rounded-lg border border-outline-variant/60 bg-surface-high/20 p-3 cursor-pointer transition-colors hover:bg-surface-high/40"
+              onClick={() => router.push(`/dashboard/prospects/${prospect.id}`)}
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                {prospect.website ? <Globe className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-medium text-on-surface">{prospect.companyName}</p>
+                <p className="mt-0.5 truncate text-xs text-on-surface-variant">
+                  {prospect.industry?.name ?? 'Unknown'} · {prospect.city ? `${prospect.city}, ${prospect.country}` : '—'}
+                </p>
+                <div className="mt-1 flex items-center gap-2">
+                  <Badge variant={statusColors[prospect.status] ?? 'neutral'}>
+                    {prospect.status}
+                  </Badge>
+                  {prospect.rating && (
+                    <span className="flex items-center gap-0.5 text-[10px] text-on-surface-variant">
+                      <Star className="h-2.5 w-2.5 fill-secondary text-secondary" />
+                      {prospect.rating}
+                    </span>
+                  )}
+                </div>
+              </div>
+              {prospect.leadScore != null && (
+                <LeadScoreRing score={prospect.leadScore} size={36} />
+              )}
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table */}
+      <Card className="hidden lg:block">
         <CardHeader>
           <CardTitle>All Prospects</CardTitle>
         </CardHeader>
@@ -205,8 +251,8 @@ export default function ProspectsPage() {
       </Card>
 
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-lg bg-surface p-6 shadow-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
+          <div className="w-full max-w-lg rounded-lg bg-surface p-4 sm:p-6 shadow-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <h2 className="font-headline-md text-headline-md font-semibold">Add Prospect</h2>
               <button onClick={() => setShowAddModal(false)} className="text-on-surface-variant hover:text-on-surface">
@@ -231,7 +277,7 @@ export default function ProspectsPage() {
                   placeholder="Acme Corp"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="font-label-caps text-label-caps text-on-surface-variant">Website</label>
                   <Input
@@ -260,7 +306,7 @@ export default function ProspectsPage() {
                   placeholder="info@acme.com"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="font-label-caps text-label-caps text-on-surface-variant">City</label>
                   <Input

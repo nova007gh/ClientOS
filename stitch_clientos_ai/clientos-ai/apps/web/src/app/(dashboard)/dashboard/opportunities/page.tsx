@@ -134,7 +134,7 @@ export default function OpportunitiesPage() {
       {loading ? (
         <div className="flex gap-card-gap overflow-hidden">
           {STAGES.map((s) => (
-            <div key={s.key} className="min-w-[280px] flex-1 space-y-3">
+            <div key={s.key} className="min-w-[240px] flex-1 space-y-3 lg:min-w-[280px]">
               <div className="h-8 animate-pulse rounded bg-surface-highest" />
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="h-32 animate-pulse rounded-lg bg-surface-highest" />
@@ -148,11 +148,11 @@ export default function OpportunitiesPage() {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-card-gap lg:grid-cols-4">
+          <div className="flex gap-3 overflow-x-auto pb-1 lg:grid lg:grid-cols-4 lg:gap-card-gap lg:overflow-visible lg:pb-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
             {summaryStats.map((stat) => {
               const Icon = stat.icon;
               return (
-                <div key={stat.label} className="rounded-xl border border-outline-variant/60 bg-surface-high/20 p-4">
+                <div key={stat.label} className="shrink-0 w-[140px] rounded-xl border border-outline-variant/60 bg-surface-high/20 p-4 lg:w-auto">
                   <div className="flex items-center justify-between">
                     <span className="font-label-caps text-label-caps text-on-surface-variant">{stat.label}</span>
                     <Icon className={`h-4 w-4 ${stat.color}`} />
@@ -163,12 +163,12 @@ export default function OpportunitiesPage() {
             })}
           </div>
 
-          <div className="flex flex-1 gap-card-gap overflow-x-auto pb-4">
+          <div className="flex flex-1 gap-card-gap overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [scrollbar-width:none] lg:[&::-webkit-scrollbar]:block">
             {STAGES.map((stage) => {
               const stageOps = opportunitiesByStage[stage.key] ?? [];
               const stageValue = stageOps.reduce((sum, o) => sum + (o.value ?? 0), 0);
               return (
-                <div key={stage.key} className="flex min-w-[280px] max-w-[280px] flex-col rounded-xl border border-outline-variant/50 bg-surface-container-low/50 p-3">
+                <div key={stage.key} className="flex min-w-[240px] max-w-[240px] flex-col rounded-xl border border-outline-variant/50 bg-surface-container-low/50 p-3 lg:min-w-[280px] lg:max-w-[280px]">
                   <div className="mb-3 flex items-center justify-between px-1">
                     <div className="flex items-center gap-2">
                       <span className={`h-2 w-2 rounded-full ${stage.color}`} />
@@ -229,8 +229,8 @@ export default function OpportunitiesPage() {
       )}
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-lg bg-surface p-6 shadow-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
+          <div className="w-full max-w-lg rounded-lg bg-surface p-4 sm:p-6 shadow-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <h2 className="font-headline-md text-headline-md font-semibold">New Opportunity</h2>
               <button onClick={() => setShowModal(false)} className="text-on-surface-variant hover:text-on-surface">
@@ -267,7 +267,7 @@ export default function OpportunitiesPage() {
                   placeholder="Website redesign for Acme Corp"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <Label>Value</Label>
                   <Input

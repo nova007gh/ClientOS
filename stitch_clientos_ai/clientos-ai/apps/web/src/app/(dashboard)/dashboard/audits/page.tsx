@@ -152,9 +152,9 @@ export default function IntelligencePage() {
         </Badge>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card className="border border-outline-variant/60 bg-surface-high/20">
-          <CardContent className="p-5 space-y-4">
+          <CardContent className="p-4 sm:p-5 space-y-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Total Revenue</p>
             <div className="flex items-start justify-between">
               <div>
@@ -183,10 +183,10 @@ export default function IntelligencePage() {
         </Card>
 
         <Card className="border border-outline-variant/60 bg-surface-high/20">
-          <CardContent className="p-5 space-y-4">
+          <CardContent className="p-4 sm:p-5 space-y-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Campaign Performance</p>
             <div className="flex items-start justify-between">
-              <div className="flex gap-6">
+              <div className="flex gap-4 sm:gap-6">
                 <div>
                   <p className="text-3xl font-semibold text-on-surface">{openRate}%</p>
                   <p className="text-body-sm text-on-surface-variant">Avg Open Rate</p>
@@ -210,7 +210,7 @@ export default function IntelligencePage() {
         </Card>
 
         <Card className="border border-outline-variant/60 bg-surface-high/20">
-          <CardContent className="p-5 space-y-4">
+          <CardContent className="p-4 sm:p-5 space-y-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">AI Compute Engine</p>
             <div className="flex items-start justify-between">
               <div>
@@ -244,9 +244,9 @@ export default function IntelligencePage() {
       </div>
 
       <Card className="border border-outline-variant/60 bg-surface-high/20">
-        <CardContent className="p-5 space-y-4">
+        <CardContent className="p-4 sm:p-5 space-y-4">
           <h2 className="font-headline-md text-headline-md font-semibold">Sales Velocity Funnel</h2>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-6">
             {funnel.map((stage, i) => (
               <div key={stage.name} className="relative flex flex-col items-center rounded-lg bg-surface-high/30 p-4 text-center">
                 <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-xl ${stage.color} text-surface`}>
@@ -273,7 +273,7 @@ export default function IntelligencePage() {
         <h2 className="font-headline-md text-headline-md font-semibold flex items-center gap-2">
           <Lightbulb className="h-5 w-5 text-primary" /> AI Recommended Actions
         </h2>
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
           {actions.map((a) => {
             const Icon = a.icon;
             return (
