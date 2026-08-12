@@ -90,7 +90,7 @@ export default function HomePage() {
           <div>
             <p className="font-semibold text-on-surface">Company</p>
             <div className="mt-2 space-y-1 text-body-sm text-on-surface-variant">
-              <p>About Us</p>
+              <Link href="/about" className="text-on-surface-variant hover:text-secondary transition-colors">About Us</Link>
               <p>Careers</p>
               <p>Contact</p>
             </div>
