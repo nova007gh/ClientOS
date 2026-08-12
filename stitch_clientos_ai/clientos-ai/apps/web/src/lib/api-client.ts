@@ -1,3 +1,7 @@
+'use client';
+
+import { useAuthStore } from './auth-store';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 type RequestOptions = {
@@ -21,7 +25,6 @@ let refreshPromise: Promise<string | null> | null = null;
 async function tryRefreshToken(): Promise<string | null> {
   if (refreshPromise) return refreshPromise;
 
-  const { useAuthStore } = await import('./auth-store');
   const state = useAuthStore.getState();
 
   if (!state.refreshToken) {
@@ -97,6 +100,9 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
       }
       return retryData as T;
     }
+    // Refresh failed — logout + redirect already triggered.
+    // Block caller from showing a stale error during redirect.
+    await new Promise(() => {});
   }
 
   const data = await res.json().catch(() => null);
