@@ -32,6 +32,12 @@ export class ContractsController {
     return this.contractsService.list(user.organization.id, { status, search });
   }
 
+  @Get('audit')
+  @UseGuards(JwtAuthGuard)
+  async auditLog(@CurrentUser() user: any) {
+    return this.contractsService.auditLog(user.organization.id);
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async get(@CurrentUser() user: any, @Param('id') id: string) {

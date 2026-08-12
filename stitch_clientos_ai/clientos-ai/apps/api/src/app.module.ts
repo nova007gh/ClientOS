@@ -13,6 +13,8 @@ import { ContractsModule } from './contracts/contracts.module';
 import { ProjectsModule } from './projects/projects.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { InboxModule } from './inbox/inbox.module';
+import { TemplatesModule } from './templates/templates.module';
 import { HealthModule } from './health/health.module';
 
 @Module({
@@ -31,6 +33,8 @@ import { HealthModule } from './health/health.module';
     ProjectsModule,
     PortfolioModule,
     DashboardModule,
+    InboxModule,
+    TemplatesModule,
     HealthModule,
   ],
 })

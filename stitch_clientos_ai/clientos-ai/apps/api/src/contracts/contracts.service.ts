@@ -265,4 +265,52 @@ export class ContractsService {
 
     return this.getByPublicToken(token);
   }
+
+  async auditLog(orgId: string) {
+    const [signatures, versions] = await Promise.all([
+      prisma.contractSignature.findMany({
+        where: { contract: { organizationId: orgId } },
+        include: {
+          contract: { select: { id: true, title: true } },
+          party: { select: { id: true, name: true, role: true } },
+        },
+        orderBy: { signedAt: 'desc' },
+      }),
+      prisma.contractVersion.findMany({
+        where: { contract: { organizationId: orgId } },
+        include: {
+          contract: { select: { id: true, title: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+    ]);
+
+    const events = [
+      ...signatures.map((s: any) => ({
+        id: s.id,
+        type: 'SIGNATURE',
+        contractId: s.contract.id,
+        contractTitle: s.contract.title,
+        partyId: s.party.id,
+        partyName: s.party.name,
+        partyRole: s.party.role,
+        signatureData: s.signatureData,
+        audit: s.auditMetadata ? JSON.parse(s.auditMetadata) : null,
+        timestamp: s.signedAt.toISOString(),
+      })),
+      ...versions.map((v: any) => ({
+        id: v.id,
+        type: 'VERSION',
+        contractId: v.contract.id,
+        contractTitle: v.contract.title,
+        version: v.version,
+        createdBy: v.createdBy,
+        timestamp: v.createdAt.toISOString(),
+      })),
+    ];
+
+    events.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    return { data: events };
+  }
 }

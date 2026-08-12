@@ -1,17 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, Button, Badge, LeadScoreRing } from '@clientos/ui';
 import { Edit, Plus, Sparkles, Bold, Italic, List, Link, ChevronDown, CheckCircle, AlertTriangle, Send, History, Type, Braces } from 'lucide-react';
+import { useAuthStore } from '@/lib/auth-store';
+import { api, ApiError } from '@/lib/api-client';
 
-const templates = [
-  { id: '1', name: 'Cold Intro v4.2', category: 'SaaS Executives', open: '68% open', active: true },
-  { id: '2', name: 'Follow-up: No Reply', category: 'General', open: '—', active: false },
-  { id: '3', name: 'Case Study Drop', category: 'Late Stage Funnel', open: '—', active: false },
-];
+interface Template {
+  id: string;
+  name: string;
+  category: string;
+  open: string;
+  active: boolean;
+  subject?: string;
+  body: string;
+  updatedAt: string;
+}
 
 export default function TemplatesPage() {
-  const [selected, setSelected] = useState(templates[0]);
+  const [selected, setSelected] = useState<Template | null>(null);
+  const [templates, setTemplates] = useState<Template[]>([]);
   const [tone, setTone] = useState('Direct');
   const [subject, setSubject] = useState("Quick question regarding {{company_name}}'s data infrastructure");
   const [body, setBody] = useState(`Hi {{prospect_name}},
@@ -24,6 +32,50 @@ Are you open to a brief chat next week to see if we can do the same for your tea
 
 Best,
 Jane`);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const { accessToken } = useAuthStore();
+
+  useEffect(() => {
+    if (!accessToken) return;
+    async function load() {
+      try {
+        const res = await api.get<{ data: Template[] }>('/templates?type=EMAIL', accessToken);
+        setTemplates(res.data);
+        if (res.data.length > 0) setSelected(res.data[0]);
+      } catch (err) {
+        setError(err instanceof ApiError ? err.message : 'Failed to load templates');
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (!selected) return;
+    setTone('Direct');
+    setSubject(selected.subject ?? '');
+    setBody(selected.body);
+  }, [selected]);
+
+  if (loading) {
+    return (
+      <div className="p-6 space-y-4">
+        <div className="h-8 w-1/3 animate-pulse rounded bg-surface-highest" />
+        <div className="h-64 w-full animate-pulse rounded-lg bg-surface-highest" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="p-6 text-error">{error}</div>;
+  }
+
+  if (!selected) {
+    return <div className="p-6 text-on-surface-variant">No templates found.</div>;
+  }
 
   return (
     <div className="grid h-[calc(100vh-8rem)] grid-cols-1 gap-0 overflow-hidden rounded-xl border border-outline-variant/60 bg-surface-high/20 lg:grid-cols-4">

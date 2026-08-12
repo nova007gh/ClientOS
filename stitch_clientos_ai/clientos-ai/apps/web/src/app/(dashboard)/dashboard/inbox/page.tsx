@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, Button, Badge, LeadScoreRing } from '@clientos/ui';
 import { Mail, Phone, MoreVertical, Filter, Sparkles, Send, Bold, Link2, Paperclip, Smile, ArrowLeft } from 'lucide-react';
+import { useAuthStore } from '@/lib/auth-store';
+import { api, ApiError } from '@/lib/api-client';
 
 interface Conversation {
   id: string;
@@ -18,58 +20,48 @@ interface Conversation {
   pitch: string;
 }
 
-const conversations: Conversation[] = [
-  {
-    id: '1',
-    company: 'Acme Corp',
-    contact: 'Sarah Jenkins',
-    title: 'Re: Enterprise Scale Proposal',
-    time: '10m ago',
-    tags: ['Meeting Request', 'High Intent'],
-    messages: [
-      { id: '1', sender: 'You', body: "Hi Sarah,\n\nFollowing up on our brief chat. I've put together a proposal showing how ClientOS can streamline Acme Corp's data pipelines, specifically addressing the bottleneck you mentioned in Q3.\n\nWould you be open to a 15-min walk-through this Thursday?", time: 'Yesterday, 10:24 AM', isMe: true },
-      { id: '2', sender: 'Sarah Jenkins', body: "Hi,\n\nThanks for sending this over. The proposed architecture looks interesting, but I have concerns about integration with our legacy CRM systems.\n\nI'd like to discuss this further. Are you available for a call tomorrow afternoon?\n\n- Sarah", time: 'Today, 9:15 AM', isMe: false },
-    ],
-    score: 85,
-    intent: 'High Intent',
-    friction: ['Legacy CRM integration concerns (Salesforce Classic)', 'Q3 data pipeline bottlenecks'],
-    pitch: 'Focus on our API-first approach that requires zero downtime to bridge their old CRM to our modern infrastructure.',
-  },
-  {
-    id: '2',
-    company: 'TechFlow Inc',
-    contact: 'Tom Allen',
-    title: 'Following up on the demo',
-    time: '2h ago',
-    tags: ['Interested'],
-    messages: [
-      { id: '1', sender: 'You', body: 'Thanks for attending the demo. Let me know if you have any questions.', time: '2h ago', isMe: true },
-    ],
-    score: 64,
-    intent: 'Interested',
-    friction: ['Pricing clarity'],
-    pitch: 'Show ROI calculator and similar SaaS case study.',
-  },
-  {
-    id: '3',
-    company: 'Global Logistics',
-    contact: 'Rachel Kim',
-    title: 'Not at this time',
-    time: 'Yesterday',
-    tags: ['Objection'],
-    messages: [
-      { id: '1', sender: 'Rachel Kim', body: 'This is not a priority for us right now.', time: 'Yesterday', isMe: false },
-    ],
-    score: 32,
-    intent: 'Low',
-    friction: ['Timing'],
-    pitch: 'Nurture with quarterly value content.',
-  },
-];
+const [conversations, setConversations] = useState<Conversation[]>([]);
 
 export default function InboxPage() {
-  const [selected, setSelected] = useState<Conversation>(conversations[0]);
-  const [reply, setReply] = useState('Reply to Sarah... (or use AI suggestions above)');
+  const [selected, setSelected] = useState<Conversation | null>(null);
+  const [reply, setReply] = useState('Reply...');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const { accessToken } = useAuthStore();
+
+  useEffect(() => {
+    if (!accessToken) return;
+    async function load() {
+      try {
+        const res = await api.get<{ data: Conversation[] }>('/inbox', accessToken);
+        setConversations(res.data);
+        if (res.data.length > 0) setSelected(res.data[0]);
+      } catch (err) {
+        setError(err instanceof ApiError ? err.message : 'Failed to load inbox');
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [accessToken]);
+
+  if (loading) {
+    return (
+      <div className="p-6 space-y-4">
+        <div className="h-8 w-1/3 animate-pulse rounded bg-surface-highest" />
+        <div className="h-96 w-full animate-pulse rounded-lg bg-surface-highest" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="p-6 text-error">{error}</div>;
+  }
+
+  if (!selected) {
+    return <div className="p-6 text-on-surface-variant">No conversations found.</div>;
+  }
 
   return (
     <div className="space-y-4">
@@ -120,7 +112,7 @@ export default function InboxPage() {
           <div className="border-b border-outline-variant p-3 sm:p-4">
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0">
-                <button className="lg:hidden rounded-lg p-1 text-on-surface-variant hover:bg-surface-high" onClick={() => setSelected(null as any)}>
+                <button className="lg:hidden rounded-lg p-1 text-on-surface-variant hover:bg-surface-high" onClick={() => setSelected(null)}>
                   <ArrowLeft className="h-4 w-4" />
                 </button>
                 <div className="min-w-0">

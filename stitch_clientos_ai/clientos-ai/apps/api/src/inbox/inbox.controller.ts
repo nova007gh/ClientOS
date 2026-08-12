@@ -1,0 +1,62 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { InboxService } from './inbox.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../auth/current-user.decorator';
+
+@Controller('inbox')
+export class InboxController {
+  constructor(private inboxService: InboxService) {}
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async list(@CurrentUser() user: any) {
+    return this.inboxService.list(user.organization.id);
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  async get(@CurrentUser() user: any, @Param('id') id: string) {
+    return this.inboxService.get(user.organization.id, id);
+  }
+
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  async create(@CurrentUser() user: any, @Body() body: any) {
+    return this.inboxService.create(user.organization.id, body);
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  async update(
+    @CurrentUser() user: any,
+    @Param('id') id: string,
+    @Body() body: any,
+  ) {
+    return this.inboxService.update(user.organization.id, id, body);
+  }
+
+  @Post(':id/messages')
+  @UseGuards(JwtAuthGuard)
+  async sendMessage(
+    @CurrentUser() user: any,
+    @Param('id') id: string,
+    @Body() body: any,
+  ) {
+    return this.inboxService.sendMessage(user.organization.id, id, body);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  async delete(@CurrentUser() user: any, @Param('id') id: string) {
+    return this.inboxService.delete(user.organization.id, id);
+  }
+}
