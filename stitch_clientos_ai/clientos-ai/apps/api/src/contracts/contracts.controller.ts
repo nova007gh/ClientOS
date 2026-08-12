@@ -98,6 +98,20 @@ export class ContractsController {
     );
   }
 
+  @Post('public/:token/sign/:partyId')
+  async signPublic(
+    @Param('token') token: string,
+    @Param('partyId') partyId: string,
+    @Body() body: any,
+  ) {
+    return this.contractsService.signByPublicToken(
+      token,
+      partyId,
+      body.signatureData,
+      body.audit,
+    );
+  }
+
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   async delete(@CurrentUser() user: any, @Param('id') id: string) {

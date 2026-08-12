@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, Button, Badge } from '@clientos/ui';
-import { ArrowLeft, Edit, Send, Lock, FileCheck, CheckCircle2, Circle, Clock, MoreHorizontal, Pen, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Edit, Send, Lock, FileCheck, CheckCircle2, Circle, Clock, MoreHorizontal, Pen, CheckCircle, Copy, Check } from 'lucide-react';
 import { api, ApiError } from '@/lib/api-client';
 import { useAuthStore } from '@/lib/auth-store';
 
@@ -29,6 +29,7 @@ interface Contract {
   status: string;
   value: number | null;
   currency: string;
+  publicToken: string;
   opportunity: { id: string; title: string } | null;
   versions: ContractVersion[];
   parties: ContractParty[];
@@ -47,6 +48,7 @@ export default function ContractDetailPage() {
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState(false);
   const [draftContent, setDraftContent] = useState('');
+  const [copiedLink, setCopiedLink] = useState(false);
 
   useEffect(() => {
     if (!accessToken || !id) return;
@@ -94,6 +96,18 @@ export default function ContractDetailPage() {
       setError(err instanceof ApiError ? err.message : 'Failed to save contract');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleCopyPublicLink = async () => {
+    if (!contract) return;
+    const url = `${window.location.origin}/contracts/public/${contract.publicToken}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
+    } catch {
+      setError('Could not copy link');
     }
   };
 
@@ -160,6 +174,17 @@ export default function ContractDetailPage() {
               <Edit className="mr-2 h-4 w-4" /> Edit Draft
             </Button>
           )}
+          <Button variant="outline" size="sm" onClick={handleCopyPublicLink}>
+            {copiedLink ? (
+              <>
+                <Check className="mr-2 h-4 w-4" /> Copied
+              </>
+            ) : (
+              <>
+                <Copy className="mr-2 h-4 w-4" /> Copy Public Link
+              </>
+            )}
+          </Button>
           {editing ? (
             <Button onClick={handleSaveEdit} disabled={saving}>
               <CheckCircle className="mr-2 h-4 w-4" /> {saving ? 'Saving...' : 'Save'}

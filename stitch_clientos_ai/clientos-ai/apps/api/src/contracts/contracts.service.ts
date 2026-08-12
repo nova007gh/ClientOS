@@ -77,6 +77,7 @@ export class ContractsService {
             signatures: { orderBy: { signedAt: 'desc' }, take: 1 },
           },
         },
+        _count: { select: { signatures: true } },
       },
     });
     if (!contract) throw new NotFoundException('Contract not found');
@@ -225,5 +226,43 @@ export class ContractsService {
     });
     if (!existing) throw new NotFoundException('Contract not found');
     return prisma.contract.delete({ where: { id } });
+  }
+
+  async signByPublicToken(token: string, partyId: string, signatureData: string, audit: any) {
+    const contract = await prisma.contract.findUnique({
+      where: { publicToken: token },
+      include: { parties: true, signatures: true },
+    });
+    if (!contract) throw new NotFoundException('Contract not found');
+
+    const party = contract.parties.find((p) => p.id === partyId);
+    if (!party) throw new NotFoundException('Party not found');
+
+    if (contract.signatures.some((s) => s.partyId === partyId)) {
+      throw new BadRequestException('Party has already signed');
+    }
+
+    await prisma.contractSignature.create({
+      data: {
+        contractId: contract.id,
+        partyId,
+        signatureData,
+        signedAt: new Date(),
+        auditMetadata: JSON.stringify(audit ?? { ip: 'unknown', userAgent: 'unknown' }),
+      },
+    });
+
+    const totalParties = contract.parties.length;
+    const signedCount = contract.signatures.length + 1;
+    const newStatus = signedCount >= totalParties ? 'SIGNED' : 'PENDING_SIGNATURE';
+
+    if (contract.status !== 'SIGNED') {
+      await prisma.contract.update({
+        where: { id: contract.id },
+        data: { status: newStatus },
+      });
+    }
+
+    return this.getByPublicToken(token);
   }
 }
