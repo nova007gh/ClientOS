@@ -16,6 +16,50 @@ export class ApiError extends Error {
   }
 }
 
+let refreshPromise: Promise<string | null> | null = null;
+
+async function tryRefreshToken(): Promise<string | null> {
+  if (refreshPromise) return refreshPromise;
+
+  const { useAuthStore } = await import('./auth-store');
+  const state = useAuthStore.getState();
+
+  if (!state.refreshToken) {
+    return null;
+  }
+
+  refreshPromise = (async () => {
+    try {
+      const res = await fetch(`${API_URL}/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken: state.refreshToken }),
+      });
+
+      if (!res.ok) throw new Error('Refresh failed');
+
+      const data = await res.json();
+      state.setAuth({
+        user: data.user,
+        organization: data.organization,
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+      });
+      return data.accessToken as string;
+    } catch {
+      state.logout();
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
+      return null;
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
+}
+
 export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Promise<T> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -30,6 +74,30 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
     headers,
     body: opts.body ? JSON.stringify(opts.body) : undefined,
   });
+
+  if (res.status === 401 && opts.token) {
+    const newToken = await tryRefreshToken();
+    if (newToken) {
+      const retryHeaders: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${newToken}`,
+      };
+      const retryRes = await fetch(`${API_URL}${path}`, {
+        method: opts.method ?? 'GET',
+        headers: retryHeaders,
+        body: opts.body ? JSON.stringify(opts.body) : undefined,
+      });
+      const retryData = await retryRes.json().catch(() => null);
+      if (!retryRes.ok) {
+        throw new ApiError(
+          (retryData as any)?.message ?? 'Request failed',
+          retryRes.status,
+          retryData,
+        );
+      }
+      return retryData as T;
+    }
+  }
 
   const data = await res.json().catch(() => null);
 
