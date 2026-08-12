@@ -9,6 +9,7 @@ import { OpportunitiesModule } from './opportunities/opportunities.module';
 import { AuditsModule } from './audits/audits.module';
 import { CampaignsModule } from './campaigns/campaigns.module';
 import { ProposalsModule } from './proposals/proposals.module';
+import { ContractsModule } from './contracts/contracts.module';
 import { ProjectsModule } from './projects/projects.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -26,6 +27,7 @@ import { HealthModule } from './health/health.module';
     AuditsModule,
     CampaignsModule,
     ProposalsModule,
+    ContractsModule,
     ProjectsModule,
     PortfolioModule,
     DashboardModule,

@@ -22,6 +22,7 @@ import {
   Sparkles,
   Menu,
   X,
+  FileText,
 } from 'lucide-react';
 
 const mobileNavItems = [
@@ -29,7 +30,7 @@ const mobileNavItems = [
   { href: '/dashboard/opportunities', label: 'Sales', icon: TrendingUp },
   { href: '/dashboard/inbox', label: 'Outreach', icon: Mail },
   { href: '/dashboard/prospects', label: 'Clients', icon: Users },
-  { href: '/dashboard/audits', label: 'Intel', icon: Brain },
+  { href: '/dashboard/contracts', label: 'Contracts', icon: FileText },
 ];
 
 const topNav = [
@@ -41,6 +42,7 @@ const mainNav = [
   { href: '/dashboard/inbox', label: 'Outreach', icon: Mail },
   { href: '/dashboard/prospects', label: 'Clients', icon: Users },
   { href: '/dashboard/projects', label: 'Work', icon: Briefcase },
+  { href: '/dashboard/contracts', label: 'Contracts', icon: FileText },
   { href: '/dashboard/audits', label: 'Intelligence', icon: Brain },
 ];
 
