@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/auth-store';
+import { useSearchStore } from '@/lib/search-store';
 import { Avatar, AvatarFallback, Button } from '@clientos/ui';
 import {
   Home,
@@ -313,6 +314,7 @@ export default function DashboardLayout({
 }
 
 function SearchContext({ pathname }: { pathname: string }) {
+  const { query, setQuery } = useSearchStore();
   const placeholder = pathname.includes('/dashboard/campaigns') ? 'Search campaigns...' :
     pathname.includes('/dashboard/prospects') ? 'Search clients...' :
     pathname.includes('/dashboard/projects') ? 'Search tasks...' :
@@ -326,6 +328,8 @@ function SearchContext({ pathname }: { pathname: string }) {
       <input
         type="text"
         placeholder={placeholder}
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
         className="w-full rounded-full border border-outline bg-surface-high py-2 pl-10 pr-4 text-body-sm text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:outline-none"
       />
     </div>

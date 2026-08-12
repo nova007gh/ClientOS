@@ -6,6 +6,7 @@ import { Search, Sparkles, Filter, Briefcase, Calendar, AlertTriangle, CheckCirc
 import { Fragment } from 'react';
 import { api, ApiError } from '@/lib/api-client';
 import { useAuthStore } from '@/lib/auth-store';
+import { useSearchStore } from '@/lib/search-store';
 import { useRouter } from 'next/navigation';
 
 interface Prospect {
@@ -54,7 +55,6 @@ interface ScannerRow {
   insight: string;
 }
 
-const industries = ['All Industries', 'Healthcare', 'Legal Services', 'Hospitality', 'Technology', 'Retail', 'Education', 'Finance'];
 const websiteStatuses = ['Any Status', 'No Website', 'Poor Performance', 'Fair', 'Good', 'Excellent'];
 
 function generateRecommendedService(audit: WebsiteAudit | null): string {
@@ -113,16 +113,18 @@ function timeAgo(date: string | null | undefined): string {
 export default function DashboardPage() {
   const router = useRouter();
   const { accessToken } = useAuthStore();
+  const { query: search, setQuery: setSearch } = useSearchStore();
   const [prospects, setProspects] = useState<Prospect[]>([]);
   const [audits, setAudits] = useState<Record<string, WebsiteAudit[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [search, setSearch] = useState('');
   const [industry, setIndustry] = useState('All Industries');
   const [webStatus, setWebStatus] = useState('Any Status');
   const [selected, setSelected] = useState<string | null>(null);
   const [campaigns, setCampaigns] = useState<{ id: string; name: string }[]>([]);
   const [showCampaignSelect, setShowCampaignSelect] = useState<string | null>(null);
+  const [industries, setIndustries] = useState<string[]>(['All Industries']);
+  const [location, setLocation] = useState('');
 
   useEffect(() => {
     if (!accessToken) return;
@@ -143,6 +145,12 @@ export default function DashboardPage() {
         }
         setAudits(byProspect);
         setCampaigns(campaignsRes.data);
+        const uniqueIndustries = Array.from(new Set(
+          prospectsRes.data
+            .map((p) => p.industry?.name)
+            .filter((name): name is string => !!name)
+        )).sort();
+        setIndustries(['All Industries', ...uniqueIndustries]);
       } catch (err) {
         setError(err instanceof ApiError ? err.message : 'Failed to load scanner data');
       } finally {
@@ -180,10 +188,11 @@ export default function DashboardPage() {
         || ((r.prospect.industry?.name ?? '').toLowerCase().includes(search.toLowerCase()))
         || (r.prospect.city ?? '').toLowerCase().includes(search.toLowerCase());
       const matchesIndustry = industry === 'All Industries' || (r.prospect.industry?.name ?? '') === industry;
+      const matchesLocation = !location || (r.prospect.city ?? '').toLowerCase().includes(location.toLowerCase()) || (r.prospect.country ?? '').toLowerCase().includes(location.toLowerCase());
       const matchesStatus = webStatus === 'Any Status' || r.webStatus === webStatus;
-      return matchesSearch && matchesIndustry && matchesStatus;
+      return matchesSearch && matchesIndustry && matchesLocation && matchesStatus;
     });
-  }, [rows, search, industry, webStatus]);
+  }, [rows, search, industry, location, webStatus]);
 
   const selectedRow = rows.find((r) => r.id === selected);
 
@@ -201,7 +210,7 @@ export default function DashboardPage() {
     })).filter((i) => i.count > 0).sort((a, b) => b.count - a.count).slice(0, 5);
     const maxIndustryCount = Math.max(...industryBreakdown.map((i) => i.count), 1);
     return { totalLeads, hotLeads, warmLeads, coldLeads, noWebsite, poorPerf, avgScore, industryBreakdown, maxIndustryCount };
-  }, [rows]);
+  }, [rows, industries]);
 
   async function handleAddToCampaign(campaignId: string, row: ScannerRow) {
     try {
@@ -385,7 +394,19 @@ export default function DashboardPage() {
           <div className="flex items-center gap-2 pb-3 text-body-sm font-medium text-on-surface">
             <Filter className="h-4 w-4 text-on-surface-variant" /> Filters
           </div>
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-5">
+            <div className="col-span-2 lg:col-span-1">
+              <label className="text-label-caps text-on-surface-variant">Search</label>
+              <div className="relative mt-1">
+                <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
+                <Input
+                  className="pl-8"
+                  placeholder="Company, industry..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            </div>
             <div>
               <label className="text-label-caps text-on-surface-variant">Industry</label>
               <select
@@ -402,7 +423,9 @@ export default function DashboardPage() {
               <label className="text-label-caps text-on-surface-variant">Location</label>
               <Input
                 className="mt-1"
-                placeholder="e.g., London, UK"
+                placeholder="e.g., Accra, Ghana"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
               />
             </div>
             <div>
@@ -418,8 +441,8 @@ export default function DashboardPage() {
               </select>
             </div>
             <div className="hidden items-end lg:flex">
-              <Button variant="outline" className="w-full border-dashed">
-                <Filter className="mr-2 h-4 w-4" /> More Filters
+              <Button variant="outline" className="w-full border-dashed" onClick={() => { setSearch(''); setIndustry('All Industries'); setLocation(''); setWebStatus('Any Status'); }}>
+                <Filter className="mr-2 h-4 w-4" /> Clear Filters
               </Button>
             </div>
           </div>
@@ -616,7 +639,7 @@ export default function DashboardPage() {
                         </td>
                         <td className="px-4 py-4 text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); }}>
+                            <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); router.push(`/dashboard/copilot?context=prospect:${row.prospect.id}`); }}>
                               Generate Pitch
                             </Button>
                             <Button size="sm" onClick={(e) => { e.stopPropagation(); setShowCampaignSelect(row.id); }}>
