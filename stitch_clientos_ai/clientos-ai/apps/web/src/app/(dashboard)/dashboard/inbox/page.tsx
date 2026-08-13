@@ -20,9 +20,8 @@ interface Conversation {
   pitch: string;
 }
 
-const [conversations, setConversations] = useState<Conversation[]>([]);
-
 export default function InboxPage() {
+  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selected, setSelected] = useState<Conversation | null>(null);
   const [reply, setReply] = useState('Reply...');
   const [loading, setLoading] = useState(true);
