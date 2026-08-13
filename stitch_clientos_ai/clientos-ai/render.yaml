@@ -1,0 +1,46 @@
+# Render deployment config — deploy ClientOS for free
+# 1. Go to render.com → New → Blueprint
+# 2. Select this repository
+# 3. Render will detect this render.yaml file
+# 4. Set your environment variables in the Render dashboard
+
+services:
+  # ── NestJS API ──
+  - type: web
+    name: clientos-api
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npx prisma generate --schema=packages/database/prisma/schema.prisma && npm run build --workspace=apps/api
+    startCommand: npx prisma db push --schema=packages/database/prisma/schema.prisma --accept-data-loss && node apps/api/dist/main.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ENCRYPTION_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: API_PORT
+        value: "3001"
+      - key: NODE_ENV
+        value: "production"
+
+  # ── Next.js Frontend ──
+  - type: web
+    name: clientos-web
+    runtime: static
+    plan: free
+    buildCommand: npm ci && NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL npm run build --workspace=apps/web
+    staticPublishPath: apps/web/.next
+    pullRequestPreviewsEnabled: true
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+
+databases:
+  # ── PostgreSQL ──
+  - name: clientos-db
+    plan: free
+    ipAllowList: []

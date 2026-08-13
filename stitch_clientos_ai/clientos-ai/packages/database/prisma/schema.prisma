@@ -1,12 +1,12 @@
 // ClientOS AI — Prisma Schema
-// SQLite for local development (no enums — SQLite doesn't support them)
+// PostgreSQL for production (also works for local dev with a local Postgres instance)
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

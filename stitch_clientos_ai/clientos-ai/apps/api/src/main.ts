@@ -10,11 +10,12 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('API_PORT', 3001);
-  const corsOrigin = configService.get<string>('CORS_ORIGIN', 'http://localhost:3000,http://localhost:3005,http://127.0.0.1:3000,http://127.0.0.1:3005');
+  const corsOrigins = configService.get<string>('CORS_ORIGIN', 'http://localhost:3000,http://localhost:3005,http://127.0.0.1:3000,http://127.0.0.1:3005');
+  const allowedOrigins = corsOrigins.split(',').map((o) => o.trim());
 
-  const devOrigin = (origin: string, callback: (err: Error | null, allow?: boolean) => void) => {
+  const corsOrigin = (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     if (!origin) return callback(null, true);
-    if (origin.match(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/)) {
+    if (allowedOrigins.includes(origin) || origin.match(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/)) {
       return callback(null, true);
     }
     callback(null, false);
@@ -22,7 +23,7 @@ async function bootstrap() {
 
   app.use(helmet());
   app.enableCors({
-    origin: devOrigin,
+    origin: corsOrigin,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   });
