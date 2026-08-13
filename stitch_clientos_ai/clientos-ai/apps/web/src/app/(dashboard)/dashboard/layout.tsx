@@ -23,6 +23,9 @@ import {
   Menu,
   X,
   FileText,
+  FileSignature,
+  LayoutTemplate,
+  Globe,
 } from 'lucide-react';
 
 const mobileNavItems = [
@@ -43,6 +46,9 @@ const mainNav = [
   { href: '/dashboard/prospects', label: 'Clients', icon: Users },
   { href: '/dashboard/projects', label: 'Work', icon: Briefcase },
   { href: '/dashboard/contracts', label: 'Contracts', icon: FileText },
+  { href: '/dashboard/proposals', label: 'Proposals', icon: FileSignature },
+  { href: '/dashboard/templates', label: 'Templates', icon: LayoutTemplate },
+  { href: '/dashboard/portfolio', label: 'Portfolio', icon: Globe },
   { href: '/dashboard/audits', label: 'Intelligence', icon: Brain },
 ];
 
@@ -321,6 +327,9 @@ function SearchContext({ pathname }: { pathname: string }) {
     pathname.includes('/dashboard/prospects') ? 'Search clients...' :
     pathname.includes('/dashboard/projects') ? 'Search tasks...' :
     pathname.includes('/dashboard/proposals') ? 'Search proposals...' :
+    pathname.includes('/dashboard/contracts') ? 'Search contracts...' :
+    pathname.includes('/dashboard/templates') ? 'Search templates...' :
+    pathname.includes('/dashboard/portfolio') ? 'Search portfolio...' :
     pathname.includes('/dashboard/audits') ? 'Search audits...' :
     'Search opportunities...';
 

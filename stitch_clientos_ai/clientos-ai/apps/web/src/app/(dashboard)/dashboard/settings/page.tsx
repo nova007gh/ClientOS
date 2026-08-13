@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, Button, Badge, Input } from '@clientos/ui';
 import { api, ApiError } from '@/lib/api-client';
 import { useAuthStore } from '@/lib/auth-store';
@@ -24,12 +24,10 @@ import {
 
 interface Member {
   id: string;
-  name: string;
-  email: string;
+  userId: string;
   role: string;
-  status: 'Active' | 'Offline' | 'Invited';
-  lastActive: string;
-  initials: string;
+  status: string;
+  user: { id: string; firstName: string; lastName: string; email: string; avatarUrl: string | null };
 }
 
 interface PaymentMethod {
@@ -41,13 +39,6 @@ interface PaymentMethod {
 }
 
 const tabs = ['General', 'Team', 'Integrations', 'Billing'];
-
-const members: Member[] = [
-  { id: '1', name: 'Sarah Jenkins', email: 'sarah@clientos.ai', role: 'Owner', status: 'Active', lastActive: 'Just now', initials: 'SJ' },
-  { id: '2', name: 'Marcus Johnson', email: 'marcus@clientos.ai', role: 'Admin', status: 'Active', lastActive: '2 hours ago', initials: 'MJ' },
-  { id: '3', name: 'David Chen', email: 'david.c@clientos.ai', role: 'Sales Manager', status: 'Offline', lastActive: 'Yesterday, 4:30 PM', initials: 'DC' },
-  { id: '4', name: 'elena.r@clientos.ai', email: 'elena.r@clientos.ai', role: 'Developer', status: 'Invited', lastActive: 'Never', initials: 'ER' },
-];
 
 const invoices = [
   { date: 'Sep 15, 2023', amount: 299.0, status: 'Paid' },
@@ -70,6 +61,17 @@ export default function SettingsPage() {
   const [savedMsg, setSavedMsg] = useState('');
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('MEMBER');
+  const [inviteError, setInviteError] = useState('');
+  const [inviting, setInviting] = useState(false);
+
+  useEffect(() => {
+    if (accessToken && activeTab === 'Team') {
+      api.get<Member[]>('/organizations/current/members', accessToken).then(setMembers).catch(() => {});
+    }
+  }, [accessToken, activeTab]);
 
   async function handleSaveOrg(e: React.FormEvent) {
     e.preventDefault();
@@ -89,6 +91,34 @@ export default function SettingsPage() {
       else setError('Failed to save settings');
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleInvite(e: React.FormEvent) {
+    e.preventDefault();
+    setInviting(true);
+    setInviteError('');
+    try {
+      const newMember = await api.post<Member>('/organizations/current/members', {
+        email: inviteEmail,
+        role: inviteRole,
+      }, accessToken);
+      setMembers((prev) => [...prev, newMember]);
+      setInviteEmail('');
+      setInviteRole('MEMBER');
+    } catch (err) {
+      setInviteError(err instanceof ApiError ? err.message : 'Failed to invite member');
+    } finally {
+      setInviting(false);
+    }
+  }
+
+  async function handleRemoveMember(userId: string) {
+    try {
+      await api.delete(`/organizations/current/members/${userId}`, accessToken);
+      setMembers((prev) => prev.filter((m) => m.userId !== userId));
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Failed to remove member');
     }
   }
 
@@ -161,17 +191,15 @@ export default function SettingsPage() {
             <Card className="border border-outline-variant/60 bg-surface-high/20">
               <CardContent className="p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Total Members</p>
-                <p className="mt-1 text-3xl font-semibold text-on-surface">12</p>
-                <p className="mt-1 text-body-sm text-secondary flex items-center gap-1"><TrendingUp className="h-3.5 w-3.5" /> 2</p>
-                <p className="text-xs text-on-surface-variant">2 seats remaining on plan</p>
+                <p className="mt-1 text-3xl font-semibold text-on-surface">{members.length}</p>
               </CardContent>
             </Card>
             <Card className="border border-outline-variant/60 bg-surface-high/20">
               <CardContent className="p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Active Roles</p>
-                <p className="mt-1 text-3xl font-semibold text-on-surface">4</p>
+                <p className="mt-1 text-3xl font-semibold text-on-surface">{new Set(members.map((m) => m.role)).size}</p>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {['Owner', 'Admin', 'Sales'].map((r) => (
+                  {[...new Set(members.map((m) => m.role))].map((r) => (
                     <Badge key={r} className="bg-surface-highest text-on-surface-variant">{r}</Badge>
                   ))}
                 </div>
@@ -180,53 +208,75 @@ export default function SettingsPage() {
             <Card className="border border-outline-variant/60 bg-surface-high/20">
               <CardContent className="p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Pending Invites</p>
-                <p className="mt-1 text-3xl font-semibold text-on-surface">3</p>
-                <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-highest">
-                  <div className="h-full w-[75%] rounded-full bg-primary" />
-                </div>
+                <p className="mt-1 text-3xl font-semibold text-on-surface">{members.filter((m) => m.status === 'INVITED').length}</p>
               </CardContent>
             </Card>
           </div>
 
           <Card className="border border-outline-variant/60 bg-surface-high/20">
             <CardContent className="p-5 space-y-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="relative max-w-sm flex-1">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-                  <Input className="pl-9" placeholder="Search members..." />
+              <h2 className="font-headline-md text-headline-md font-semibold">Team Members</h2>
+
+              {/* Invite Form */}
+              <form onSubmit={handleInvite} className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                <div className="flex-1">
+                  <label className="text-label-caps text-on-surface-variant">Email</label>
+                  <Input
+                    className="mt-1"
+                    type="email"
+                    required
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    placeholder="colleague@example.com"
+                  />
                 </div>
-                <div className="flex gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
-                  <Button variant="outline" className="shrink-0">All Roles</Button>
-                  <Button variant="outline" className="shrink-0">Status</Button>
+                <div className="sm:w-40">
+                  <label className="text-label-caps text-on-surface-variant">Role</label>
+                  <select
+                    className="mt-1 w-full rounded-lg border border-outline bg-surface px-3 py-2 text-body-sm text-on-surface focus:border-primary focus:outline-none"
+                    value={inviteRole}
+                    onChange={(e) => setInviteRole(e.target.value)}
+                  >
+                    <option value="MEMBER">Member</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="SALES">Sales</option>
+                  </select>
                 </div>
-              </div>
+                <Button type="submit" disabled={inviting || !inviteEmail}>
+                  <Plus className="mr-2 h-4 w-4" /> {inviting ? 'Inviting...' : 'Invite'}
+                </Button>
+              </form>
+              {inviteError && (
+                <div className="rounded border border-error/20 bg-error/10 px-3 py-2 text-body-sm text-error">{inviteError}</div>
+              )}
 
               {/* Mobile Member Cards */}
               <div className="space-y-3 lg:hidden">
                 {members.map((m) => (
                   <div key={m.id} className="flex items-center gap-3 rounded-lg border border-outline-variant/60 bg-surface-high/20 p-3">
                     <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-                      m.status === 'Invited' ? 'bg-surface-highest text-on-surface-variant' : 'bg-primary text-on-primary'
+                      m.status === 'INVITED' ? 'bg-surface-highest text-on-surface-variant' : 'bg-primary text-on-primary'
                     }`}>
-                      {m.initials}
+                      {`${m.user.firstName[0] ?? ''}${m.user.lastName[0] ?? ''}`.toUpperCase()}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate font-medium text-on-surface">{m.name}</p>
-                      <p className="truncate text-xs text-on-surface-variant">{m.email}</p>
+                      <p className="truncate font-medium text-on-surface">{m.user.firstName} {m.user.lastName}</p>
+                      <p className="truncate text-xs text-on-surface-variant">{m.user.email}</p>
                       <div className="mt-1 flex items-center gap-2">
                         <Badge className="bg-surface-highest text-on-surface-variant">{m.role}</Badge>
                         <span className={`inline-flex items-center gap-1 text-[10px] ${
-                          m.status === 'Active' ? 'text-secondary' :
-                          m.status === 'Offline' ? 'text-on-surface-variant' : 'text-tertiary'
+                          m.status === 'ACTIVE' ? 'text-secondary' : 'text-tertiary'
                         }`}>
-                          <span className={`h-1.5 w-1.5 rounded-full ${
-                            m.status === 'Active' ? 'bg-secondary' :
-                            m.status === 'Offline' ? 'bg-on-surface-variant' : 'bg-tertiary'
-                          }`} />
+                          <span className={`h-1.5 w-1.5 rounded-full ${m.status === 'ACTIVE' ? 'bg-secondary' : 'bg-tertiary'}`} />
                           {m.status}
                         </span>
                       </div>
                     </div>
+                    {m.role !== 'OWNER' && (
+                      <button onClick={() => handleRemoveMember(m.userId)} className="p-2 text-on-surface-variant hover:text-error">
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -238,7 +288,6 @@ export default function SettingsPage() {
                     <th className="pb-3 font-medium">Member</th>
                     <th className="pb-3 font-medium">Role</th>
                     <th className="pb-3 font-medium">Status</th>
-                    <th className="pb-3 font-medium">Last Active</th>
                     <th className="pb-3 font-medium text-right">Actions</th>
                   </tr>
                 </thead>
@@ -248,56 +297,44 @@ export default function SettingsPage() {
                       <td className="py-3">
                         <div className="flex items-center gap-3">
                           <div className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold ${
-                            m.status === 'Invited' ? 'bg-surface-highest text-on-surface-variant' : 'bg-primary text-on-primary'
+                            m.status === 'INVITED' ? 'bg-surface-highest text-on-surface-variant' : 'bg-primary text-on-primary'
                           }`}>
-                            {m.initials}
+                            {`${m.user.firstName[0] ?? ''}${m.user.lastName[0] ?? ''}`.toUpperCase()}
                           </div>
                           <div>
-                            <p className="font-medium text-on-surface">{m.name}</p>
-                            {m.status !== 'Invited' && <p className="text-xs text-on-surface-variant">{m.email}</p>}
-                            {m.status === 'Invited' && <p className="text-xs text-on-surface-variant">Invitation sent 2 days ago</p>}
+                            <p className="font-medium text-on-surface">{m.user.firstName} {m.user.lastName}</p>
+                            <p className="text-xs text-on-surface-variant">{m.user.email}</p>
                           </div>
                         </div>
                       </td>
                       <td className="py-3">
                         <Badge className="bg-surface-highest text-on-surface-variant">
-                          {m.role === 'Owner' && <Shield className="mr-1 h-3 w-3" />}
-                          {m.role === 'Admin' && <Users className="mr-1 h-3 w-3" />}
-                          {m.role === 'Sales Manager' && <TrendingUp className="mr-1 h-3 w-3" />}
-                          {m.role === 'Developer' && <CodeIcon className="mr-1 h-3 w-3" />}
+                          {m.role === 'OWNER' && <Shield className="mr-1 h-3 w-3" />}
+                          {m.role === 'ADMIN' && <Users className="mr-1 h-3 w-3" />}
                           {m.role}
                         </Badge>
                       </td>
                       <td className="py-3">
                         <span className={`inline-flex items-center gap-1.5 text-body-sm ${
-                          m.status === 'Active' ? 'text-secondary' :
-                          m.status === 'Offline' ? 'text-on-surface-variant' : 'text-tertiary'
+                          m.status === 'ACTIVE' ? 'text-secondary' : 'text-tertiary'
                         }`}>
-                          <span className={`h-2 w-2 rounded-full ${
-                            m.status === 'Active' ? 'bg-secondary' :
-                            m.status === 'Offline' ? 'bg-on-surface-variant' : 'bg-tertiary'
-                          }`} />
+                          <span className={`h-2 w-2 rounded-full ${m.status === 'ACTIVE' ? 'bg-secondary' : 'bg-tertiary'}`} />
                           {m.status}
                         </span>
                       </td>
-                      <td className="py-3 text-body-sm text-on-surface-variant">{m.lastActive}</td>
-                      <td className="py-3 text-right"><MoreHorizontal /></td>
+                      <td className="py-3 text-right">
+                        {m.role !== 'OWNER' && (
+                          <button onClick={() => handleRemoveMember(m.userId)} className="p-2 text-on-surface-variant hover:text-error">
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
 
-              <div className="flex items-center justify-between pt-2">
-                <p className="text-body-sm text-on-surface-variant">Showing 1 to 4 of 12 members</p>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline">&lt;</Button>
-                  <Button size="sm" variant="outline">&gt;</Button>
-                </div>
-              </div>
-
-              <Button className="w-full sm:w-auto">
-                <Plus className="mr-2 h-4 w-4" /> Invite Member
-              </Button>
+              <p className="text-body-sm text-on-surface-variant">Showing {members.length} member{members.length !== 1 ? 's' : ''}</p>
             </CardContent>
           </Card>
         </div>
@@ -480,24 +517,5 @@ export default function SettingsPage() {
         </div>
       )}
     </div>
-  );
-}
-
-function CodeIcon(props: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
-      <polyline points="16 18 22 12 16 6" />
-      <polyline points="8 6 2 12 8 18" />
-    </svg>
-  );
-}
-
-function MoreHorizontal(props: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className || 'h-4 w-4 text-on-surface-variant'}>
-      <circle cx="12" cy="12" r="1" />
-      <circle cx="19" cy="12" r="1" />
-      <circle cx="5" cy="12" r="1" />
-    </svg>
   );
 }

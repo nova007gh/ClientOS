@@ -12,6 +12,11 @@ export class DashboardService {
       auditsCompleted,
       wonOpportunities,
       totalOpportunities,
+      wonValue,
+      totalContracts,
+      signedContracts,
+      totalConversations,
+      repliedConversations,
       recentActivities,
       prospectsByStatus,
     ] = await Promise.all([
@@ -37,6 +42,22 @@ export class DashboardService {
       }),
       prisma.opportunity.count({
         where: { organizationId: orgId, stage: { notIn: ['LOST'] } },
+      }),
+      prisma.opportunity.aggregate({
+        where: { organizationId: orgId, stage: 'WON' },
+        _sum: { value: true },
+      }),
+      prisma.contract.count({
+        where: { organizationId: orgId },
+      }),
+      prisma.contract.count({
+        where: { organizationId: orgId, status: 'SIGNED' },
+      }),
+      prisma.conversation.count({
+        where: { organizationId: orgId },
+      }),
+      prisma.inboxMessage.count({
+        where: { conversation: { organizationId: orgId }, isMe: false },
       }),
       prisma.activity.findMany({
         where: { organizationId: orgId },
@@ -84,14 +105,27 @@ export class DashboardService {
       pct: totalProspectsInPipeline > 0 ? Math.round((p.count / totalProspectsInPipeline) * 100) : 0,
     }));
 
+    const activePipeline = pipelineValue._sum.value ?? 0;
+    const totalRevenue = wonValue._sum.value ?? 0;
+    const openRate = totalConversations > 0 ? Math.round((repliedConversations / totalConversations) * 100) : 0;
+    const replyRate = totalConversations > 0 ? Math.round((repliedConversations / totalConversations) * 100) : 0;
+
     return {
       stats: {
         totalProspects,
         qualifiedLeads,
         activeCampaigns,
-        pipelineValue: pipelineValue._sum.value ?? 0,
+        pipelineValue: activePipeline,
+        activePipeline,
+        totalRevenue,
         auditsCompleted,
         winRate,
+        openRate,
+        replyRate,
+        totalContracts,
+        signedContracts,
+        totalConversations,
+        repliedConversations,
       },
       recentActivities: recentActivities.map((a) => ({
         id: a.id,

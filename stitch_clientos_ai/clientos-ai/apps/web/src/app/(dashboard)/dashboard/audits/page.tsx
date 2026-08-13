@@ -30,7 +30,17 @@ interface DashboardData {
     winRate: number;
     openRate: number;
     replyRate: number;
+    totalProspects: number;
+    qualifiedLeads: number;
+    activeCampaigns: number;
+    auditsCompleted: number;
+    totalContracts: number;
+    signedContracts: number;
+    totalConversations: number;
+    repliedConversations: number;
   };
+  pipelineOverview: { stage: string; count: number; pct: number }[];
+  recentActivities: { id: string; type: string; description: string; createdAt: string; user: string | null }[];
 }
 
 interface FunnelStage {
@@ -67,55 +77,34 @@ export default function IntelligencePage() {
     load();
   }, [accessToken]);
 
-  const funnel: FunnelStage[] = [
-    { name: 'Discovery', count: 1240, pct: 100, color: 'bg-on-surface-variant' },
-    { name: 'Audit', count: 850, pct: 68, color: 'bg-primary' },
-    { name: 'Qualified', count: 420, pct: 49, color: 'bg-primary' },
-    { name: 'Contacted', count: 380, pct: 90, color: 'bg-secondary' },
-    { name: 'Replied', count: 145, pct: 38, color: 'bg-secondary' },
-    { name: 'Closed', count: 42, pct: 29, color: 'bg-secondary' },
-  ];
+  const funnel: FunnelStage[] = (data?.pipelineOverview ?? []).map((p, i) => ({
+    name: p.stage,
+    count: p.count,
+    pct: p.pct,
+    color: i === 0 ? 'bg-on-surface-variant' : i < 3 ? 'bg-primary' : 'bg-secondary',
+  }));
 
-  const actions = [
-    {
-      icon: User,
-      label: 'Hot Lead',
-      time: '2m ago',
-      name: 'Sarah Jenkins',
-      company: 'TechFlow',
-      insight: 'Opened proposal document 4 times today. Viewed pricing tier for 3 minutes.',
-      action: 'Draft Email',
-      phone: true,
-    },
-    {
-      icon: Sparkles,
-      label: 'AI Detection',
-      time: '1h ago',
-      name: 'Michael Chang',
-      company: 'Nexus Corp',
-      insight: 'Replied to sequence 2 with intent question regarding API integration capabilities.',
-      action: 'View Thread',
-      phone: false,
-    },
-    {
-      icon: Clock,
-      label: 'Stagnant',
-      time: '4d ago',
-      name: 'Emily Ross',
-      company: 'Vertex',
-      insight: "Stuck in 'Qualified' stage. AI generated a personalized re-engagement script.",
-      action: 'Generate Msg',
-      phone: false,
-    },
-  ];
+  const actions = (data?.recentActivities ?? []).slice(0, 6).map((a) => ({
+    icon: a.type.includes('Email') ? Mail : a.type.includes('Audit') ? Eye : a.type.includes('Call') ? User : Sparkles,
+    label: a.type,
+    time: new Date(a.createdAt).toLocaleDateString(),
+    name: a.user ?? 'System',
+    company: '',
+    insight: a.description,
+    action: 'View Details',
+    phone: false,
+  }));
 
   const topCampaign = useMemo(() => {
     return campaigns.length > 0 ? campaigns[0] : { name: 'Q3 Enterprise Target' };
   }, [campaigns]);
 
-  const totalRevenue = data?.stats?.totalRevenue ?? 842500;
-  const openRate = data?.stats?.openRate ?? 68;
-  const replyRate = data?.stats?.replyRate ?? 14;
+  const totalRevenue = data?.stats?.totalRevenue ?? 0;
+  const activePipeline = data?.stats?.activePipeline ?? 0;
+  const openRate = data?.stats?.openRate ?? 0;
+  const replyRate = data?.stats?.replyRate ?? 0;
+  const totalProspects = data?.stats?.totalProspects ?? 0;
+  const auditsCompleted = data?.stats?.auditsCompleted ?? 0;
   const credits = 14250;
   const creditsTotal = 20000;
 
@@ -169,15 +158,15 @@ export default function IntelligencePage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-body-sm">
                 <span className="text-on-surface-variant">Closed Won</span>
-                <span className="font-medium text-on-surface">$315,000</span>
+                <span className="font-medium text-on-surface">${totalRevenue.toLocaleString()}</span>
               </div>
               <div className="flex items-center justify-between text-body-sm">
                 <span className="text-on-surface-variant">Active Pipeline</span>
-                <span className="font-medium text-on-surface">$527,500</span>
+                <span className="font-medium text-on-surface">${activePipeline.toLocaleString()}</span>
               </div>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-surface-highest">
-              <div className="h-full w-[60%] rounded-full bg-secondary" />
+              <div className="h-full rounded-full bg-secondary" style={{ width: `${totalProspects > 0 ? Math.round((auditsCompleted / totalProspects) * 100) : 0}%` }} />
             </div>
           </CardContent>
         </Card>

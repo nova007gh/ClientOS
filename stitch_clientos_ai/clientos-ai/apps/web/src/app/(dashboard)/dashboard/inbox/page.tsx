@@ -58,6 +58,22 @@ export default function InboxPage() {
     return <div className="p-6 text-error">{error}</div>;
   }
 
+  async function handleSendReply() {
+    if (!selected || !reply.trim() || reply === 'Reply...') return;
+    try {
+      const updated = await api.post<Conversation>(`/inbox/${selected.id}/messages`, {
+        sender: 'You',
+        body: reply,
+        isMe: true,
+      }, accessToken);
+      setConversations((prev) => prev.map((c) => c.id === updated.id ? updated : c));
+      setSelected(updated);
+      setReply('Reply...');
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Failed to send message');
+    }
+  }
+
   if (!selected) {
     return <div className="p-6 text-on-surface-variant">No conversations found.</div>;
   }
@@ -80,7 +96,7 @@ export default function InboxPage() {
                 key={c.id}
                 onClick={() => setSelected(c)}
                 className={`w-full rounded-lg p-3 text-left transition-colors ${
-                  selected.id === c.id ? 'bg-surface-high/50' : 'hover:bg-surface-high/30'
+                  selected?.id === c.id ? 'bg-surface-high/50' : 'hover:bg-surface-high/30'
                 }`}
               >
                 <div className="flex items-start justify-between">
@@ -163,7 +179,7 @@ export default function InboxPage() {
                   <Paperclip className="h-4 w-4" />
                   <Smile className="h-4 w-4" />
                 </div>
-                <Button size="sm" className="bg-primary text-on-primary">
+                <Button size="sm" className="bg-primary text-on-primary" onClick={handleSendReply}>
                   Send <Send className="ml-2 h-3.5 w-3.5" />
                 </Button>
               </div>
