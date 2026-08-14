@@ -1,13 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import {
-  APIProvider,
-  Map,
-  AdvancedMarker,
-  useMap,
-  useMapsLibrary,
-} from '@vis.gl/react-google-maps';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { Card, CardContent, Badge, LeadScoreRing } from '@clientos/ui';
 import { api } from '@/lib/api-client';
 import { useAuthStore } from '@/lib/auth-store';
@@ -37,108 +33,35 @@ const statusColors: Record<string, 'default' | 'secondary' | 'warning' | 'error'
   LOST: 'error',
 };
 
-const DEFAULT_CENTER = { lat: 5.6037, lng: -0.187 }; // Accra, Ghana
+const DEFAULT_CENTER: [number, number] = [5.6037, -0.187]; // Accra, Ghana
 
-function ProspectMarker({
-  prospect,
-  onClick,
-  isSelected,
-}: {
-  prospect: Prospect;
-  onClick: () => void;
-  isSelected: boolean;
-}) {
-  if (prospect.latitude == null || prospect.longitude == null) return null;
-
-  const score = prospect.leadScore ?? 0;
+function createScoreIcon(score: number) {
   const color =
     score >= 80 ? '#16a34a' : score >= 60 ? '#eab308' : score >= 40 ? '#f97316' : '#94a3b8';
-
-  return (
-    <AdvancedMarker
-      position={{ lat: prospect.latitude, lng: prospect.longitude }}
-      onClick={onClick}
-      title={prospect.companyName}
-    >
-      <div
-        className={`flex items-center justify-center rounded-full border-2 transition-all ${
-          isSelected ? 'scale-125 border-primary shadow-lg' : 'border-white shadow-md'
-        }`}
-        style={{ backgroundColor: color, width: 28, height: 28 }}
-      >
-        <span className="text-[10px] font-bold text-white">{score || '?'}</span>
-      </div>
-    </AdvancedMarker>
-  );
+  const html = `<div style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;border:2px solid white;background-color:${color};box-shadow:0 2px 6px rgba(0,0,0,0.3);"><span style="font-size:10px;font-weight:bold;color:white;">${score || '?'}</span></div>`;
+  return L.divIcon({
+    html,
+    className: 'lead-score-marker',
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -14],
+  });
 }
 
-function MapSearchBar({
-  onPlaceSelect,
-}: {
-  onPlaceSelect: (place: google.maps.places.PlaceResult | null) => void;
-}) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const places = useMapsLibrary('places');
-
-  useEffect(() => {
-    if (!places || !inputRef.current) return;
-
-    const autocomplete = new places.Autocomplete(inputRef.current, {
-      fields: ['geometry', 'name', 'formatted_address'],
-    });
-
-    const listener = autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      onPlaceSelect(place);
-    });
-
-    return () => {
-      google.maps.event.removeListener(listener);
-    };
-  }, [places, onPlaceSelect]);
-
-  return (
-    <div className="relative flex items-center">
-      <Search className="absolute left-3 h-4 w-4 text-on-surface-variant" />
-      <input
-        ref={inputRef}
-        type="text"
-        placeholder="Search a location..."
-        className="w-full rounded-lg border border-outline-variant bg-surface-high py-2.5 pl-10 pr-4 text-sm text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-      />
-    </div>
-  );
-}
-
-function MapController({
-  center,
-  zoom,
-  onIdle,
-}: {
-  center: { lat: number; lng: number } | null;
-  zoom: number;
-  onIdle: (center: { lat: number; lng: number }, zoom: number) => void;
-}) {
+function FlyTo({ center, zoom }: { center: [number, number] | null; zoom: number }) {
   const map = useMap();
-
   useEffect(() => {
-    if (!map || !center) return;
-    map.panTo(center);
-    if (zoom) map.setZoom(zoom);
+    if (center) {
+      map.flyTo(center, zoom, { duration: 1.2 });
+    }
   }, [map, center, zoom]);
-
-  useEffect(() => {
-    if (!map) return;
-    const listener = map.addListener('idle', () => {
-      onIdle(
-        { lat: map.getCenter()?.lat() ?? 0, lng: map.getCenter()?.lng() ?? 0 },
-        map.getZoom() ?? 10
-      );
-    });
-    return () => google.maps.event.removeListener(listener);
-  }, [map, onIdle]);
-
   return null;
+}
+
+interface SearchResult {
+  lat: string;
+  lon: string;
+  display_name: string;
 }
 
 export default function LeadMapPage() {
@@ -147,11 +70,13 @@ export default function LeadMapPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(null);
-  const [mapZoom, setMapZoom] = useState(10);
-  const [pendingCenter, setPendingCenter] = useState<{ lat: number; lng: number } | null>(null);
-
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const [flyTarget, setFlyTarget] = useState<[number, number] | null>(null);
+  const [flyZoom, setFlyZoom] = useState(10);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -160,14 +85,6 @@ export default function LeadMapPage() {
       .get<{ data: Prospect[] }>('/prospects?pageSize=200', accessToken)
       .then((res) => {
         setProspects(res.data ?? []);
-        const withCoords = (res.data ?? []).filter((p) => p.latitude != null && p.longitude != null);
-        if (withCoords.length > 0) {
-          const avgLat = withCoords.reduce((s, p) => s + (p.latitude ?? 0), 0) / withCoords.length;
-          const avgLng = withCoords.reduce((s, p) => s + (p.longitude ?? 0), 0) / withCoords.length;
-          setMapCenter({ lat: avgLat, lng: avgLng });
-        } else {
-          setMapCenter(DEFAULT_CENTER);
-        }
       })
       .catch((err) => setError(err.message || 'Failed to load prospects'))
       .finally(() => setLoading(false));
@@ -178,55 +95,62 @@ export default function LeadMapPage() {
     [prospects]
   );
 
+  const mapCenter = useMemo<[number, number]>(() => {
+    if (geoProspects.length > 0) {
+      const avgLat = geoProspects.reduce((s, p) => s + (p.latitude ?? 0), 0) / geoProspects.length;
+      const avgLng = geoProspects.reduce((s, p) => s + (p.longitude ?? 0), 0) / geoProspects.length;
+      return [avgLat, avgLng];
+    }
+    return DEFAULT_CENTER;
+  }, [geoProspects]);
+
   const selectedProspect = useMemo(
     () => prospects.find((p) => p.id === selectedId) ?? null,
     [prospects, selectedId]
   );
 
-  const handlePlaceSelect = useCallback(
-    (place: google.maps.places.PlaceResult | null) => {
-      if (!place?.geometry?.location) return;
-      const lat = place.geometry.location.lat();
-      const lng = place.geometry.location.lng();
-      setPendingCenter({ lat, lng });
-      setMapZoom(12);
-    },
-    []
-  );
-
-  const handleMapIdle = useCallback((center: { lat: number; lng: number }, zoom: number) => {
-    setMapCenter(center);
-    setMapZoom(zoom);
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchQuery(value);
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    if (!value.trim()) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+    searchTimer.current = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&limit=5`,
+          { headers: { 'Accept-Language': 'en' } }
+        );
+        const data = await res.json();
+        setSearchResults(data);
+        setShowResults(true);
+      } catch {
+        setSearchResults([]);
+      } finally {
+        setSearching(false);
+      }
+    }, 500);
   }, []);
 
-  if (!apiKey) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <Card className="max-w-md">
-          <CardContent className="p-8 text-center">
-            <MapPin className="mx-auto mb-4 h-12 w-12 text-on-surface-variant" />
-            <h2 className="mb-2 text-lg font-semibold text-on-surface">Google Maps API Key Required</h2>
-            <p className="text-sm text-on-surface-variant">
-              Add <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to your{' '}
-              <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs">.env.local</code> file to enable the lead map.
-            </p>
-            <p className="mt-3 text-xs text-on-surface-variant">
-              Get a free API key from the{' '}
-              <a
-                href="https://console.cloud.google.com/google/maps-apis/credentials"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary underline"
-              >
-                Google Cloud Console
-              </a>
-              . Enable the Maps JavaScript API and Places API.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const handleSelectResult = (result: SearchResult) => {
+    const lat = parseFloat(result.lat);
+    const lng = parseFloat(result.lon);
+    setFlyTarget([lat, lng]);
+    setFlyZoom(13);
+    setSearchQuery(result.display_name.split(',')[0]);
+    setShowResults(false);
+  };
+
+  const handleProspectClick = (prospect: Prospect) => {
+    setSelectedId(prospect.id);
+    if (prospect.latitude && prospect.longitude) {
+      setFlyTarget([prospect.latitude, prospect.longitude]);
+      setFlyZoom(14);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -250,37 +174,77 @@ export default function LeadMapPage() {
       <div className="flex gap-4 h-[calc(100vh-16rem)] overflow-hidden rounded-xl border border-outline-variant/60">
         {/* Map */}
         <div className="relative flex-1 overflow-hidden rounded-xl">
-          <APIProvider apiKey={apiKey}>
-            {/* Search overlay */}
-            <div className="absolute left-4 top-4 z-10 w-72 max-w-[calc(100%-2rem)]">
-              <div className="rounded-lg bg-surface-high/95 p-3 shadow-lg backdrop-blur-sm">
-                <MapSearchBar onPlaceSelect={handlePlaceSelect} />
-              </div>
-            </div>
-
-            <Map
-              defaultCenter={mapCenter ?? DEFAULT_CENTER}
-              defaultZoom={mapZoom}
-              gestureHandling="greedy"
-              disableDefaultUI
-              mapId="lead-map"
-              className="h-full w-full"
-            >
-              <MapController center={pendingCenter} zoom={mapZoom} onIdle={handleMapIdle} />
-              {geoProspects.map((p) => (
-                <ProspectMarker
-                  key={p.id}
-                  prospect={p}
-                  onClick={() => setSelectedId(p.id)}
-                  isSelected={selectedId === p.id}
+          {/* Search overlay */}
+          <div className="absolute left-4 top-4 z-[1000] w-80 max-w-[calc(100%-2rem)]">
+            <div className="relative">
+              <div className="flex items-center rounded-lg bg-white shadow-lg">
+                <Search className="ml-3 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  onFocus={() => searchResults.length > 0 && setShowResults(true)}
+                  placeholder="Search a location..."
+                  className="w-full bg-transparent py-2.5 pl-2 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none"
                 />
-              ))}
-            </Map>
-          </APIProvider>
+                {searching && (
+                  <span className="mr-3 text-xs text-gray-400">...</span>
+                )}
+              </div>
+              {showResults && searchResults.length > 0 && (
+                <div className="absolute mt-1 w-full rounded-lg bg-white shadow-lg max-h-64 overflow-y-auto">
+                  {searchResults.map((r, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleSelectResult(r)}
+                      className="flex w-full items-start gap-2 border-b border-gray-100 p-3 text-left text-sm text-gray-700 hover:bg-gray-50 last:border-0"
+                    >
+                      <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" />
+                      <span className="line-clamp-2">{r.display_name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <MapContainer
+            center={mapCenter}
+            zoom={10}
+            scrollWheelZoom
+            className="h-full w-full"
+            style={{ background: '#e5e7eb' }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <FlyTo center={flyTarget} zoom={flyZoom} />
+            {geoProspects.map((p) => (
+              <Marker
+                key={p.id}
+                position={[p.latitude!, p.longitude!]}
+                icon={createScoreIcon(p.leadScore ?? 0)}
+                eventHandlers={{ click: () => handleProspectClick(p) }}
+              >
+                <Popup>
+                  <div className="text-sm">
+                    <p className="font-semibold">{p.companyName}</p>
+                    <p className="text-gray-500">
+                      {[p.city, p.country].filter(Boolean).join(', ') || 'No location'}
+                    </p>
+                    <p className="mt-1 text-xs">
+                      Score: <strong>{p.leadScore ?? 'N/A'}</strong> · Status: {p.status}
+                    </p>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
 
           {loading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-surface-high/50 backdrop-blur-sm">
-              <p className="text-sm text-on-surface-variant">Loading leads...</p>
+            <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm">
+              <p className="text-sm text-gray-500">Loading leads...</p>
             </div>
           )}
         </div>
@@ -304,13 +268,7 @@ export default function LeadMapPage() {
                 {geoProspects.map((p) => (
                   <button
                     key={p.id}
-                    onClick={() => {
-                      setSelectedId(p.id);
-                      if (p.latitude && p.longitude) {
-                        setPendingCenter({ lat: p.latitude, lng: p.longitude });
-                        setMapZoom(14);
-                      }
-                    }}
+                    onClick={() => handleProspectClick(p)}
                     className={`flex w-full items-center gap-3 rounded-lg p-3 text-left transition-colors ${
                       selectedId === p.id
                         ? 'bg-surface-container ring-1 ring-primary'
@@ -343,7 +301,7 @@ export default function LeadMapPage() {
 
       {/* Selected Prospect Detail Card */}
       {selectedProspect && (
-        <Card className="fixed bottom-6 left-1/2 z-20 w-96 max-w-[calc(100%-2rem)] -translate-x-1/2 lg:left-[calc(50%+10rem)]">
+        <Card className="fixed bottom-6 left-1/2 z-[1000] w-96 max-w-[calc(100%-2rem)] -translate-x-1/2 lg:left-[calc(50%+10rem)]">
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
