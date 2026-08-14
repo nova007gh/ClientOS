@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@clientos/ui';
-import { Play, Sparkles } from 'lucide-react';
+import { Play } from 'lucide-react';
 import Link from 'next/link';
 import { api } from '@/lib/api-client';
 

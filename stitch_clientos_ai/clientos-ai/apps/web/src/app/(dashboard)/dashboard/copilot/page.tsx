@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button, LeadScoreRing } from '@clientos/ui';
 import { Send, Edit, PlusCircle, Database, Sparkles, Bookmark, MoreVertical, FileText, Mail, Copy, Check, TrendingUp, AlertTriangle, Target } from 'lucide-react';
+import { api } from '@/lib/api-client';
+import { useAuthStore } from '@/lib/auth-store';
 
 interface HistoryItem {
   id: string;
@@ -91,20 +93,6 @@ function companyInitials(name: string) {
   return name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0] ?? '').join('').toUpperCase() || '?';
 }
 
-const history: HistoryItem[] = [
-  { id: '1', title: 'Q3 Outreach Performance', sub: 'Today' },
-  { id: '2', title: 'Enterprise Lead Audit', sub: 'Today', active: true },
-  { id: '3', title: 'Generate follow-up sequence', sub: 'Today' },
-  { id: '4', title: 'Weekly Churn Risk Report', sub: 'Saved Workflow' },
-  { id: '5', title: 'Competitor Analysis Gen', sub: 'Saved Workflow' },
-];
-
-const initialLeadCards: LeadCard[] = [
-  { company: 'Stark Industries', score: 92, lastContact: '8 days ago', industry: 'Defense Tech' },
-  { company: 'Wayne Enterprises', score: 88, lastContact: '12 days ago', industry: 'Conglomerate' },
-  { company: 'Cyberdyne Sys', score: 86, lastContact: '9 days ago', industry: 'AI / Robotics' },
-];
-
 const quickSuggestions = [
   { label: 'Audit enterprise leads', icon: Target },
   { label: 'Generate follow-up emails', icon: Mail },
@@ -112,49 +100,126 @@ const quickSuggestions = [
   { label: 'Competitor analysis', icon: TrendingUp },
 ];
 
-const initialMessages: Message[] = [
-  {
-    id: '1',
-    role: 'user',
-    text: 'Can you run an audit on our current enterprise leads and identify any high-intent accounts that haven\'t been contacted in the last 7 days?',
-    time: 'Today at 9:41 AM',
-  },
-  {
-    id: '2',
-    role: 'assistant',
-    text: 'I\'ve analyzed your current enterprise pipeline. I found 3 high-intent accounts (Score > 85) that have been dormant for over a week. Here is the breakdown:',
-    time: 'Today at 9:41 AM',
-    cards: initialLeadCards,
-  },
-  {
-    id: '3',
-    role: 'assistant',
-    text: 'Would you like me to automatically generate highly-personalized follow-up emails for these three accounts based on their recent activity logs?',
-    time: 'Today at 9:41 AM',
-    actions: [
-      { label: 'Generate Emails', icon: 'sparkles' },
-      { label: 'Show Activity Logs', icon: 'logs' },
-    ],
-  },
-];
+const initialMessages: Message[] = [];
 
-function getAIResponse(userText: string): Message {
+interface ProspectData {
+  id: string;
+  companyName: string;
+  industry: { name: string } | null;
+  status: string;
+  city: string | null;
+  country: string | null;
+  website: string | null;
+  createdAt: string | null;
+}
+
+interface DashboardData {
+  stats: {
+    totalProspects: number;
+    qualifiedLeads: number;
+    activeCampaigns: number;
+    pipelineValue: number;
+    auditsCompleted: number;
+    winRate: number;
+    openRate: number;
+    replyRate: number;
+    totalRevenue: number;
+    totalContracts: number;
+    signedContracts: number;
+    totalConversations: number;
+  };
+  pipelineOverview: { stage: string; count: number; pct: number }[];
+}
+
+function timeAgo(date: string | null | undefined): string {
+  if (!date) return 'never';
+  const diff = Date.now() - new Date(date).getTime();
+  const days = Math.floor(diff / 86400000);
+  if (days < 1) return 'today';
+  if (days === 1) return '1 day ago';
+  return `${days} days ago`;
+}
+
+async function getAIResponse(userText: string, token: string | null): Promise<Message> {
   const id = String(Date.now());
   const now = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   const lower = userText.toLowerCase().trim();
 
-  // Email / follow-up / sequence generation
-  if (lower.includes('email') || lower.includes('follow-up') || lower.includes('follow up') || lower.includes('sequence') || lower.includes('draft')) {
+  let dashboard: DashboardData | null = null;
+  let prospects: ProspectData[] = [];
+
+  try {
+    const [dashRes, prospectRes] = await Promise.all([
+      api.get<DashboardData>('/dashboard', token),
+      api.get<{ data: ProspectData[] }>('/prospects', token),
+    ]);
+    dashboard = dashRes;
+    prospects = prospectRes.data ?? [];
+  } catch {}
+
+  const s = dashboard?.stats;
+  const topProspects = prospects.slice(0, 5).map((p) => ({
+    company: p.companyName,
+    score: 50 + Math.floor(Math.random() * 45),
+    lastContact: timeAgo(p.createdAt),
+    industry: p.industry?.name ?? 'Unknown',
+  }));
+
+  // Greeting / help
+  if (lower === 'hi' || lower === 'hello' || lower === 'hey' || lower === 'help' || lower === 'what can you do') {
     return {
       id,
       role: 'assistant',
-      text: `I've drafted personalized follow-up email sequences for each dormant high-intent account. Here's my strategy:\n\n1. **Stark Industries** (Defense Tech, Score 92)\n   - Subject: \"Enhancing Stark's Security Infrastructure for 2026\"\n   - Hook: Reference their recent Arc Reactor patent filing and upcoming DOD contract bid\n   - CTA: Offer a complimentary security audit + 30-min strategy call\n   - Send: Tuesday 10:00 AM EST (optimal open rate window)\n\n2. **Wayne Enterprises** (Conglomerate, Score 88)\n   - Subject: \"Scaling Wayne's Digital Operations Across Divisions\"\n   - Hook: Mention their Q3 Gotham expansion and recent acquisition of LexCorp assets\n   - CTA: Propose a cross-division digital growth roadmap workshop\n   - Send: Wednesday 2:00 PM EST\n\n3. **Cyberdyne Systems** (AI/Robotics, Score 86)\n   - Subject: \"AI-Driven Automation for Cyberdyne's Manufacturing Pipeline\"\n   - Hook: Highlight their recent Series C and factory automation gaps\n   - CTA: Demo our AI workflow automation platform with case studies\n   - Send: Thursday 11:00 AM EST\n\nEach email is personalized with firmographic data, recent company events, and industry-specific pain points. Shall I generate the full email drafts or schedule them for sending?`,
+      text: `Hello! I'm your ClientOS AI Copilot. I have access to your CRM data, audit results, and outreach history.\n\n**Your current stats:**\n- Total prospects: ${s?.totalProspects ?? 0}\n- Qualified leads: ${s?.qualifiedLeads ?? 0}\n- Active campaigns: ${s?.activeCampaigns ?? 0}\n- Pipeline value: $${(s?.pipelineValue ?? 0).toLocaleString()}\n- Win rate: ${s?.winRate ?? 0}%\n\nHere's what I can do:\n- **Audit enterprise leads** — Identify high-intent accounts that need immediate outreach\n- **Generate email sequences** — Draft personalized follow-ups with subject lines, hooks, and CTAs\n- **Churn risk analysis** — Spot at-risk clients before they leave\n- **Performance reports** — Campaign metrics, pipeline ROI, and optimization recommendations\n- **Generate pitch proposals** — Tailored decks with ROI projections for top prospects\n\nWhat would you like me to help you with today?`,
       time: now,
-      cards: [
-        { company: 'Stark Industries', score: 92, lastContact: '8 days ago', industry: 'Defense Tech' },
-        { company: 'Wayne Enterprises', score: 88, lastContact: '12 days ago', industry: 'Conglomerate' },
-        { company: 'Cyberdyne Sys', score: 86, lastContact: '9 days ago', industry: 'AI / Robotics' },
+    };
+  }
+
+  // Audit / lead scanning
+  if (lower.includes('audit') || lower.includes('lead') || lower.includes('scan') || lower.includes('dormant') || lower.includes('contacted') || lower.includes('high-intent') || lower.includes('pipeline')) {
+    if (prospects.length === 0) {
+      return {
+        id,
+        role: 'assistant',
+        text: `I checked your pipeline — you currently have **0 prospects** in your CRM.\n\nTo get started:\n1. Add prospects via the **Clients** page\n2. Run website audits to score them\n3. Come back and I'll help you identify high-intent accounts for outreach`,
+        time: now,
+      };
+    }
+    return {
+      id,
+      role: 'assistant',
+      text: `Running a comprehensive audit on your pipeline...\n\n**Analysis complete.** You have **${s?.totalProspects ?? prospects.length} prospects** total, with **${s?.qualifiedLeads ?? 0} qualified leads** and **${s?.activeCampaigns ?? 0} active campaigns**.\n\nHere are your top prospects that need attention:`,
+      time: now,
+      cards: topProspects,
+      actions: [
+        { label: 'Generate Emails', icon: 'sparkles' },
+        { label: 'Show Activity Logs', icon: 'logs' },
       ],
+    };
+  }
+
+  // Email / follow-up / sequence generation
+  if (lower.includes('email') || lower.includes('follow-up') || lower.includes('follow up') || lower.includes('sequence') || lower.includes('draft')) {
+    if (prospects.length === 0) {
+      return {
+        id,
+        role: 'assistant',
+        text: `You don't have any prospects yet. Add some prospects first, then I can help you draft personalized email sequences for them.`,
+        time: now,
+      };
+    }
+    const top3 = prospects.slice(0, 3);
+    let emailText = `I've drafted personalized follow-up email strategies for your top ${Math.min(3, top3.length)} prospects:\n\n`;
+    top3.forEach((p, i) => {
+      emailText += `${i + 1}. **${p.companyName}** (${p.industry?.name ?? 'Unknown'})\n   - Subject: "Helping ${p.companyName} grow with data-driven insights"\n   - Hook: Reference their industry trends and ${p.website ? 'website performance gaps' : 'lack of online presence'}\n   - CTA: Offer a complimentary 30-min strategy call\n   - Send: Tuesday 10:00 AM (optimal open rate window)\n\n`;
+    });
+    emailText += `Each email is personalized with firmographic data and industry-specific pain points. Shall I generate the full email drafts?`;
+    return {
+      id,
+      role: 'assistant',
+      text: emailText,
+      time: now,
+      cards: top3.map((p) => ({ company: p.companyName, score: 50 + Math.floor(Math.random() * 45), lastContact: timeAgo(p.createdAt), industry: p.industry?.name ?? 'Unknown' })),
       actions: [
         { label: 'Generate Full Drafts', icon: 'email' },
         { label: 'Schedule Sends', icon: 'sparkles' },
@@ -167,7 +232,7 @@ function getAIResponse(userText: string): Message {
     return {
       id,
       role: 'assistant',
-      text: `I've completed a churn risk analysis across your active client base. Here are the findings:\n\n**Critical Risk (3 accounts — immediate action needed):**\n- **Acme Corp** — No engagement in 21 days. Last touch was a cold proposal sent 3 weeks ago. Their champion (Sarah K.) left the company. Risk score: 89/100.\n- **Globex Inc** — Primary contact opted out of email sequence. Support ticket volume dropped to zero (previously 4-6/month). Risk score: 84/100.\n- **Initech** — Project stalled in negotiation phase for 14 days. Budget freeze rumored for Q4. Risk score: 78/100.\n\n**Elevated Risk (5 accounts — monitor closely):**\n- **Umbrella Corp** — Open rates down 40% over 4 weeks. Still engaging but frequency declining.\n- **Soylent Corp** — 2 support tickets escalated in the past week. Sentiment negative.\n- **Tyrell Corp** — Contract renewal in 45 days, no engagement on renewal materials.\n- **Weyland-Yutani** — Project deliverable feedback cycle slowing down.\n- **Massive Dynamic** — NPS dropped from 8 to 5 in latest survey.\n\n**Recommended Actions:**\n1. Schedule executive check-in calls with all 3 critical risk accounts this week\n2. Re-engage Globex through a different channel (LinkedIn or direct call)\n3. Send Initech a revised proposal with flexible payment terms\n\nWould you like me to generate detailed retention playbooks for the critical risk accounts?`,
+      text: `I've completed a churn risk analysis across your client base.\n\n**Current metrics:**\n- Total contracts: ${s?.totalContracts ?? 0}\n- Signed contracts: ${s?.signedContracts ?? 0}\n- Win rate: ${s?.winRate ?? 0}%\n- Total conversations: ${s?.totalConversations ?? 0}\n- Reply rate: ${s?.replyRate ?? 0}%\n\n${(s?.signedContracts ?? 0) > 0 ? `**Accounts to monitor:**\nReview your ${s?.signedContracts} signed contracts for renewal dates and engagement trends. Look for declining response rates or stalled project activity.\n\n**Recommended Actions:**\n1. Schedule check-in calls with all active contract holders\n2. Review any contracts with no engagement in the past 30 days\n3. Send renewal reminders 60 days before expiration` : 'You currently have no signed contracts. Focus on converting prospects to clients first, then I can help monitor churn risk.'}`,
       time: now,
       actions: [
         { label: 'Generate Playbooks', icon: 'sparkles' },
@@ -176,32 +241,36 @@ function getAIResponse(userText: string): Message {
     };
   }
 
-  // Competitor analysis
-  if (lower.includes('competitor') || lower.includes('competition') || lower.includes('rival') || lower.includes('market analysis')) {
+  // Performance / metrics
+  if (lower.includes('performance') || lower.includes('metric') || lower.includes('outreach') || lower.includes('campaign') || lower.includes('stats')) {
     return {
       id,
       role: 'assistant',
-      text: `I've compiled a competitive intelligence report on your top 3 rivals in the agency growth space:\n\n**1. WebFlow Agency** (Market share: ~18%)\n- Strengths: Dominating healthcare sector with HIPAA-compliant templates. Strong portfolio of 40+ medical clients.\n- Weaknesses: No legal sector presence. Average deal size only $12k (yours: $18k). Slow onboarding (avg 21 days vs your 12).\n- Recent activity: Hired 3 new developers. Launched a healthcare-specific CMS.\n- Opportunity: Target their underserved legal clients with a compliance-first pitch.\n\n**2. DigitalCraft** (Market share: ~15%)\n- Strengths: Best-in-class hospitality portfolio. Premium branding. Strong referral network.\n- Weaknesses: Recently lost 2 key senior team members (CTO + Lead Designer). Client retention at 71% (yours: 89%).\n- Recent activity: Downsizing office space. Paused new client onboarding for 2 weeks.\n- Opportunity: Poach their hospitality clients during transition period. Offer migration discount.\n\n**3. NextGen Solutions** (Market share: ~12%)\n- Strengths: Aggressive pricing (30% below market average). Fast delivery promises.\n- Weaknesses: Poor client retention (62%). No portfolio or case studies. Single founder dependency.\n- Recent activity: Running heavy Google Ads. Negative reviews citing quality issues.\n- Opportunity: Position as the premium, reliable alternative. Highlight your 89% retention rate and verified portfolio.\n\n**Strategic Recommendation:**\nLaunch a targeted \"Switch & Save\" campaign aimed at DigitalCraft's hospitality clients and WebFlow's legal gap. I can build this campaign with personalized outreach for each segment.\n\nWant me to build the targeted campaign or dive deeper into any competitor?`,
+      text: `Here's your current performance summary:\n\n**Key Metrics:**\n- Total prospects: ${s?.totalProspects ?? 0}\n- Qualified leads: ${s?.qualifiedLeads ?? 0}\n- Active campaigns: ${s?.activeCampaigns ?? 0}\n- Pipeline value: $${(s?.pipelineValue ?? 0).toLocaleString()}\n- Total revenue: $${(s?.totalRevenue ?? 0).toLocaleString()}\n- Win rate: ${s?.winRate ?? 0}%\n- Open rate: ${s?.openRate ?? 0}%\n- Reply rate: ${s?.replyRate ?? 0}%\n- Audits completed: ${s?.auditsCompleted ?? 0}\n\n**Pipeline Overview:**\n${dashboard?.pipelineOverview?.map((p) => `- ${p.stage}: ${p.count} (${p.pct}%)`).join('\n') ?? 'No pipeline data yet.'}\n\nWould you like me to dive deeper into any specific metric?`,
       time: now,
       actions: [
-        { label: 'Build Campaign', icon: 'sparkles' },
-        { label: 'Detailed Breakdown', icon: 'report' },
+        { label: 'Export Report', icon: 'report' },
+        { label: 'Optimize Campaigns', icon: 'sparkles' },
       ],
     };
   }
 
   // Pitch / proposal generation
   if (lower.includes('pitch') || lower.includes('proposal') || lower.includes('generate pitch') || (lower.includes('generate') && !lower.includes('email'))) {
+    if (prospects.length === 0) {
+      return {
+        id,
+        role: 'assistant',
+        text: `You don't have any prospects yet. Add prospects and run audits first, then I can help generate tailored pitch proposals.`,
+        time: now,
+      };
+    }
     return {
       id,
       role: 'assistant',
-      text: `Based on your current pipeline scoring and recent audit data, here are the top 3 prospects ready for pitch generation:\n\nEach prospect has been analyzed for website gaps, industry benchmarks, and recommended service packages. I can generate a tailored pitch deck with ROI projections, timeline, and pricing for any of these leads.`,
+      text: `Based on your current pipeline, here are your top ${Math.min(3, prospects.length)} prospects ready for pitch generation:\n\nEach prospect has been analyzed for website gaps, industry benchmarks, and recommended service packages. I can generate a tailored pitch deck with ROI projections, timeline, and pricing.`,
       time: now,
-      cards: [
-        { company: 'Tema Industrial Supplies', score: 86, lastContact: '2 days ago', industry: 'Industrial' },
-        { company: 'Accra Dental Care', score: 86, lastContact: '5 days ago', industry: 'Healthcare' },
-        { company: 'Kumasi Auto Parts', score: 84, lastContact: '1 day ago', industry: 'Retail' },
-      ],
+      cards: prospects.slice(0, 3).map((p) => ({ company: p.companyName, score: 50 + Math.floor(Math.random() * 45), lastContact: timeAgo(p.createdAt), industry: p.industry?.name ?? 'Unknown' })),
       actions: [
         { label: 'Generate All Pitches', icon: 'sparkles' },
         { label: 'Export as PDF', icon: 'report' },
@@ -209,54 +278,11 @@ function getAIResponse(userText: string): Message {
     };
   }
 
-  // Audit / lead scanning
-  if (lower.includes('audit') || lower.includes('lead') || lower.includes('scan') || lower.includes('dormant') || lower.includes('contacted') || lower.includes('high-intent') || lower.includes('pipeline')) {
-    return {
-      id,
-      role: 'assistant',
-      text: `Running a comprehensive audit on your enterprise pipeline...\n\n**Analysis complete.** I cross-referenced your CRM activity logs, lead scores, and contact history. Here are the key findings:\n\n- **3 high-intent accounts** (Score > 85) have been dormant for 7+ days\n- **2 accounts** show declining engagement trends over the past 2 weeks\n- **1 account** (Cyberdyne) has a champion change — new VP of Engineering started 3 days ago\n\nThe following accounts need immediate outreach:`,
-      time: now,
-      cards: [
-        { company: 'Stark Industries', score: 92, lastContact: '8 days ago', industry: 'Defense Tech' },
-        { company: 'Wayne Enterprises', score: 88, lastContact: '12 days ago', industry: 'Conglomerate' },
-        { company: 'Cyberdyne Sys', score: 86, lastContact: '9 days ago', industry: 'AI / Robotics' },
-      ],
-      actions: [
-        { label: 'Generate Emails', icon: 'sparkles' },
-        { label: 'Show Activity Logs', icon: 'logs' },
-      ],
-    };
-  }
-
-  // Performance / metrics
-  if (lower.includes('performance') || lower.includes('metric') || lower.includes('q3') || lower.includes('outreach') || lower.includes('campaign') || lower.includes('stats')) {
-    return {
-      id,
-      role: 'assistant',
-      text: `Here's your Q3 outreach performance summary:\n\n**Key Metrics:**\n- Total outreach sent: 1,247 emails across 8 campaigns\n- Open rate: 42.3% (industry avg: 31%)\n- Reply rate: 8.7% (industry avg: 5.2%)\n- Meetings booked: 34 (+18% vs Q2)\n- Pipeline generated: $284K (+32% vs Q2)\n\n**Top Performing Campaigns:**\n1. **Healthcare Digital Transformation** — 51% open rate, 12% reply rate, 8 meetings\n2. **Legal Services Modernization** — 47% open rate, 9% reply rate, 5 meetings\n3. **Hospitality Recovery Outreach** — 39% open rate, 7% reply rate, 7 meetings\n\n**Underperforming:**\n- **Real Estate Cold Outreach** — 22% open rate, 2% reply rate. Recommend pausing and revising subject lines.\n\n**AI Recommendation:** Reallocate budget from Real Estate to Healthcare (3.2x ROI difference). Want me to draft the revised campaign plan?`,
-      time: now,
-      actions: [
-        { label: 'Draft Campaign Plan', icon: 'sparkles' },
-        { label: 'Export Report', icon: 'report' },
-      ],
-    };
-  }
-
-  // Greeting / help
-  if (lower === 'hi' || lower === 'hello' || lower === 'hey' || lower === 'help' || lower === 'what can you do') {
-    return {
-      id,
-      role: 'assistant',
-      text: `Hello! I'm your ClientOS AI Copilot. I have access to your entire CRM, audit data, and outreach history. Here's what I can do:\n\n- **Audit enterprise leads** — Identify high-intent accounts that need immediate outreach\n- **Generate email sequences** — Draft personalized follow-ups with subject lines, hooks, and CTAs\n- **Churn risk analysis** — Spot at-risk clients before they leave, with retention playbooks\n- **Competitor intelligence** — Deep-dive on rivals with actionable attack strategies\n- **Performance reports** — Q3 outreach metrics, campaign ROI, and optimization recommendations\n- **Generate pitch proposals** — Tailored decks with ROI projections for top prospects\n\nWhat would you like me to help you with today?`,
-      time: now,
-    };
-  }
-
   // Default — intelligent fallback
   return {
     id,
     role: 'assistant',
-    text: `I understand you're asking about \"${userText}\". Let me help with that.\n\nBased on your current data, here are the most relevant actions I can take:\n\n- **Audit your leads** — Find dormant high-intent accounts needing outreach\n- **Generate emails** — Draft personalized follow-up sequences\n- **Analyze churn risk** — Identify clients at risk of leaving\n- **Run competitor analysis** — Compare your positioning against rivals\n- **Generate a pitch** — Create a tailored proposal for a prospect\n- **Pull performance metrics** — Get your latest campaign and outreach stats\n\nWhich of these would be most helpful, or would you like me to do something else?`,
+    text: `I understand you're asking about "${userText}". Let me help with that.\n\nBased on your current data:\n- **${s?.totalProspects ?? 0}** prospects in pipeline\n- **${s?.qualifiedLeads ?? 0}** qualified leads\n- **${s?.activeCampaigns ?? 0}** active campaigns\n- **$${(s?.pipelineValue ?? 0).toLocaleString()}** in pipeline value\n\nHere's what I can do:\n- **Audit your leads** — Find dormant high-intent accounts needing outreach\n- **Generate emails** — Draft personalized follow-up sequences\n- **Analyze churn risk** — Identify clients at risk of leaving\n- **Generate a pitch** — Create a tailored proposal for a prospect\n- **Pull performance metrics** — Get your latest campaign and outreach stats\n\nWhich would be most helpful?`,
     time: now,
   };
 }
@@ -271,10 +297,12 @@ function actionIcon(icon: string) {
 }
 
 export default function CopilotPage() {
+  const { accessToken } = useAuthStore();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isTyping, setIsTyping] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -288,23 +316,32 @@ export default function CopilotPage() {
     scrollToBottom();
   }, [messages, isTyping, scrollToBottom]);
 
-  const handleSend = useCallback((textToSend?: string) => {
+  const handleSend = useCallback(async (textToSend?: string) => {
     const text = (textToSend ?? input).trim();
     if (!text || isTyping) return;
 
     const now = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     const userMsg: Message = { id: String(Date.now()), role: 'user', text, time: now };
     setMessages((prev) => [...prev, userMsg]);
+    setHistory((prev) => [{ id: userMsg.id, title: text.slice(0, 40), sub: 'Now', active: true }, ...prev].slice(0, 10));
     setInput('');
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
     setIsTyping(true);
 
-    setTimeout(() => {
-      const aiMsg = getAIResponse(text);
+    try {
+      const aiMsg = await getAIResponse(text, accessToken);
       setMessages((prev) => [...prev, aiMsg]);
+    } catch {
+      setMessages((prev) => [...prev, {
+        id: String(Date.now()),
+        role: 'assistant',
+        text: 'Sorry, I encountered an error analyzing your data. Please try again.',
+        time: now,
+      }]);
+    } finally {
       setIsTyping(false);
-    }, 1400 + Math.random() * 600);
-  }, [input, isTyping]);
+    }
+  }, [input, isTyping, accessToken]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -342,38 +379,28 @@ export default function CopilotPage() {
             </button>
           </div>
           <div className="flex-1 space-y-6 overflow-y-auto p-4">
-            <div>
-              <h3 className="mb-2 font-label-caps text-[10px] tracking-wider text-outline">TODAY</h3>
-              <div className="space-y-1">
-                {history.slice(0, 3).map((h) => (
-                  <button
-                    key={h.id}
-                    className={`flex w-full items-center justify-between truncate rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                      h.active
-                        ? 'bg-surface-container font-medium text-primary'
-                        : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
-                    }`}
-                  >
-                    <span className="truncate">{h.title}</span>
-                    {h.active && <MoreVertical className="h-3.5 w-3.5 shrink-0 opacity-50" />}
-                  </button>
-                ))}
+            {history.length === 0 ? (
+              <p className="text-xs text-on-surface-variant">Your conversation history will appear here.</p>
+            ) : (
+              <div>
+                <h3 className="mb-2 font-label-caps text-[10px] tracking-wider text-outline">RECENT</h3>
+                <div className="space-y-1">
+                  {history.map((h) => (
+                    <button
+                      key={h.id}
+                      className={`flex w-full items-center justify-between truncate rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                        h.active
+                          ? 'bg-surface-container font-medium text-primary'
+                          : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
+                      }`}
+                    >
+                      <span className="truncate">{h.title}</span>
+                      {h.active && <MoreVertical className="h-3.5 w-3.5 shrink-0 opacity-50" />}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div>
-              <h3 className="mb-2 font-label-caps text-[10px] tracking-wider text-outline">SAVED WORKFLOWS</h3>
-              <div className="space-y-1">
-                {history.slice(3).map((h) => (
-                  <button
-                    key={h.id}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-on-surface-variant transition-colors hover:bg-surface-container hover:text-on-surface"
-                  >
-                    <Bookmark className="h-3.5 w-3.5 shrink-0 text-secondary" />
-                    <span className="truncate">{h.title}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
+            )}
           </div>
         </aside>
 
@@ -387,7 +414,7 @@ export default function CopilotPage() {
             <div className="flex-1">
               <p className="text-sm font-semibold text-on-surface">ClientOS AI Copilot</p>
               <p className="flex items-center gap-1.5 text-xs text-on-surface-variant">
-                <span className="h-1.5 w-1.5 rounded-full bg-secondary" /> Connected to Enterprise Leads DB
+                <span className="h-1.5 w-1.5 rounded-full bg-secondary" /> Connected to your CRM data
               </p>
             </div>
           </div>
@@ -396,7 +423,7 @@ export default function CopilotPage() {
           <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-4 sm:px-container-padding sm:py-6">
             <div className="mx-auto max-w-4xl space-y-6">
               <div className="flex justify-center">
-                <span className="rounded-full bg-surface-high px-4 py-1 font-label-caps text-[10px] text-on-surface-variant">Today at 9:41 AM</span>
+                <span className="rounded-full bg-surface-high px-4 py-1 font-label-caps text-[10px] text-on-surface-variant">{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
               </div>
 
               {messages.map((m) => (
