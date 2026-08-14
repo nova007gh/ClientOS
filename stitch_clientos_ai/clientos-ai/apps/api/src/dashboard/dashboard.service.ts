@@ -3,6 +3,25 @@ import { prisma } from '@clientos/database';
 
 @Injectable()
 export class DashboardService {
+  async getPublicStats() {
+    const [totalProspects, auditsCompleted, totalConversations, repliedConversations] = await Promise.all([
+      prisma.prospect.count(),
+      prisma.websiteAudit.count({ where: { status: 'COMPLETED' } }),
+      prisma.conversation.count(),
+      prisma.inboxMessage.count({ where: { isMe: false } }),
+    ]);
+
+    const replyRate = totalConversations > 0
+      ? Math.round((repliedConversations / totalConversations) * 100)
+      : 0;
+
+    return {
+      totalLeads: totalProspects,
+      auditsRun: auditsCompleted,
+      replyRate,
+    };
+  }
+
   async getStats(orgId: string) {
     const [
       totalProspects,

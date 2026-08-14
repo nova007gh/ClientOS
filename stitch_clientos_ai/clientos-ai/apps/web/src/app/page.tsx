@@ -1,10 +1,36 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Button } from '@clientos/ui';
 import { Play, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { api } from '@/lib/api-client';
+
+type PlatformStats = {
+  totalLeads: number;
+  auditsRun: number;
+  replyRate: number;
+};
 
 export default function HomePage() {
+  const [stats, setStats] = useState<PlatformStats>({
+    totalLeads: 0,
+    auditsRun: 0,
+    replyRate: 0,
+  });
+
+  useEffect(() => {
+    api.get<{ totalLeads: number; auditsRun: number; replyRate: number }>('/dashboard/public-stats')
+      .then((data) => {
+        setStats({
+          totalLeads: data.totalLeads,
+          auditsRun: data.auditsRun,
+          replyRate: data.replyRate,
+        });
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="min-h-screen bg-surface text-on-surface">
       <nav className="flex items-center justify-between border-b border-outline-variant px-6 py-4">
@@ -17,7 +43,7 @@ export default function HomePage() {
         </div>
         <div className="flex items-center gap-3">
           <Link href="/login" className="text-body-sm text-on-surface-variant hover:text-on-surface">Login</Link>
-          <Button className="bg-primary text-on-primary">Join Network</Button>
+          <Link href="/register"><Button className="bg-primary text-on-primary">Join Network</Button></Link>
         </div>
       </nav>
 
@@ -34,8 +60,8 @@ export default function HomePage() {
         </p>
 
         <div className="mt-8 flex justify-center gap-3">
-          <Button className="bg-primary text-on-primary">Start Free Trial</Button>
-          <Button variant="outline"><Play className="mr-2 h-4 w-4" /> Watch Demo</Button>
+          <Link href="/register"><Button className="bg-primary text-on-primary">Start Free Trial</Button></Link>
+          <Link href="/login"><Button variant="outline"><Play className="mr-2 h-4 w-4" /> Watch Demo</Button></Link>
         </div>
 
         <div className="mx-auto mt-16 max-w-4xl rounded-xl border border-outline-variant/60 bg-surface-high/20 p-3">
@@ -47,15 +73,15 @@ export default function HomePage() {
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div className="rounded-lg bg-surface p-3 text-left">
-                    <p className="text-2xl font-bold text-on-surface">14,592</p>
+                    <p className="text-2xl font-bold text-on-surface">{stats.totalLeads.toLocaleString()}</p>
                     <p className="text-xs text-on-surface-variant">Total Leads</p>
                   </div>
                   <div className="rounded-lg bg-surface p-3 text-left">
-                    <p className="text-2xl font-bold text-on-surface">4,120</p>
+                    <p className="text-2xl font-bold text-on-surface">{stats.auditsRun.toLocaleString()}</p>
                     <p className="text-xs text-on-surface-variant">Audits Run</p>
                   </div>
                   <div className="rounded-lg bg-surface p-3 text-left">
-                    <p className="text-2xl font-bold text-on-surface">28.2%</p>
+                    <p className="text-2xl font-bold text-on-surface">{stats.replyRate}%</p>
                     <p className="text-xs text-on-surface-variant">Reply Rate</p>
                   </div>
                 </div>

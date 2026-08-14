@@ -35,7 +35,7 @@ export default function RegisterPage() {
         password,
       });
       setAuth(data);
-      router.push('/onboarding');
+      router.push('/dashboard');
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);
