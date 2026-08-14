@@ -26,6 +26,7 @@ import {
   FileSignature,
   LayoutTemplate,
   Globe,
+  MapPin,
 } from 'lucide-react';
 
 const mobileNavItems = [
@@ -33,6 +34,7 @@ const mobileNavItems = [
   { href: '/dashboard/opportunities', label: 'Sales', icon: TrendingUp },
   { href: '/dashboard/inbox', label: 'Outreach', icon: Mail },
   { href: '/dashboard/prospects', label: 'Clients', icon: Users },
+  { href: '/dashboard/lead-map', label: 'Map', icon: MapPin },
   { href: '/dashboard/contracts', label: 'Contracts', icon: FileText },
 ];
 
@@ -49,6 +51,7 @@ const mainNav = [
   { href: '/dashboard/proposals', label: 'Proposals', icon: FileSignature },
   { href: '/dashboard/templates', label: 'Templates', icon: LayoutTemplate },
   { href: '/dashboard/portfolio', label: 'Portfolio', icon: Globe },
+  { href: '/dashboard/lead-map', label: 'Lead Map', icon: MapPin },
   { href: '/dashboard/audits', label: 'Intelligence', icon: Brain },
 ];
 

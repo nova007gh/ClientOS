@@ -13,7 +13,8 @@
     "incremental": true,
     "noEmit": true,
     "types": [
-      "node"
+      "node",
+      "google.maps"
     ],
     "paths": {
       "@/*": [
