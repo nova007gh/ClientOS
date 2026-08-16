@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClientOS AI — User Manual</title>
+<style>
+  @page { margin: 2cm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    color: #1a1a2e;
+    line-height: 1.6;
+    background: #f8f9fa;
+  }
+  .page {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 48px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+  .cover {
+    text-align: center;
+    padding: 80px 48px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    border-radius: 12px;
+    margin-bottom: 40px;
+  }
+  .cover h1 { font-size: 36px; margin-bottom: 8px; font-weight: 700; }
+  .cover p { font-size: 16px; opacity: 0.9; }
+  .cover .version { margin-top: 20px; font-size: 13px; opacity: 0.7; }
+
+  h2 {
+    font-size: 22px;
+    color: #4f46e5;
+    margin-top: 36px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  h3 {
+    font-size: 17px;
+    color: #1e293b;
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+  p { margin-bottom: 10px; font-size: 14px; }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .menu-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    background: #f9fafb;
+  }
+  .menu-card .icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+  .menu-card h4 {
+    font-size: 15px;
+    color: #4f46e5;
+    margin-bottom: 4px;
+  }
+  .menu-card p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    margin: 12px 0;
+  }
+  .steps li {
+    position: relative;
+    padding-left: 36px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .steps li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    background: #6366f1;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .callout {
+    background: #eef2ff;
+    border-left: 4px solid #6366f1;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .callout strong { color: #4f46e5; }
+
+  .tip {
+    background: #f0fdf4;
+    border-left: 4px solid #16a34a;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .tip strong { color: #15803d; }
+
+  .warning {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .warning strong { color: #b45309; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  th {
+    background: #4f46e5;
+    color: white;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  tr:nth-child(even) td { background: #f9fafb; }
+
+  .score-legend {
+    display: flex;
+    gap: 16px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+  .score-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .score-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 32px 0;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 24px;
+    color: #94a3b8;
+    font-size: 12px;
+  }
+
+  @media print {
+    body { background: white; }
+    .page { box-shadow: none; max-width: 100%; padding: 0; }
+    .cover { break-after: page; }
+    h2 { break-after: avoid; }
+    .menu-card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Cover -->
+  <div class="cover">
+    <h1>ClientOS AI</h1>
+    <p>Client Acquisition Platform — User Manual</p>
+    <div class="version">Version 1.0 — August 2026</div>
+  </div>
+
+  <!-- Getting Started -->
+  <h2>Getting Started</h2>
+
+  <h3>Login</h3>
+  <ol class="steps">
+    <li>Open your browser and go to <strong>http://localhost:3005/login</strong></li>
+    <li>Enter your email: <strong>owner@clientos.ai</strong></li>
+    <li>Enter your password: <strong>Password123!</strong></li>
+    <li>Click <strong>Sign in</strong></li>
+  </ol>
+
+  <div class="callout">
+    <strong>Need an account?</strong> Click "Sign up" on the login page to create a new account.
+  </div>
+
+  <!-- Menu Reference -->
+  <h2>Menu Reference</h2>
+  <p>The sidebar on the left contains all main navigation items:</p>
+
+  <div class="menu-grid">
+    <div class="menu-card">
+      <div class="icon">🏠</div>
+      <h4>Home</h4>
+      <p>Dashboard with key stats: total prospects, pipeline value, win rate, recent activity</p>
+    </div>
+    <div class="menu-card">
+      <div class="icon">📈</div>
+      <h4>Sales</h4>
+      <p>Manage opportunities and track deals through your pipeline stages</p>
+    </div>
+    <div class="menu-card">
+      <div class="icon">✉️</div>
+      <h4>Outreach</h4>
+      <p>Email inbox and conversations with prospects. Track replies and engagement</p>
+    </div>
+    <div class="menu-card">
+      <div class="icon">👥</div>
+      <h4>Clients</h4>
+      <p>Your prospect/lead list. Search, add, and manage all prospects</p>
+    </div>
+    <div class="menu-card">
+      <div class="icon">💼</div>
+      <h4>Work</h4>
+      <p>Project management for active client work. Tasks, milestones, team members</p>
+    </div>
+    <div class="menu-card">
+      <div class="icon">📝</div>
+      <h4>Contracts</h4>
+      <p>Create, send, and track contracts with e-signature support</p>
+    </div>
+    <div class="menu-card">
+      <div class="icon">✏️</div>
+      <h4>Proposals</h4>
+      <p>Build professional proposals from reusable templates</p>
+    </div>
+    <div class="menu-card">
+      <div class="icon">📐</div>
+      <h4>Templates</h4>
+      <p>Manage reusable proposal and email templates</p>
+    </div>
+    <div class="menu-card">
+      <div class="icon">🌐</div>
+      <h4>Portfolio</h4>
+      <p>Showcase past projects with reviews and ratings</p>
+    </div>
+    <div class="menu-card">
+      <div class="icon">📍</div>
+      <h4>Lead Map</h4>
+      <p>Interactive map of all prospects by location. Search and scan areas for leads</p>
+    </div>
+    <div class="menu-card">
+      <div class="icon">🧠</div>
+      <h4>Intelligence</h4>
+      <p>Website audits and AI insights on your prospects</p>
+    </div>
+    <div class="menu-card">
+      <div class="icon">⚙️</div>
+      <h4>Settings</h4>
+      <p>Account settings, organization preferences</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- How-To: Leads -->
+  <h2>How-To: Create & Manage Leads</h2>
+
+  <h3>Adding a New Prospect</h3>
+  <ol class="steps">
+    <li>Click <strong>Clients</strong> in the sidebar</li>
+    <li>Click the <strong>+ Add prospect</strong> button (top right)</li>
+    <li>Fill in the form:
+      <ul style="margin: 8px 0 8px 20px; font-size: 13px;">
+        <li><strong>Company Name</strong> — required</li>
+        <li><strong>Website</strong> — optional (e.g., https://example.com)</li>
+        <li><strong>Phone</strong> — optional</li>
+        <li><strong>Email</strong> — optional</li>
+        <li><strong>City</strong> — optional but recommended (puts them on the map)</li>
+        <li><strong>Country</strong> — optional but recommended</li>
+        <li><strong>Description</strong> — optional notes about the prospect</li>
+      </ul>
+    </li>
+    <li>Click <strong>Submit</strong> to save</li>
+  </ol>
+
+  <div class="tip">
+    <strong>Tip:</strong> Adding city and country is recommended — it allows the prospect to appear on the Lead Map after geocoding.
+  </div>
+
+  <h3>Searching Prospects</h3>
+  <ol class="steps">
+    <li>Go to <strong>Clients</strong> in the sidebar</li>
+    <li>Use the search bar at the top to filter by company name</li>
+    <li>Click any prospect to view full details, contacts, audits, and opportunities</li>
+  </ol>
+
+  <h3>Lead Scores</h3>
+  <p>Each prospect has a lead score from 0 to 100. Higher scores indicate hotter leads.</p>
+  <table>
+    <tr><th>Score Range</th><th>Rating</th><th>Color on Map</th></tr>
+    <tr><td>80 - 100</td><td>Hot Lead</td><td>🟢 Green</td></tr>
+    <tr><td>60 - 79</td><td>Warm Lead</td><td>🟡 Yellow</td></tr>
+    <tr><td>40 - 59</td><td>Cold Lead</td><td>🟠 Orange</td></tr>
+    <tr><td>0 - 39</td><td>Low Priority</td><td>⚪ Gray</td></tr>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- How-To: Lead Map -->
+  <h2>How-To: Use the Lead Map</h2>
+
+  <h3>Viewing Leads on the Map</h3>
+  <ol class="steps">
+    <li>Click <strong>Lead Map</strong> in the sidebar</li>
+    <li>The map auto-centers on your prospects' average location</li>
+    <li>Colored markers appear for each prospect with location data</li>
+    <li>The right sidebar lists all mapped prospects — click any to fly to their location</li>
+  </ol>
+
+  <h3>Searching a Location</h3>
+  <ol class="steps">
+    <li>Type a city, country, or address in the search bar (top left of map)</li>
+    <li>Autocomplete suggestions appear as you type</li>
+    <li>Click a suggestion — the map flies to that location</li>
+    <li>Use the + and − buttons to zoom in/out</li>
+  </ol>
+
+  <h3>Marker Colors</h3>
+  <div class="score-legend">
+    <div class="score-item"><div class="score-dot" style="background:#16a34a"></div> Score 80+</div>
+    <div class="score-item"><div class="score-dot" style="background:#eab308"></div> Score 60-79</div>
+    <div class="score-item"><div class="score-dot" style="background:#f97316"></div> Score 40-59</div>
+    <div class="score-item"><div class="score-dot" style="background:#94a3b8"></div> Score &lt; 40</div>
+  </div>
+
+  <h3>Viewing Prospect Details</h3>
+  <ol class="steps">
+    <li>Click any marker on the map — a popup shows company name, location, score, and status</li>
+    <li>A detail card appears at the bottom with industry, website, and status badge</li>
+    <li>Click the × on the card to close it</li>
+  </ol>
+
+  <div class="callout">
+    <strong>Note:</strong> New prospects need geocoding to appear on the map. Run this command in the project terminal:
+    <br><code>cd stitch_clientos_ai/clientos-ai && pnpm dlx tsx scripts/geocode-prospects.ts</code>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- How-To: AI Copilot -->
+  <h2>How-To: Use AI Copilot</h2>
+
+  <p>The AI Copilot is available via the floating button at the bottom right of any dashboard page.</p>
+
+  <ol class="steps">
+    <li>Click <strong>Ask AI Copilot</strong> at the bottom right</li>
+    <li>Type your question and press Enter or click Send</li>
+    <li>The AI fetches real data from your CRM and responds with insights</li>
+  </ol>
+
+  <h3>Try These Commands</h3>
+  <table>
+    <tr><th>Type This</th><th>What You Get</th></tr>
+    <tr><td>hello</td><td>Overview of your CRM stats (prospects, pipeline, win rate)</td></tr>
+    <tr><td>audit my leads</td><td>List of top prospects with scores and details</td></tr>
+    <tr><td>performance</td><td>Dashboard metrics and key performance indicators</td></tr>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- How-To: Sales Pipeline -->
+  <h2>How-To: Manage Your Sales Pipeline</h2>
+
+  <h3>Pipeline Stages</h3>
+  <table>
+    <tr><th>Stage</th><th>Meaning</th></tr>
+    <tr><td>NEW</td><td>Opportunity just created</td></tr>
+    <tr><td>QUALIFIED</td><td>Prospect meets your criteria</td></tr>
+    <tr><td>CONTACTED</td><td>Outreach initiated</td></tr>
+    <tr><td>REPLIED</td><td>Prospect responded</td></tr>
+    <tr><td>MEETING</td><td>Meeting scheduled or completed</td></tr>
+    <tr><td>PROPOSAL</td><td>Proposal sent</td></tr>
+    <tr><td>NEGOTIATION</td><td>Discussing terms</td></tr>
+    <tr><td>WON</td><td>Deal closed successfully</td></tr>
+    <tr><td>LOST</td><td>Deal fell through</td></tr>
+  </table>
+
+  <h3>Working with Opportunities</h3>
+  <ol class="steps">
+    <li>Go to <strong>Sales</strong> in the sidebar</li>
+    <li>View all opportunities and their current stages</li>
+    <li>Click an opportunity to view details and update its stage</li>
+    <li>Track total pipeline value and win rate on the dashboard</li>
+  </ol>
+
+  <div class="divider"></div>
+
+  <!-- How-To: Outreach -->
+  <h2>How-To: Outreach & Email</h2>
+
+  <ol class="steps">
+    <li>Go to <strong>Outreach</strong> in the sidebar</li>
+    <li>View all conversations with prospects</li>
+    <li>Click a conversation to see the full email thread</li>
+    <li>Track which prospects have replied and which need follow-up</li>
+  </ol>
+
+  <div class="tip">
+    <strong>Tip:</strong> Use the AI Copilot to draft personalized outreach emails based on prospect audit data.
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- How-To: Intelligence -->
+  <h2>How-To: Website Audits (Intelligence)</h2>
+
+  <ol class="steps">
+    <li>Go to <strong>Intelligence</strong> in the sidebar</li>
+    <li>View completed website audits for your prospects</li>
+    <li>Each audit shows findings like SEO issues, performance problems, design flaws</li>
+    <li>Use these insights to craft targeted outreach messages</li>
+  </ol>
+
+  <div class="callout">
+    <strong>Pro Tip:</strong> Prospects with poor website scores are more likely to need your services. Target them first!
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- How-To: Contracts -->
+  <h2>How-To: Proposals & Contracts</h2>
+
+  <h3>Creating a Proposal</h3>
+  <ol class="steps">
+    <li>Go to <strong>Proposals</strong> in the sidebar</li>
+    <li>Click <strong>New Proposal</strong></li>
+    <li>Select a template or start from scratch</li>
+    <li>Add sections, pricing, and terms</li>
+    <li>Save and send to the prospect</li>
+  </ol>
+
+  <h3>Managing Contracts</h3>
+  <ol class="steps">
+    <li>Go to <strong>Contracts</strong> in the sidebar</li>
+    <li>Create a contract from a proposal or template</li>
+    <li>Add parties, terms, and signature fields</li>
+    <li>Send for e-signature</li>
+    <li>Track status: Draft → Sent → Signed</li>
+  </ol>
+
+  <div class="divider"></div>
+
+  <!-- How-To: Projects -->
+  <h2>How-To: Project Management</h2>
+
+  <ol class="steps">
+    <li>Go to <strong>Work</strong> in the sidebar</li>
+    <li>Create a project for a signed client</li>
+    <li>Assign team members and set milestones</li>
+    <li>Create and assign tasks with deadlines</li>
+    <li>Track progress and communicate with the client</li>
+  </ol>
+
+  <div class="divider"></div>
+
+  <!-- Quick Reference -->
+  <h2>Quick Reference</h2>
+
+  <h3>Login Credentials</h3>
+  <table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td>URL</td><td>http://localhost:3005</td></tr>
+    <tr><td>Email</td><td>owner@clientos.ai</td></tr>
+    <tr><td>Password</td><td>Password123!</td></tr>
+  </table>
+
+  <h3>Keyboard Shortcuts</h3>
+  <table>
+    <tr><th>Action</th><th>How</th></tr>
+    <tr><td>Search prospects</td><td>Type in the search bar on the Clients page</td></tr>
+    <tr><td>Search location on map</td><td>Type in the map search bar (top left)</td></tr>
+    <tr><td>Zoom map</td><td>Use + / − buttons or scroll wheel</td></tr>
+    <tr><td>Open AI Copilot</td><td>Click "Ask AI Copilot" button (bottom right)</td></tr>
+  </table>
+
+  <h3>Geocoding New Leads</h3>
+  <p>When you add new prospects with a city/country, run this to add them to the map:</p>
+  <div class="callout">
+    <code>cd stitch_clientos_ai/clientos-ai && pnpm dlx tsx scripts/geocode-prospects.ts</code>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="footer">
+    ClientOS AI — Client Acquisition Platform<br>
+    User Manual v1.0 — August 2026<br>
+    © Digital Boost Agency
+  </div>
+
+</div>
+</body>
+</html>
