@@ -14,6 +14,7 @@
     "db:studio": "pnpm --filter @clientos/database prisma:studio"
   },
   "devDependencies": {
+    "next": "^14.2.7",
     "turbo": "^2.1.0",
     "typescript": "^5.5.4",
     "prettier": "^3.3.3"
