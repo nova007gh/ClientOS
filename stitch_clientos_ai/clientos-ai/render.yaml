@@ -32,12 +32,29 @@ services:
     name: clientos-web
     runtime: static
     plan: free
-    buildCommand: npm ci && NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL npm run build --workspace=apps/web
+    buildCommand: npm ci && NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL NEXT_PUBLIC_SCRAPER_URL=$NEXT_PUBLIC_SCRAPER_URL npm run build --workspace=apps/web
     staticPublishPath: apps/web/.next
     pullRequestPreviewsEnabled: true
     envVars:
       - key: NEXT_PUBLIC_API_URL
         sync: false
+      - key: NEXT_PUBLIC_SCRAPER_URL
+        sync: false
+
+  # ── Python Scraper Service ──
+  - type: web
+    name: clientos-scraper
+    runtime: python
+    plan: free
+    rootDir: apps/scraper
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: CORS_ORIGINS
+        sync: false
+      - key: PYTHON_VERSION
+        value: "3.12.0"
 
 databases:
   # ── PostgreSQL ──
