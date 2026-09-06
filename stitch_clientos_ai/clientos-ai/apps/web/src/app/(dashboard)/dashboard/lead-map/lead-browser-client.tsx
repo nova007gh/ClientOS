@@ -1,9 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Circle, useMap, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import { Card, CardContent, Badge, LeadScoreRing, Button } from '@clientos/ui';
 import { api } from '@/lib/api-client';
 import { useAuthStore } from '@/lib/auth-store';
@@ -11,8 +8,9 @@ import {
   Search, MapPin, X, Users, Radar, Plus, Loader2, Store,
   Phone, Globe, Mail, Clock, Info, Globe2, Facebook, Twitter,
   Instagram, Linkedin, Youtube, MessageCircle, ExternalLink, RefreshCw,
-  Plus as PlusIcon, Sparkles, Zap,
+  Plus as PlusIcon, Sparkles, Zap, Camera,
 } from 'lucide-react';
+import CesiumGlobe, { type BusinessMarker, type ProspectMarker, type CCTVMarker } from './cesium-globe';
 
 // ── Types ──────────────────────────────────────
 
@@ -53,7 +51,7 @@ interface BrowserTab {
   title: string;
   query: string;
   location: string;
-  source: 'maps' | 'web' | 'social' | 'local' | 'deep';
+  source: 'maps' | 'web' | 'social' | 'local' | 'deep' | 'yellowpages' | 'yelp' | 'directories' | 'enrich' | 'area';
   results: ScrapedBusiness[];
   loading: boolean;
   error: string;
@@ -74,57 +72,29 @@ const DEFAULT_CENTER: [number, number] = [5.6037, -0.187];
 const SCRAPER_URL = process.env.NEXT_PUBLIC_SCRAPER_URL || 'http://127.0.0.1:8000';
 
 const SOURCE_OPTIONS = [
-  { label: 'Map Discovery', value: 'maps', icon: Radar, desc: 'Find businesses on the map' },
+  { label: 'Map Discovery', value: 'maps', icon: Radar, desc: 'Find businesses on the 3D globe via OSM' },
+  { label: 'Area Search', value: 'area', icon: MapPin, desc: 'Scrape all businesses in visible map area' },
+  { label: 'Google Search', value: 'yellowpages', icon: Store, desc: 'Search Google for business contacts' },
+  { label: 'Bing Search', value: 'yelp', icon: Store, desc: 'Search Bing for business contacts' },
+  { label: 'All Sources', value: 'directories', icon: Globe2, desc: 'OSM + Google + Bing + website enrichment' },
+  { label: 'Deep Scan', value: 'deep', icon: Zap, desc: 'Map results + website contact extraction' },
+  { label: 'Contact Enrichment', value: 'enrich', icon: Sparkles, desc: 'Scrape business websites for emails & phones' },
   { label: 'Web Search', value: 'web', icon: Globe2, desc: 'Scrape websites for info' },
   { label: 'Social Media', value: 'social', icon: MessageCircle, desc: 'Find social profiles' },
   { label: 'Local Search', value: 'local', icon: Store, desc: 'Combined local search' },
-  { label: 'Deep Scan', value: 'deep', icon: Zap, desc: 'Map + website contact extraction' },
 ];
 
 const QUICK_QUERIES = [
   'restaurants', 'dental clinics', 'hotels', 'law firms', 'real estate',
   'beauty salons', 'gyms', 'auto repair', 'pharmacies', 'tech companies',
+  'healthcare', 'schools', 'construction', 'plumbers', 'electricians',
+  'churches', 'banks', 'insurance', 'marketing agencies', 'accountants',
 ];
 
 const statusColors: Record<string, 'default' | 'secondary' | 'warning' | 'error' | 'outline' | 'neutral'> = {
   NEW: 'neutral', CONTACTED: 'default', REPLIED: 'secondary',
   QUALIFIED: 'secondary', AUDITED: 'default', WON: 'secondary', LOST: 'error',
 };
-
-// ── Leaflet icon helpers ───────────────────────
-
-function createScrapedIcon(source: string) {
-  const colors: Record<string, string> = {
-    maps: '#3b82f6', web: '#8b5cf6', social: '#ec4899',
-    local: '#f59e0b', deep: '#10b981',
-  };
-  const color = colors[source] || '#6366f1';
-  const html = `<div style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;border:2px solid white;background-color:${color};box-shadow:0 2px 6px rgba(0,0,0,0.3);"><span style="font-size:10px;">●</span></div>`;
-  return L.divIcon({ html, className: 'scraped-marker', iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -12] });
-}
-
-function createScoreIcon(score: number) {
-  const color = score >= 80 ? '#16a34a' : score >= 60 ? '#eab308' : score >= 40 ? '#f97316' : '#94a3b8';
-  const html = `<div style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;border:2px solid white;background-color:${color};box-shadow:0 2px 6px rgba(0,0,0,0.3);"><span style="font-size:10px;font-weight:bold;color:white;">${score || '?'}</span></div>`;
-  return L.divIcon({ html, className: 'lead-score-marker', iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] });
-}
-
-// ── Map helpers ────────────────────────────────
-
-function FlyTo({ center, zoom }: { center: [number, number] | null; zoom: number }) {
-  const map = useMap();
-  useEffect(() => {
-    if (center) map.flyTo(center, zoom, { duration: 1.2 });
-  }, [map, center, zoom]);
-  return null;
-}
-
-function ClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
-  useMapEvents({
-    click(e) { onClick(e.latlng.lat, e.latlng.lng); },
-  });
-  return null;
-}
 
 // ── UI Components ──────────────────────────────
 
@@ -201,6 +171,23 @@ export default function LeadMapPage() {
   const [sidebarTab, setSidebarTab] = useState<'prospects' | 'results'>('results');
   const [showSaved, setShowSaved] = useState(false);
 
+  // CCTV state
+  const [showCCTV, setShowCCTV] = useState(false);
+  const [cctvMarkers, setCctvMarkers] = useState<CCTVMarker[]>([]);
+  const [cctvLoading, setCctvLoading] = useState(false);
+
+  // Notification state
+  const [notifications, setNotifications] = useState<{ id: number; message: string; type: 'info' | 'success' | 'error' }[]>([]);
+  const notifIdRef = useRef(0);
+
+  const notify = useCallback((message: string, type: 'info' | 'success' | 'error' = 'info') => {
+    const id = ++notifIdRef.current;
+    setNotifications((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
+    }, 4000);
+  }, []);
+
   // Load prospects
   useEffect(() => {
     if (!accessToken) return;
@@ -235,6 +222,39 @@ export default function LeadMapPage() {
   const geoScrapedResults = useMemo(
     () => allScrapedResults.filter((r) => r.lat != null && r.lon != null),
     [allScrapedResults],
+  );
+
+  // Convert scraped results to Cesium markers
+  const cesiumMarkers = useMemo<BusinessMarker[]>(
+    () =>
+      geoScrapedResults.map((b, i) => ({
+        id: `${b.name}-${i}`,
+        name: b.name,
+        lat: b.lat!,
+        lon: b.lon!,
+        category: b.category,
+        source: b.source || activeTab?.source || 'maps',
+        phone: b.phone,
+        website: b.website,
+        email: b.email,
+        address: b.address,
+        description: b.description,
+      })),
+    [geoScrapedResults, activeTab],
+  );
+
+  // Convert prospects to Cesium markers
+  const cesiumProspects = useMemo<ProspectMarker[]>(
+    () =>
+      geoProspects.map((p) => ({
+        id: p.id,
+        name: p.companyName,
+        lat: p.latitude!,
+        lon: p.longitude!,
+        score: p.leadScore,
+        status: p.status,
+      })),
+    [geoProspects],
   );
 
   // ── Location search ───────────────────────────
@@ -323,6 +343,7 @@ export default function LeadMapPage() {
 
   const executeSearch = async (tabId: string, query: string, location: string, source: string) => {
     updateTab(tabId, { loading: true, error: '' });
+    notify(`Searching for "${query}"...`, 'info');
 
     const payload: Record<string, unknown> = {
       query,
@@ -330,8 +351,20 @@ export default function LeadMapPage() {
       lat: scanCenter?.[0],
       lon: scanCenter?.[1],
       radius: scanRadius,
-      max_results: 50,
+      max_results: source === 'area' ? 500 : 50,
     };
+
+    // For area search, compute bounding box from scan center and radius
+    if (source === 'area' && scanCenter) {
+      const [clat, clon] = scanCenter;
+      const radiusKm = scanRadius / 1000;
+      const latDelta = radiusKm / 111;
+      const lonDelta = radiusKm / (111 * Math.cos((clat * Math.PI) / 180));
+      payload.bbox_south = clat - latDelta;
+      payload.bbox_west = clon - lonDelta;
+      payload.bbox_north = clat + latDelta;
+      payload.bbox_east = clon + lonDelta;
+    }
 
     // Map source to correct endpoint
     let url: string;
@@ -341,6 +374,11 @@ export default function LeadMapPage() {
       case 'social': url = `${SCRAPER_URL}/api/social/search`; break;
       case 'local': url = `${SCRAPER_URL}/api/local/search`; break;
       case 'deep': url = `${SCRAPER_URL}/api/local/deep`; break;
+      case 'yellowpages': url = `${SCRAPER_URL}/api/directories/yellowpages`; break;
+      case 'yelp': url = `${SCRAPER_URL}/api/directories/yelp`; break;
+      case 'directories': url = `${SCRAPER_URL}/api/directories/all`; break;
+      case 'enrich': url = `${SCRAPER_URL}/api/directories/enrich`; break;
+      case 'area': url = `${SCRAPER_URL}/api/maps/area`; break;
       default: url = `${SCRAPER_URL}/api/maps/discover`;
     }
 
@@ -353,13 +391,17 @@ export default function LeadMapPage() {
 
       if (!res.ok) throw new Error(`Scraping failed (${res.status})`);
       const data = await res.json();
+      const resultCount = (data.results || []).length;
+      const withContacts = (data.results || []).filter((r: ScrapedBusiness) => r.phone || r.email || r.website).length;
       updateTab(tabId, {
         results: data.results || [],
         loading: false,
-        title: `${query} (${(data.results || []).length})`,
+        title: `${query} (${resultCount})`,
       });
+      notify(`Found ${resultCount} businesses${withContacts > 0 ? ` (${withContacts} with contact info)` : ''}`, 'success');
     } catch (e: any) {
       updateTab(tabId, { loading: false, error: e.message || 'Search failed' });
+      notify(`Search failed: ${e.message || 'Unknown error'}`, 'error');
     }
   };
 
@@ -397,8 +439,10 @@ export default function LeadMapPage() {
       setProspects(res.data ?? []);
       setShowSaved(true);
       setTimeout(() => setShowSaved(false), 2000);
+      notify(`Saved "${business.name}" as prospect`, 'success');
     } catch (e: any) {
       console.error('Save failed:', e);
+      notify(`Failed to save lead: ${e.message || 'Unknown error'}`, 'error');
     } finally {
       setSavingId(null);
     }
@@ -425,10 +469,52 @@ export default function LeadMapPage() {
       setProspects(res.data ?? []);
       setShowSaved(true);
       setTimeout(() => setShowSaved(false), 2000);
+      notify(`Saved ${unsaved.length} prospects`, 'success');
     } catch (e: any) {
       console.error('Bulk save failed:', e);
+      notify(`Bulk save failed: ${e.message || 'Unknown error'}`, 'error');
     } finally {
       setSavingId(null);
+    }
+  };
+
+  // ── CCTV toggle ───────────────────────────────
+
+  const handleToggleCCTV = async () => {
+    if (showCCTV) {
+      setShowCCTV(false);
+      return;
+    }
+    if (!scanCenter) return;
+    setShowCCTV(true);
+    setCctvLoading(true);
+    try {
+      const res = await fetch(`${SCRAPER_URL}/api/cctv/nearby`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: 'cameras',
+          lat: scanCenter[0],
+          lon: scanCenter[1],
+          radius: scanRadius,
+          max_results: 30,
+        }),
+      });
+      const data = await res.json();
+      const cctvData = (data.results || []).map((c: any, i: number) => ({
+          id: `cctv-${i}`,
+          name: c.name,
+          lat: c.lat,
+          lon: c.lon,
+          operator: c.extra?.operator,
+        }));
+      setCctvMarkers(cctvData);
+      notify(`Loaded ${cctvData.length} CCTV cameras`, 'success');
+    } catch {
+      setCctvMarkers([]);
+      notify('Failed to load CCTV cameras', 'error');
+    } finally {
+      setCctvLoading(false);
     }
   };
 
@@ -568,82 +654,105 @@ export default function LeadMapPage() {
 
       {/* Main content: Map + Sidebar */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Map */}
+        {/* 3D Globe */}
         <div className="relative flex-1 overflow-hidden">
-          <MapContainer
+          <CesiumGlobe
             center={mapCenter}
-            zoom={10}
-            scrollWheelZoom
-            preferCanvas
-            className="h-full w-full"
-            style={{ background: '#0b1326' }}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-              subdomains="abcd"
-              maxZoom={19}
-              keepBuffer={2}
-            />
-            <FlyTo center={flyTarget} zoom={flyZoom} />
-            <ClickHandler onClick={handleMapClick} />
+            markers={cesiumMarkers}
+            prospects={cesiumProspects}
+            cctvMarkers={cctvMarkers}
+            showCCTV={showCCTV}
+            scanCenter={scanCenter}
+            scanRadius={scanRadius}
+            flyTarget={flyTarget}
+            flyZoom={flyZoom}
+            onMapClick={handleMapClick}
+            onMarkerClick={(m) => {
+              const business: ScrapedBusiness = {
+                name: m.name,
+                category: m.category,
+                source: m.source,
+                phone: m.phone,
+                website: m.website,
+                email: m.email,
+                address: m.address,
+                description: m.description,
+                lat: m.lat,
+                lon: m.lon,
+              };
+              setSelectedBusiness(business);
+              setFlyTarget([m.lat, m.lon]);
+              setFlyZoom(16);
+            }}
+            onProspectClick={(p) => {
+              setFlyTarget([p.lat, p.lon]);
+              setFlyZoom(14);
+            }}
+          />
 
-            {/* Scan radius circle */}
-            {scanCenter && (
-              <Circle
-                center={scanCenter}
-                radius={scanRadius}
-                pathOptions={{ color: '#adc6ff', fillColor: '#adc6ff', fillOpacity: 0.06, weight: 1.5, dashArray: '5,5' }}
-              />
+          {/* 3D Globe badge */}
+          <div className="pointer-events-none absolute top-3 left-3 z-[500] rounded-lg border border-outline-variant/30 bg-surface-container-low/60 px-3 py-1.5 text-[10px] font-medium text-on-surface-variant backdrop-blur-md">
+            🌐 3D Globe — Click anywhere to set scan center
+          </div>
+
+          {/* CCTV Toggle */}
+          <button
+            onClick={handleToggleCCTV}
+            disabled={!scanCenter || cctvLoading}
+            className={`absolute top-3 right-3 z-[500] flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium backdrop-blur-md transition-all ${
+              showCCTV
+                ? 'border-red-500/40 bg-red-500/15 text-red-400'
+                : 'border-outline-variant/30 bg-surface-container-low/60 text-on-surface-variant hover:text-on-surface'
+            } disabled:opacity-40 disabled:cursor-not-allowed`}
+            title="Toggle public CCTV cameras near scan center"
+          >
+            {cctvLoading ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Camera className="h-3.5 w-3.5" />
+            )}
+            CCTV {showCCTV ? 'ON' : 'OFF'}
+            {showCCTV && cctvMarkers.length > 0 && (
+              <span className="ml-1 rounded-full bg-red-500/20 px-1.5 text-[10px]">{cctvMarkers.length}</span>
+            )}
+          </button>
+
+          {/* Map Controls */}
+          <div className="absolute bottom-3 right-3 z-[500] flex flex-col gap-2">
+            {/* Fit to Results */}
+            {cesiumMarkers.length > 0 && (
+              <button
+                onClick={() => (window as any).__cesiumFitToResults?.()}
+                className="flex items-center gap-2 rounded-lg border border-outline-variant/30 bg-surface-container-low/60 px-3 py-1.5 text-xs font-medium text-on-surface-variant backdrop-blur-md transition-all hover:text-on-surface"
+                title="Zoom to show all results"
+              >
+                <Radar className="h-3.5 w-3.5" />
+                Fit to Results ({cesiumMarkers.length})
+              </button>
             )}
 
-            {/* Existing prospect markers */}
-            {geoProspects.map((p) => (
-              <Marker
-                key={p.id}
-                position={[p.latitude!, p.longitude!]}
-                icon={createScoreIcon(p.leadScore ?? 0)}
-              >
-                <Popup>
-                  <div className="text-sm">
-                    <p className="font-semibold text-on-surface">{p.companyName}</p>
-                    <p className="text-on-surface-variant">{[p.city, p.country].filter(Boolean).join(', ') || 'No location'}</p>
-                    <p className="mt-1 text-xs text-on-surface-variant">Score: <strong className="text-on-surface">{p.leadScore ?? 'N/A'}</strong> · Status: {p.status}</p>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-
-            {/* Scraped business markers */}
-            {geoScrapedResults.map((b, i) => (
-              <Marker
-                key={`${b.name}-${i}`}
-                position={[b.lat!, b.lon!]}
-                icon={createScrapedIcon(b.source || activeTab?.source || 'maps')}
-                eventHandlers={{ click: () => {
-                  setSelectedBusiness(b);
-                  setFlyTarget([b.lat!, b.lon!]);
-                  setFlyZoom(15);
-                }}}
-              >
-                <Popup>
-                  <div className="text-sm" style={{ minWidth: 200 }}>
-                    <p className="font-semibold text-on-surface">{b.name}</p>
-                    {b.category && <p className="text-xs text-on-surface-variant capitalize">{b.category}</p>}
-                    {b.address && <p className="mt-1 text-xs text-on-surface-variant">{b.address}</p>}
-                    {b.phone && <p className="text-xs text-on-surface-variant">📞 {b.phone}</p>}
-                    {b.website && <p className="text-xs text-on-surface-variant break-words">🌐 {b.website}</p>}
-                    {b.email && <p className="text-xs text-on-surface-variant break-words">✉️ {b.email}</p>}
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
+            {/* Scan Radius Control */}
+            {scanCenter && (
+              <div className="flex items-center gap-2 rounded-lg border border-outline-variant/30 bg-surface-container-low/60 px-3 py-1.5 backdrop-blur-md">
+                <MapPin className="h-3.5 w-3.5 text-on-surface-variant" />
+                <input
+                  type="range"
+                  min="1000"
+                  max="50000"
+                  step="1000"
+                  value={scanRadius}
+                  onChange={(e) => setScanRadius(Number(e.target.value))}
+                  className="w-24 accent-primary"
+                />
+                <span className="text-[10px] text-on-surface-variant w-12">{(scanRadius / 1000).toFixed(0)}km</span>
+              </div>
+            )}
+          </div>
 
           {/* Loading overlay for active tab */}
           {activeTab?.loading && (
             <div className="absolute inset-0 z-[999] flex items-center justify-center bg-surface/40 backdrop-blur-sm">
-              <div className="flex flex-col items-center gap-3 rounded-xl border border-outline-variant bg-surface-container-low p-6 shadow-2xl">
+              <div className="flex flex-col items-center gap-3 rounded-xl border border-outline-variant bg-surface-container-low/80 p-6 shadow-2xl backdrop-blur-md">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 <p className="text-sm font-medium text-on-surface">Scraping {activeTab.source} sources...</p>
                 <p className="text-xs text-on-surface-variant">Query: "{activeTab.query}"</p>
@@ -944,11 +1053,42 @@ export default function LeadMapPage() {
               )}
             </div>
 
-            <div className="mt-3">
+            {/* Quick contact actions */}
+            <div className="mt-3 flex gap-2">
+              {selectedBusiness.phone && (
+                <a
+                  href={`tel:${selectedBusiness.phone}`}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary/10 px-3 py-2 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
+                >
+                  <Phone className="h-3.5 w-3.5" /> Call
+                </a>
+              )}
+              {selectedBusiness.email && (
+                <a
+                  href={`mailto:${selectedBusiness.email}`}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary/10 px-3 py-2 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
+                >
+                  <Mail className="h-3.5 w-3.5" /> Email
+                </a>
+              )}
+              {selectedBusiness.website && (
+                <a
+                  href={selectedBusiness.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary/10 px-3 py-2 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" /> Visit
+                </a>
+              )}
+            </div>
+
+            <div className="mt-2 flex gap-2">
               <Button
                 onClick={() => handleSaveLead(selectedBusiness)}
                 disabled={savingId === `${selectedBusiness.name}-${selectedBusiness.lat}-${selectedBusiness.lon}`}
-                className="w-full"
+                className="flex-1"
+                size="sm"
               >
                 {savingId === `${selectedBusiness.name}-${selectedBusiness.lat}-${selectedBusiness.lon}` ? (
                   <><Loader2 className="h-4 w-4 animate-spin" /> Saving...</>
@@ -956,10 +1096,45 @@ export default function LeadMapPage() {
                   <><Plus className="h-4 w-4" /> Save as Prospect</>
                 )}
               </Button>
+              <Button
+                onClick={() => {
+                  handleSaveLead(selectedBusiness);
+                  setTimeout(() => {
+                    window.location.href = '/dashboard/outreach';
+                  }, 500);
+                }}
+                disabled={savingId === `${selectedBusiness.name}-${selectedBusiness.lat}-${selectedBusiness.lon}`}
+                variant="outline"
+                className="flex-1"
+                size="sm"
+              >
+                <Sparkles className="h-4 w-4" /> Start Outreach
+              </Button>
             </div>
           </CardContent>
         </Card>
       )}
+
+      {/* Notification toasts */}
+      <div className="fixed right-4 top-4 z-[2000] flex flex-col gap-2">
+        {notifications.map((n) => (
+          <div
+            key={n.id}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg transition-all ${
+              n.type === 'success'
+                ? 'bg-green-600 text-white'
+                : n.type === 'error'
+                ? 'bg-red-600 text-white'
+                : 'bg-surface-high text-on-surface'
+            }`}
+          >
+            {n.type === 'success' && <Plus className="h-4 w-4" />}
+            {n.type === 'error' && <X className="h-4 w-4" />}
+            {n.type === 'info' && <Radar className="h-4 w-4" />}
+            {n.message}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

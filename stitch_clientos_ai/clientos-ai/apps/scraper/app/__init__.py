@@ -9,7 +9,7 @@ from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional
-from .routers import web, maps, social, local
+from .routers import web, maps, social, local, cctv, directories
 
 app = FastAPI(
     title="ClientOS Scraper API",
@@ -44,3 +44,5 @@ app.include_router(web.router, prefix="/api/web", tags=["web"])
 app.include_router(maps.router, prefix="/api/maps", tags=["maps"])
 app.include_router(social.router, prefix="/api/social", tags=["social"])
 app.include_router(local.router, prefix="/api/local", tags=["local"])
+app.include_router(cctv.router, prefix="/api/cctv", tags=["cctv"])
+app.include_router(directories.router, prefix="/api/directories", tags=["directories"])

@@ -12,6 +12,10 @@ class ScrapeRequest(BaseModel):
     lon: Optional[float] = Field(None, description="Longitude")
     radius: Optional[int] = Field(5000, description="Search radius in meters")
     max_results: Optional[int] = Field(50, description="Maximum results to return")
+    bbox_south: Optional[float] = Field(None, description="Bounding box south latitude")
+    bbox_west: Optional[float] = Field(None, description="Bounding box west longitude")
+    bbox_north: Optional[float] = Field(None, description="Bounding box north latitude")
+    bbox_east: Optional[float] = Field(None, description="Bounding box east longitude")
 
 
 class BusinessResult(BaseModel):
