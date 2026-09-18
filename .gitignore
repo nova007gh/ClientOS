@@ -10,6 +10,8 @@ build/
 
 # Production
 dist/
+*.egg-info/
+__pycache__/
 
 # Environment
 .env

@@ -362,14 +362,16 @@ def search_yelp(req: ScrapeRequest):
 @router.post("/all", response_model=ScrapeResponse)
 def search_all_directories(req: ScrapeRequest):
     """Search Overpass + Bing + Google and merge results with contact enrichment.
-    Overpass is primary (has structured contact data). Bing/Google used for enrichment."""
+    Overpass is primary (has structured contact data). Bing/Google used for enrichment.
+    All three sources run in parallel; slow sources are abandoned if they exceed 15s."""
+    import concurrent.futures
     location = req.location or "United States"
     max_results = req.max_results or 50
 
     all_results: list[BusinessResult] = []
-    seen = set()
+    seen: set[str] = set()
 
-    # 1. Geocode location if lat/lon not provided, then use Overpass as primary source
+    # Geocode location if lat/lon not provided
     if req.lat is None or req.lon is None:
         if req.location:
             try:
@@ -377,7 +379,7 @@ def search_all_directories(req: ScrapeRequest):
                 resp = _req.get(
                     f"https://nominatim.openstreetmap.org/search?format=json&q={urllib.parse.quote(req.location)}&limit=1",
                     headers={"User-Agent": "ClientOS-Scraper/1.0"},
-                    timeout=10,
+                    timeout=8,
                 )
                 data = resp.json()
                 if data:
@@ -386,35 +388,49 @@ def search_all_directories(req: ScrapeRequest):
             except Exception:
                 pass
 
-    if req.lat is not None and req.lon is not None:
+    # Run all three sources in parallel
+    def _overpass():
+        if req.lat is not None and req.lon is not None:
+            try:
+                from .maps import discover_on_map
+                return discover_on_map(req).results
+            except Exception:
+                pass
+        return []
+
+    def _bing():
         try:
-            from .maps import discover_on_map
-            map_resp = discover_on_map(req)
-            for r in map_resp.results:
+            return _scrape_bing_businesses(req.query, location, max_results)
+        except Exception:
+            return []
+
+    def _google():
+        try:
+            return _scrape_google_businesses(req.query, location, max_results)
+        except Exception:
+            return []
+
+    pool = concurrent.futures.ThreadPoolExecutor(max_workers=3)
+    overpass_future = pool.submit(_overpass)
+    bing_future = pool.submit(_bing)
+    google_future = pool.submit(_google)
+
+    # Collect results as they complete — don't wait longer than 15s for any source
+    for future in [overpass_future, bing_future, google_future]:
+        try:
+            for r in future.result(timeout=15):
                 key = r.name.lower().strip()
                 if key not in seen:
                     seen.add(key)
                     all_results.append(r)
+        except TimeoutError:
+            future.cancel()
+            continue
         except Exception:
-            pass
+            continue
 
-    # 2. Bing search (for additional coverage and websites)
-    for r in _scrape_bing_businesses(req.query, location, max_results):
-        key = r.name.lower().strip()
-        if key not in seen:
-            seen.add(key)
-            all_results.append(r)
-
-    # 3. Google search (may return limited results due to JS rendering)
-    for r in _scrape_google_businesses(req.query, location, max_results):
-        key = r.name.lower().strip()
-        if key not in seen:
-            seen.add(key)
-            all_results.append(r)
-
-    # Note: Enrichment via Bing search for unknown websites is unreliable
-    # (often finds irrelevant sites like bbc.co.uk, nytimes.com for business names)
-    # Users can use the dedicated /enrich endpoint for targeted enrichment
+    # Don't wait for lingering threads — release the pool immediately
+    pool.shutdown(wait=False, cancel_futures=True)
 
     return ScrapeResponse(
         results=all_results[:max_results],

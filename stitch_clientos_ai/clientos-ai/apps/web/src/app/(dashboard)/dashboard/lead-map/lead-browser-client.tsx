@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { Card, CardContent, Badge, LeadScoreRing, Button } from '@clientos/ui';
 import { api } from '@/lib/api-client';
 import { useAuthStore } from '@/lib/auth-store';
@@ -10,7 +11,22 @@ import {
   Instagram, Linkedin, Youtube, MessageCircle, ExternalLink, RefreshCw,
   Plus as PlusIcon, Sparkles, Zap, Camera,
 } from 'lucide-react';
-import CesiumGlobe, { type BusinessMarker, type ProspectMarker, type CCTVMarker } from './cesium-globe';
+import { type BusinessMarker, type ProspectMarker, type CCTVMarker } from './gods-eye-globe';
+import { VISUAL_MODE_OPTIONS, type VisualMode } from './gods-eye-styles';
+
+// God's Eye View globe — the sole map renderer. Lazy-loaded because Cesium
+// pulls ~3700 modules; shows a loading screen while it initializes.
+const GodsEyeGlobe = dynamic(() => import('./gods-eye-globe'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full w-full items-center justify-center bg-[#0a0e1a] text-on-surface-variant">
+      <div className="flex flex-col items-center gap-2">
+        <Loader2 className="h-6 w-6 animate-spin" />
+        <span className="text-xs">Loading God's Eye View…</span>
+      </div>
+    </div>
+  ),
+});
 
 // ── Types ──────────────────────────────────────
 
@@ -156,7 +172,7 @@ export default function LeadMapPage() {
 
   // Search bar
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchLocation, setSearchLocation] = useState('');
+  const [searchLocation, setSearchLocation] = useState('Accra, Ghana');
   const [searchSource, setSearchSource] = useState<string>('maps');
   const [searchResults, setSearchResults] = useState<NominatimResult[]>([]);
   const [searching, setSearching] = useState(false);
@@ -174,6 +190,10 @@ export default function LeadMapPage() {
   // CCTV state
   const [showCCTV, setShowCCTV] = useState(false);
   const [cctvMarkers, setCctvMarkers] = useState<CCTVMarker[]>([]);
+
+  // God's Eye View visual mode (FLIR / NVG / CRT / Noir / Snow / Anime)
+  const [visualMode, setVisualMode] = useState<VisualMode>('normal');
+  const [showVisualModeMenu, setShowVisualModeMenu] = useState(false);
   const [cctvLoading, setCctvLoading] = useState(false);
 
   // Notification state
@@ -348,8 +368,8 @@ export default function LeadMapPage() {
     const payload: Record<string, unknown> = {
       query,
       location: location || undefined,
-      lat: scanCenter?.[0],
-      lon: scanCenter?.[1],
+      lat: scanCenter?.[0] ?? mapCenter[0],
+      lon: scanCenter?.[1] ?? mapCenter[1],
       radius: scanRadius,
       max_results: source === 'area' ? 500 : 50,
     };
@@ -382,12 +402,19 @@ export default function LeadMapPage() {
       default: url = `${SCRAPER_URL}/api/maps/discover`;
     }
 
+    // "All Sources" and directory aggregations run multiple scrapers in
+    // parallel server-side, so give them more room.
+    const isAggregated = source === 'directories' || source === 'deep';
     try {
+      // Timeout so the UI never hangs indefinitely on slow upstream APIs.
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), isAggregated ? 45000 : 25000);
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-      });
+        signal: controller.signal,
+      }).finally(() => clearTimeout(timeout));
 
       if (!res.ok) throw new Error(`Scraping failed (${res.status})`);
       const data = await res.json();
@@ -400,8 +427,9 @@ export default function LeadMapPage() {
       });
       notify(`Found ${resultCount} businesses${withContacts > 0 ? ` (${withContacts} with contact info)` : ''}`, 'success');
     } catch (e: any) {
-      updateTab(tabId, { loading: false, error: e.message || 'Search failed' });
-      notify(`Search failed: ${e.message || 'Unknown error'}`, 'error');
+      const msg = e?.name === 'AbortError' ? `Search timed out (${isAggregated ? 45 : 25}s) — try a smaller area` : (e.message || 'Search failed');
+      updateTab(tabId, { loading: false, error: msg });
+      notify(`Search failed: ${msg}`, 'error');
     }
   };
 
@@ -654,9 +682,9 @@ export default function LeadMapPage() {
 
       {/* Main content: Map + Sidebar */}
       <div className="flex flex-1 overflow-hidden">
-        {/* 3D Globe */}
+        {/* God's Eye View — the sole 3D globe map renderer */}
         <div className="relative flex-1 overflow-hidden">
-          <CesiumGlobe
+          <GodsEyeGlobe
             center={mapCenter}
             markers={cesiumMarkers}
             prospects={cesiumProspects}
@@ -666,6 +694,7 @@ export default function LeadMapPage() {
             scanRadius={scanRadius}
             flyTarget={flyTarget}
             flyZoom={flyZoom}
+            visualMode={visualMode}
             onMapClick={handleMapClick}
             onMarkerClick={(m) => {
               const business: ScrapedBusiness = {
@@ -690,9 +719,9 @@ export default function LeadMapPage() {
             }}
           />
 
-          {/* 3D Globe badge */}
+          {/* Map badge */}
           <div className="pointer-events-none absolute top-3 left-3 z-[500] rounded-lg border border-outline-variant/30 bg-surface-container-low/60 px-3 py-1.5 text-[10px] font-medium text-on-surface-variant backdrop-blur-md">
-            🌐 3D Globe — Click anywhere to set scan center
+            🌐 God's Eye View — Click anywhere to set scan center
           </div>
 
           {/* CCTV Toggle */}
@@ -716,6 +745,43 @@ export default function LeadMapPage() {
               <span className="ml-1 rounded-full bg-red-500/20 px-1.5 text-[10px]">{cctvMarkers.length}</span>
             )}
           </button>
+
+          {/* God's Eye View — Visual Mode selector */}
+          <div className="absolute top-3 right-[124px] z-[500]">
+            <button
+              onClick={() => setShowVisualModeMenu((v) => !v)}
+              className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium backdrop-blur-md transition-all ${
+                visualMode !== 'normal'
+                  ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-400'
+                  : 'border-outline-variant/30 bg-surface-container-low/60 text-on-surface-variant hover:text-on-surface'
+              }`}
+              title="God's Eye View visual mode"
+            >
+              <span>{VISUAL_MODE_OPTIONS.find((o) => o.value === visualMode)?.icon}</span>
+              {VISUAL_MODE_OPTIONS.find((o) => o.value === visualMode)?.label}
+            </button>
+            {showVisualModeMenu && (
+              <div className="absolute right-0 top-full mt-1 flex flex-col overflow-hidden rounded-lg border border-outline-variant/30 bg-surface-container-low/95 backdrop-blur-md">
+                {VISUAL_MODE_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => {
+                      setVisualMode(opt.value);
+                      setShowVisualModeMenu(false);
+                    }}
+                    className={`flex items-center gap-2 whitespace-nowrap px-3 py-1.5 text-left text-xs font-medium transition-colors ${
+                      visualMode === opt.value
+                        ? 'bg-emerald-500/15 text-emerald-400'
+                        : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
+                    }`}
+                  >
+                    <span>{opt.icon}</span>
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Map Controls */}
           <div className="absolute bottom-3 right-3 z-[500] flex flex-col gap-2">

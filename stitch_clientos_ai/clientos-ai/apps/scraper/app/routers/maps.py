@@ -127,28 +127,39 @@ QUERY_TAG_MAP = {
 
 
 def match_tags(query: str) -> list[dict]:
-    """Match a natural language query to OSM tag filters."""
-    q_lower = query.lower()
-    for keyword, tags in QUERY_TAG_MAP.items():
+    """Match a natural language query to OSM tag filters.
+    Sorts by longest keyword first so 'healthcare' doesn't match 'car'."""
+    q_lower = query.lower().strip()
+    # Sort by keyword length descending — longest match wins
+    for keyword in sorted(QUERY_TAG_MAP.keys(), key=len, reverse=True):
+        # Match whole-word or as a distinct token (avoid 'car' in 'healthcare')
+        if q_lower == keyword or f" {keyword} " in f" {q_lower} " or q_lower.startswith(keyword + " ") or q_lower.endswith(" " + keyword):
+            return QUERY_TAG_MAP[keyword]
+    # Fallback: substring match (less precise, but catches multi-word queries)
+    for keyword in sorted(QUERY_TAG_MAP.keys(), key=len, reverse=True):
         if keyword in q_lower:
-            return tags
+            return QUERY_TAG_MAP[keyword]
     # Default: search for common business types
     return [{"amenity": None}, {"shop": None}]
 
 
 def build_query(tags: list[dict], lat: float, lon: float, radius: int) -> str:
-    """Build an Overpass QL query that fetches nodes with names."""
+    """Build an Overpass QL query that fetches nodes with names.
+    Uses regex filter to combine multiple values efficiently instead of
+    separate node statements per value (which is much slower on Overpass)."""
     filters = []
     for tag_group in tags:
         for key, values in tag_group.items():
             if values is None:
                 filters.append(f'node["{key}"]["name"](around:{radius},{lat},{lon});')
             else:
-                for v in values:
-                    filters.append(f'node["{key}"="{v}"]["name"](around:{radius},{lat},{lon});')
+                # Use a single regex filter per key: ["amenity"~"restaurant|cafe|bar"]
+                # This is much faster than one node statement per value.
+                regex = "|".join(values)
+                filters.append(f'node["{key}"~"^{regex}$"]["name"](around:{radius},{lat},{lon});')
 
-    timeout = 60 if radius >= 25000 else 40 if radius >= 10000 else 25
-    return f"[out:json][timeout:{timeout}];({''.join(filters)});out body 300;"
+    timeout = 25 if radius >= 25000 else 15
+    return f"[out:json][timeout:{timeout}];({''.join(filters)});out body 100;"
 
 
 @router.post("/discover", response_model=ScrapeResponse)
@@ -182,13 +193,14 @@ def discover_on_map(req: ScrapeRequest):
     seen = set()
 
     # 1. Try Overpass first — it has phone, email, website, social media tags
-    # Use curl subprocess since requests gets 406 from Overpass servers
-    for endpoint in OVERPASS_ENDPOINTS:
+    # Use curl subprocess since requests gets 406 from Overpass servers.
+    # Only try first 2 endpoints to avoid excessive latency.
+    for endpoint in OVERPASS_ENDPOINTS[:2]:
         try:
             proc = subprocess.run(
-                ["curl", "-s", "--max-time", "30", "--connect-timeout", "10",
+                ["curl", "-s", "--max-time", "8", "--connect-timeout", "4",
                  "-X", "POST", "--data-urlencode", f"data={query}", endpoint],
-                capture_output=True, text=True, timeout=35,
+                capture_output=True, text=True, timeout=10,
             )
             output = proc.stdout
             if not output or output.startswith("<!DOCTYPE") or output.startswith("<?xml"):
