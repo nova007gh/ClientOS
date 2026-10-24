@@ -1,0 +1,18 @@
+apiVersion: v2
+name: clientos
+description: >-
+  ClientOS AI — client and sales management platform.
+  Deploys web (Next.js), api (NestJS), worker (BullMQ),
+  ai-service and scraper (FastAPI), plus optional PostgreSQL and Redis.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - crm
+  - sales
+  - ai
+home: https://github.com/nova007gh/ClientOS
+sources:
+  - https://github.com/nova007gh/ClientOS
+maintainers:
+  - name: nova007gh

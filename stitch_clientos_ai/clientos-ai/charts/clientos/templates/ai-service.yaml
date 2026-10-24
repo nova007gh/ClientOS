@@ -1,0 +1,90 @@
+{{- if .Values.aiService.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "clientos.fullname" . }}-ai-service
+  labels:
+    {{- include "clientos.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ai-service
+spec:
+  replicas: {{ .Values.aiService.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "clientos.selectorLabels" (dict "root" . "component" "ai-service") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "clientos.labels" . | nindent 8 }}
+        app.kubernetes.io/component: ai-service
+        {{- include "clientos.selectorLabels" (dict "root" . "component" "ai-service") | nindent 8 }}
+    spec:
+      {{- include "clientos.imagePullSecrets" . | nindent 6 }}
+      containers:
+        - name: ai-service
+          image: {{ include "clientos.image" (dict "root" . "service" .Values.aiService) }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8002
+          env:
+            - name: AI_HOST
+              value: "0.0.0.0"
+            - name: AI_PORT
+              value: "8002"
+            - name: AI_DEFAULT_PROVIDER
+              value: {{ .Values.aiService.env.defaultProvider | quote }}
+            - name: AI_DEFAULT_MODEL
+              value: {{ .Values.aiService.env.defaultModel | quote }}
+            - name: AI_API_BASE_URL
+              value: "http://{{ include "clientos.fullname" . }}-api:3001/api"
+            - name: AI_OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "clientos.secretName" . }}
+                  key: AI_OPENAI_API_KEY
+            - name: AI_ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "clientos.secretName" . }}
+                  key: AI_ANTHROPIC_API_KEY
+            - name: AI_REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "clientos.secretName" . }}
+                  key: REDIS_URL
+            {{- with .Values.aiService.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          {{- with .Values.aiService.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "clientos.fullname" . }}-ai-service
+  labels:
+    {{- include "clientos.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ai-service
+spec:
+  type: {{ .Values.aiService.service.type }}
+  ports:
+    - name: http
+      port: {{ .Values.aiService.service.port }}
+      targetPort: http
+  selector:
+    {{- include "clientos.selectorLabels" (dict "root" . "component" "ai-service") | nindent 4 }}
+{{- end }}

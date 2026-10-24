@@ -1,5 +1,13 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
+  experimental: {
+    // Monorepo: trace files relative to the repo root so standalone includes
+    // workspace packages and the pnpm store.
+    outputFileTracingRoot: path.join(__dirname, '../../'),
+  },
   transpilePackages: ['@clientos/ui', '@clientos/types', '@clientos/validation', '@clientos/database'],
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api',

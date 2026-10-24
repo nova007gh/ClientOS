@@ -1,0 +1,171 @@
+# ClientOS Helm chart — default values
+#
+# Images are pulled from GitHub Container Registry (GHCR):
+#   ghcr.io/<image.owner>/clientos-<service>:<image.tag>
+#
+# For private packages create a pull secret and reference it:
+#   kubectl create secret docker-registry ghcr-pull \
+#     --docker-server=ghcr.io --docker-username=<github-user> \
+#     --docker-password=<PAT with read:packages>
+#   helm install clientos ./charts/clientos \
+#     --set global.imagePullSecrets[0].name=ghcr-pull
+
+global:
+  imageRegistry: ghcr.io
+  # Secrets attached to every pod for pulling private images, e.g. [{name: ghcr-pull}]
+  imagePullSecrets: []
+
+image:
+  # GHCR namespace (GitHub user or org, lowercase)
+  owner: nova007gh
+  # Default tag for all services; override per service with <service>.image.tag
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# ── Services ──────────────────────────────────────────────────────────────
+
+web:
+  enabled: true
+  replicaCount: 1
+  image:
+    name: clientos-web
+    tag: ""
+  service:
+    type: ClusterIP
+    port: 3000
+  env: {}
+    # NEXT_PUBLIC_* values are baked into the image at build time.
+    # Anything set here only affects server-side runtime.
+  resources: {}
+  extraEnv: []
+
+api:
+  enabled: true
+  replicaCount: 1
+  image:
+    name: clientos-api
+    tag: ""
+  service:
+    type: ClusterIP
+    port: 3001
+  env:
+    # Comma-separated list. Defaults to https://<ingress.host> when empty.
+    corsOrigin: ""
+  resources: {}
+  extraEnv: []
+
+worker:
+  enabled: true
+  replicaCount: 1
+  image:
+    name: clientos-worker
+    tag: ""
+  resources: {}
+  extraEnv: []
+
+aiService:
+  enabled: true
+  replicaCount: 1
+  image:
+    name: clientos-ai-service
+    tag: ""
+  service:
+    type: ClusterIP
+    port: 8002
+  env:
+    defaultProvider: openai
+    defaultModel: gpt-4o-mini
+  resources: {}
+  extraEnv: []
+
+scraper:
+  enabled: true
+  replicaCount: 1
+  image:
+    name: clientos-scraper
+    tag: ""
+  service:
+    type: ClusterIP
+    port: 8000
+  env:
+    corsOrigins: "*"
+  resources: {}
+  extraEnv: []
+
+# ── Secrets ───────────────────────────────────────────────────────────────
+# All values below land in a single Opaque Secret (<release>-clientos-secrets).
+# Prefer --set-file / sealed-secrets / external secret stores in production.
+
+secrets:
+  # Required
+  jwtSecret: "change-me-in-production-min-32-chars"
+  encryptionKey: "change-me-32-byte-hex-key-here"
+  # Database / cache — leave empty to use the bundled postgres/redis below,
+  # or set a full connection URL to use external services.
+  databaseUrl: ""
+  redisUrl: ""
+  # LLM providers
+  openaiApiKey: ""
+  anthropicApiKey: ""
+  # OAuth
+  googleClientId: ""
+  googleClientSecret: ""
+  microsoftClientId: ""
+  microsoftClientSecret: ""
+  # Payments
+  paystackSecretKey: ""
+  paystackPublicKey: ""
+  stripeSecretKey: ""
+  stripeWebhookSecret: ""
+  # Business data provider
+  businessDataProvider: ""
+  businessDataApiKey: ""
+  # S3-compatible object storage (set s3Endpoint to enable, e.g. MinIO)
+  s3Endpoint: ""
+  s3Bucket: clientos
+  s3AccessKey: ""
+  s3SecretKey: ""
+
+# ── Bundled dependencies ──────────────────────────────────────────────────
+
+postgres:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "16-alpine"
+  auth:
+    username: clientos
+    password: clientos
+    database: clientos
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClass: ""
+  resources: {}
+
+redis:
+  enabled: true
+  image:
+    repository: redis
+    tag: "7-alpine"
+  persistence:
+    enabled: false
+    size: 2Gi
+    storageClass: ""
+  resources: {}
+
+# ── Ingress ───────────────────────────────────────────────────────────────
+# Routes /api -> api service, everything else -> web.
+# Optionally expose the scraper on its own host (its routes also start with
+# /api, so path-based routing cannot distinguish it from the NestJS API).
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  host: clientos.local
+  # Optional dedicated hostname for the scraper service, e.g. scraper.example.com
+  scraperHost: ""
+  tls: []
+  #  - secretName: clientos-tls
+  #    hosts: [clientos.example.com]

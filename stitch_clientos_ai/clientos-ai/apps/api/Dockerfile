@@ -1,44 +1,31 @@
-# ClientOS API — Dockerfile for production deployment
-# Works with Render, Railway, Fly.io, Belmo, and any Docker-compatible host
+# ClientOS API — production image (pnpm monorepo)
+# Build context must be the monorepo root (stitch_clientos_ai/clientos-ai):
+#   docker build -f apps/api/Dockerfile -t ghcr.io/<owner>/clientos-api stitch_clientos_ai/clientos-ai
 
 FROM node:20-slim AS base
-
-# Install OpenSSL for Prisma
+# OpenSSL required by Prisma engines
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
-
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+RUN corepack enable && corepack prepare pnpm@9.7.1 --activate
 WORKDIR /app
 
-# ---- Dependencies ----
-FROM base AS deps
-COPY package.json package-lock.json* ./
-COPY packages/database/package.json ./packages/database/
-RUN npm ci --omit=dev || npm install --omit=dev
-
 # ---- Build ----
-FROM base AS builder
-COPY package.json package-lock.json* ./
-COPY packages/ ./packages/
-COPY apps/api/ ./apps/api/
-COPY tsconfig.json ./
-RUN npm ci
-RUN npx prisma generate --schema=packages/database/prisma/schema.prisma
-RUN npm run build --workspace=apps/api
+FROM base AS build
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml tsconfig.base.json ./
+COPY packages ./packages
+COPY apps/api ./apps/api
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --filter @clientos/api... --frozen-lockfile
+RUN pnpm --filter @clientos/database prisma:generate
+RUN pnpm --filter @clientos/api build
 
-# ---- Production ----
+# ---- Runtime ----
+# The workspace layout is copied as-is: dist/main.js is a webpack bundle but the
+# Prisma client + engines are resolved from node_modules at runtime.
 FROM base AS runner
 ENV NODE_ENV=production
-
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages/database/node_modules ./packages/database/node_modules
-COPY --from=builder /app/apps/api/dist ./apps/api/dist
-COPY --from=builder /app/packages/database ./packages/database
-COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
-COPY --from=builder /app/package.json ./package.json
-
-# Generate Prisma client
-RUN npx prisma generate --schema=packages/database/prisma/schema.prisma
-
+COPY --from=build /app ./
 EXPOSE 3001
-
-# Run migrations then start
-CMD ["sh", "-c", "npx prisma db push --schema=packages/database/prisma/schema.prisma --accept-data-loss && node apps/api/dist/main.js"]
+# Push the Prisma schema then start (same behaviour as previous Dockerfile/render.yaml)
+CMD ["sh", "-c", "pnpm --filter @clientos/database exec prisma db push --accept-data-loss && node apps/api/dist/main.js"]

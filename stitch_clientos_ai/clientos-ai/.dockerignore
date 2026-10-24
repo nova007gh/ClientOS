@@ -1,0 +1,38 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies (reinstalled in image)
+**/node_modules
+**/.pnpm-store
+
+# Build artifacts
+**/.next
+**/dist
+**/tsconfig.tsbuildinfo
+**/__pycache__
+**/*.egg-info
+**/.pytest_cache
+
+# Env files — never bake secrets into images
+.env
+.env.*
+!.env.example
+!.env.production.example
+
+# Deployment / CI
+charts
+.github
+docker-compose.yml
+render.yaml
+vercel.json
+netlify.toml
+
+# Docs
+*.md
+docs
+
+# OS / editor
+.DS_Store
+.vscode
+.idea

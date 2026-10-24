@@ -1,0 +1,71 @@
+{{- if .Values.scraper.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "clientos.fullname" . }}-scraper
+  labels:
+    {{- include "clientos.labels" . | nindent 4 }}
+    app.kubernetes.io/component: scraper
+spec:
+  replicas: {{ .Values.scraper.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "clientos.selectorLabels" (dict "root" . "component" "scraper") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "clientos.labels" . | nindent 8 }}
+        app.kubernetes.io/component: scraper
+        {{- include "clientos.selectorLabels" (dict "root" . "component" "scraper") | nindent 8 }}
+    spec:
+      {{- include "clientos.imagePullSecrets" . | nindent 6 }}
+      containers:
+        - name: scraper
+          image: {{ include "clientos.image" (dict "root" . "service" .Values.scraper) }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "8000"
+            - name: CORS_ORIGINS
+              value: {{ .Values.scraper.env.corsOrigins | quote }}
+            {{- with .Values.scraper.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          {{- with .Values.scraper.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "clientos.fullname" . }}-scraper
+  labels:
+    {{- include "clientos.labels" . | nindent 4 }}
+    app.kubernetes.io/component: scraper
+spec:
+  type: {{ .Values.scraper.service.type }}
+  ports:
+    - name: http
+      port: {{ .Values.scraper.service.port }}
+      targetPort: http
+  selector:
+    {{- include "clientos.selectorLabels" (dict "root" . "component" "scraper") | nindent 4 }}
+{{- end }}

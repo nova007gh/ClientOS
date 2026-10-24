@@ -1,0 +1,38 @@
+ClientOS has been installed.
+
+Release:   {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+Components:
+{{- if .Values.web.enabled }}       web        http://{{ include "clientos.fullname" . }}-web:{{ .Values.web.service.port }}{{ end }}
+{{- if .Values.api.enabled }}       api        http://{{ include "clientos.fullname" . }}-api:{{ .Values.api.service.port }}{{ end }}
+{{- if .Values.worker.enabled }}    worker     (background BullMQ consumer){{ end }}
+{{- if .Values.aiService.enabled }} ai-service http://{{ include "clientos.fullname" . }}-ai-service:{{ .Values.aiService.service.port }}{{ end }}
+{{- if .Values.scraper.enabled }}   scraper    http://{{ include "clientos.fullname" . }}-scraper:{{ .Values.scraper.service.port }}{{ end }}
+{{- if .Values.postgres.enabled }}  postgres   {{ include "clientos.fullname" . }}-postgres:5432{{ end }}
+{{- if .Values.redis.enabled }}     redis      {{ include "clientos.fullname" . }}-redis:6379{{ end }}
+
+{{- if .Values.ingress.enabled }}
+Ingress: http(s)://{{ .Values.ingress.host }}  (/ -> web, /api -> api)
+{{- if .Values.ingress.scraperHost }}
+Scraper: http(s)://{{ .Values.ingress.scraperHost }}
+{{- end }}
+{{- else }}
+Ingress is disabled. Access the app via:
+  kubectl port-forward svc/{{ include "clientos.fullname" . }}-web {{ .Values.web.service.port }}:{{ .Values.web.service.port }}
+{{- end }}
+
+Images are pulled from ghcr.io/{{ .Values.image.owner }}. If the GHCR packages
+are private, create a pull secret and upgrade the release:
+
+  kubectl create secret docker-registry ghcr-pull \
+    --docker-server=ghcr.io \
+    --docker-username=<github-user> \
+    --docker-password=<token-with-read:packages>
+
+  helm upgrade {{ .Release.Name }} ./charts/clientos \
+    --reuse-values \
+    --set global.imagePullSecrets[0].name=ghcr-pull
+
+Check pod status:
+  kubectl get pods -l app.kubernetes.io/instance={{ .Release.Name }}

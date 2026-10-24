@@ -1,0 +1,48 @@
+{{- if .Values.worker.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "clientos.fullname" . }}-worker
+  labels:
+    {{- include "clientos.labels" . | nindent 4 }}
+    app.kubernetes.io/component: worker
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "clientos.selectorLabels" (dict "root" . "component" "worker") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "clientos.labels" . | nindent 8 }}
+        app.kubernetes.io/component: worker
+        {{- include "clientos.selectorLabels" (dict "root" . "component" "worker") | nindent 8 }}
+    spec:
+      {{- include "clientos.imagePullSecrets" . | nindent 6 }}
+      containers:
+        - name: worker
+          image: {{ include "clientos.image" (dict "root" . "service" .Values.worker) }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: AI_SERVICE_URL
+              value: "http://{{ include "clientos.fullname" . }}-ai-service:8002"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "clientos.secretName" . }}
+                  key: DATABASE_URL
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "clientos.secretName" . }}
+                  key: REDIS_URL
+            {{- with .Values.worker.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.worker.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
